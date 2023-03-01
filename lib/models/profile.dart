@@ -1,8 +1,8 @@
 import 'package:fire_control_app/models/api_info.dart';
+// import 'package:fire_control_app/common/global.dart';
 
 /// 全局配置实体
 class Profile {
-
   // 是否登录
   bool isLogin = true;
 
@@ -19,9 +19,13 @@ class Profile {
         userId = json['userId'],
         apiInfo = ApiInfo.fromJson(json['apiInfo']);
 
-  Map<String, dynamic> toJson() => {
-    'isLogin': isLogin,
-    'userId': userId,
-    'apiInfo': apiInfo.toJson()
-  };
+  Map<String, dynamic> toJson() =>
+      {'isLogin': isLogin, 'userId': userId, 'apiInfo': apiInfo.toJson()};
+
+  init(String appDomain) {
+    var domain = appDomain.split('-');
+    apiInfo.baseUrl = 'https://api-${domain[1]}';
+    apiInfo.imgUrl = "https://img-${domain[1]}";
+    print('baseUrl: ${apiInfo.baseUrl}  imgUrl: ${apiInfo.imgUrl}');
+  }
 }

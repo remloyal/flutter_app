@@ -19,6 +19,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   shared_preferences: ^2.0.17
   provider: ^6.0.5
+  fluttertoast: ^8.2.1
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +28,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/media/
   fonts:
    - family: fcm
      fonts:

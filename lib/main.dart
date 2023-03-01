@@ -1,12 +1,13 @@
-import 'package:fire_control_app/common/colors.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/common/router.dart';
 import 'package:fire_control_app/states/unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/pages/index.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:fire_control_app/pages/login/login.dart';
 
 void main() {
   Global.init().then((value) => runApp(const FireControlApp()));
@@ -18,31 +19,36 @@ class FireControlApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: UnitModel())
-      ],
+      providers: [ChangeNotifierProvider.value(value: UnitModel())],
       child: RefreshConfiguration(
-        headerBuilder: () => ClassicHeader(),
-        footerBuilder: () => ClassicFooter(),
+        headerBuilder: () => const ClassicHeader(),
+        footerBuilder: () => const ClassicFooter(),
         child: MaterialApp(
           title: '智慧消防',
           theme: ThemeData(
-              primarySwatch: Colors.grey
+            primarySwatch: Colors.grey,
+            platform: TargetPlatform.iOS, //滑动切换页面
           ),
-          locale: Locale('zh', 'CN'),
-          localizationsDelegates: [
+          locale: const Locale('zh', 'CN'),
+          localizationsDelegates: const [
             // 本地化的代理类
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
             RefreshLocalizations.delegate
           ],
-          supportedLocales: [
-            const Locale('en', 'US'), // 美国英语
-            const Locale('zh', 'CN'), // 中文简体
+          supportedLocales: const [
+            Locale('en', 'US'), // 美国英语
+            Locale('zh', 'CN'), // 中文简体
           ],
           home: const IndexPage(),
-          routes: FireControlRouter.getRoutes(),
+          // routes: FireControlRouter.getRoutes(),
+          routes: {
+            ...FireControlRouter.getRoutes(), // 首页路由
+            "/login": (context) => const Login(), // 首页路由
+          },
+          initialRoute: '/login',
+          builder: FToastBuilder(),
         ),
       ),
     );

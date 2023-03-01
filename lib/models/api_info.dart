@@ -1,5 +1,10 @@
+import 'package:fire_control_app/common/global.dart';
+
 /// 接口相关配置实体
 class ApiInfo {
+  final Global global = Global();
+  late String appDomain = '';
+
   // 登录的token
   String token = "2a75c6fd483822569b4d75941f9d9ccf";
   // 登录的ticket
@@ -21,10 +26,19 @@ class ApiInfo {
         imgUrl = json['imgUrl'];
 
   Map<String, String> toJson() => {
-    'token': token,
-    'ticket': ticket,
-    'appKey': appKey,
-    'baseUrl': baseUrl,
-    'imgUrl': imgUrl
-  };
+        'token': token,
+        'ticket': ticket,
+        'appKey': appKey,
+        'baseUrl': baseUrl,
+        'imgUrl': imgUrl
+      };
+  init(String key) {
+    print(key);
+    // appDomain = global.getString('appDomain') as String;
+    var domain = key.split('-');
+    print(domain);
+    baseUrl = 'https://api-${domain[1]}.zhxf.ltd';
+    imgUrl = "https://img-${domain[1]}.zhxf.ltd";
+    print('baseUrl: $baseUrl , imgUrl:  $imgUrl ');
+  }
 }

@@ -23,22 +23,30 @@ class Global {
 
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
-      WidgetsFlutterBinding.ensureInitialized();
-      _prefs = await SharedPreferences.getInstance();
+    WidgetsFlutterBinding.ensureInitialized();
+    _prefs = await SharedPreferences.getInstance();
 
-      String? cacheProfile = _prefs.getString(_profileKey);
-      if (cacheProfile != null) {
-        try {
-          profile = Profile.fromJson(jsonDecode(cacheProfile));
-        } catch (e) {
-          print(e);
-        }
-      } else {
-
+    String? cacheProfile = _prefs.getString(_profileKey);
+    if (cacheProfile != null) {
+      try {
+        profile = Profile.fromJson(jsonDecode(cacheProfile));
+      } catch (e) {
+        print(e);
       }
+    } else {}
 
-      Http.init();
-    }
+    Http.init();
+  }
+
+  // 重置api
+  apiInfo() {
+    getString('appDomain').then((value) {
+      print('valuevalue  $value');
+      profile.init(value.toString());
+    });
+
+    // profile.init(key);
+  }
 
   // 持久化Profile信息
   static saveProfile() =>
@@ -46,6 +54,15 @@ class Global {
 
   // 清除Profile的信息
   static clearProfile() => _prefs.remove(_profileKey);
+
+  Future<void> setString(key, value) async {
+    _prefs.setString(key, value);
+  }
+
+  Future<String?> getString(String key) async {
+    var value = _prefs.getString(key);
+    return value;
+  }
 }
 
 class ProfileChangeNotifier extends ChangeNotifier {
