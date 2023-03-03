@@ -38,14 +38,8 @@ class Global {
     Http.init();
   }
 
-  // 重置api
-  apiInfo() {
-    getString('appDomain').then((value) {
-      print('valuevalue  $value');
-      profile.init(value.toString());
-    });
-
-    // profile.init(key);
+  static setBaseUrl() {
+    Http.dio.options.baseUrl = profile.apiInfo.baseUrl;
   }
 
   // 持久化Profile信息

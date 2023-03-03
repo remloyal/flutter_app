@@ -16,7 +16,7 @@ enum DioMethod {
 /// 网络请求配置及封装
 class Http {
   static Dio dio = Dio();
-  ApiInfo apiInfo = Global.profile.apiInfo;
+  static ApiInfo apiInfo = Global.profile.apiInfo;
 
   static void init() {
     if (Global.profile.apiInfo.baseUrl.isNotEmpty) {
@@ -46,6 +46,7 @@ class Http {
     options.headers['user-agent'] =
         "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
     options.headers['ticket'] = Global.profile.apiInfo.ticket;
+    print(options);
     handler.next(options);
     // super.onRequest(options, handler);
   }
@@ -63,7 +64,7 @@ class Http {
   }
 
   /// 请求类
-  Future<T> request<T>(
+  static Future<T> request<T>(
     String path, {
     DioMethod method = DioMethod.get,
     Map<String, dynamic>? params,

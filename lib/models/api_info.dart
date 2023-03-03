@@ -9,12 +9,21 @@ class ApiInfo {
   String token = "2a75c6fd483822569b4d75941f9d9ccf";
   // 登录的ticket
   String ticket = "78a5ac1bdc6448168a97dfce0d40fa47";
+
+  String userId = "1915";
+
+  String userUnit = "1915";
   // 应用key
   String appKey = "develop_test";
   // 接口域名
   String baseUrl = "https://api-dev.zhxf.ltd";
   // 图片域名
   String imgUrl = "https://img-dev.zhxf.ltd";
+
+  //系统设置信息
+  bool voice = true;
+  bool pronunciation = true;
+  bool shock = true;
 
   ApiInfo();
 
@@ -23,22 +32,20 @@ class ApiInfo {
         ticket = json['ticket'],
         appKey = json['appKey'],
         baseUrl = json['baseUrl'],
-        imgUrl = json['imgUrl'];
+        imgUrl = json['imgUrl'],
+        userId = json['userId'],
+        userUnit = json['userUnit'],
+        voice = json['voice'],
+        pronunciation = json['pronunciation'],
+        shock = json['shock'];
 
   Map<String, String> toJson() => {
         'token': token,
         'ticket': ticket,
         'appKey': appKey,
         'baseUrl': baseUrl,
-        'imgUrl': imgUrl
+        'imgUrl': imgUrl,
+        'userId': userId,
+        'userUnit': userUnit
       };
-  init(String key) {
-    print(key);
-    // appDomain = global.getString('appDomain') as String;
-    var domain = key.split('-');
-    print(domain);
-    baseUrl = 'https://api-${domain[1]}.zhxf.ltd';
-    imgUrl = "https://img-${domain[1]}.zhxf.ltd";
-    print('baseUrl: $baseUrl , imgUrl:  $imgUrl ');
-  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fire_control_app/http/login_api.dart';
 import './login_from.dart';
+import './reg_from.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -10,10 +10,17 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final LoginService loginApi = LoginService();
+  late String name = 'login';
 
-  late List<dynamic> unitMethod = [];
-  late String unitText = '';
+  change(String type) {
+    setState(() {
+      if (type == 'login') {
+        name = type;
+      } else {
+        name = type;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +65,11 @@ class _LoginState extends State<Login> {
                         fontSize: 22,
                         color: Color.fromARGB(255, 255, 255, 255)),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 10),
                     child: Text(
-                      '欢迎登录',
-                      style: TextStyle(
+                      name == 'login' ? '欢迎登录' : '用户注册',
+                      style: const TextStyle(
                           fontSize: 30,
                           color: Color.fromARGB(255, 255, 255, 255)),
                     ),
@@ -75,8 +82,16 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                       ),
                       child: Column(
-                        children: const [
-                          LoginFrom(),
+                        children: [
+                          AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 1000),
+                              child: name == 'login'
+                                  ? LoginFrom(
+                                      change: change,
+                                    )
+                                  : RegFrom(
+                                      change: change,
+                                    )),
                         ],
                       )),
                 ]))));

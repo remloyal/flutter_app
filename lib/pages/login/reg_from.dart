@@ -7,19 +7,18 @@ import 'package:fire_control_app/http/login_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fire_control_app/utils/toast.dart';
 
-class LoginFrom extends StatefulWidget {
-  const LoginFrom({super.key, required this.change});
+class RegFrom extends StatefulWidget {
+  const RegFrom({super.key, required this.change});
 
   final Function change;
   @override
-  State<LoginFrom> createState() => _LoginFromState();
+  State<RegFrom> createState() => _RegFromState();
 }
 
-class _LoginFromState extends State<LoginFrom> {
+class _RegFromState extends State<RegFrom> {
   final GlobalKey _formKey = GlobalKey<FormState>();
   final LoginService loginApi = LoginService();
   late BuildContext dialogContext;
-  final FocusNode _phoneFocus = FocusNode();
 
   late String _username = '', _code = '';
 
@@ -45,7 +44,7 @@ class _LoginFromState extends State<LoginFrom> {
     setState(() {
       unitMethod = data;
     });
-    _phoneFocus.unfocus();
+    print(unitMethod);
   }
 
   // 图片验证正确
@@ -131,6 +130,7 @@ class _LoginFromState extends State<LoginFrom> {
   // 登录
   onSubmit() async {
     var data = await loginApi.login(_username, _code, serial);
+
     if (data['errorCode'] == 20201) {
       userCheck();
       return;
@@ -139,7 +139,6 @@ class _LoginFromState extends State<LoginFrom> {
       Message.show(data['message']);
       return;
     }
-    await loginApi.settingInfo(data['data']);
     Future.delayed(Duration.zero).then((e) {
       Navigator.of(context).pushReplacementNamed('/index');
     });
@@ -224,7 +223,6 @@ class _LoginFromState extends State<LoginFrom> {
                 keyboardType: TextInputType.number,
                 maxLength: 11,
                 maxLines: 1,
-                focusNode: _phoneFocus,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                 ],
@@ -239,8 +237,9 @@ class _LoginFromState extends State<LoginFrom> {
                   if (!phoneReg.hasMatch(v!)) {
                     print(unitMethod.isNotEmpty);
                     return '请输入正确的手机号';
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
                 onChanged: (value) {
                   if (phoneReg.hasMatch(value)) {
@@ -401,13 +400,13 @@ class _LoginFromState extends State<LoginFrom> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('没有账号?'),
+            // const Text('没有账号?'),
             GestureDetector(
-              child: const Text('点击注册', style: TextStyle(color: Colors.green)),
+              child: const Text('返回登录',
+                  style: TextStyle(color: Color.fromARGB(102, 48, 48, 48))),
               onTap: () {
                 print("点击注册");
-                // Navigator.of(context).pushReplacementNamed('/index');
-                widget.change('reg');
+                widget.change('login');
               },
             )
           ],
@@ -528,6 +527,8 @@ class _LoginFromState extends State<LoginFrom> {
           var domain = unitMethod[value]['domain'].split('-');
           Global.profile.apiInfo.baseUrl = 'https://api-${domain[1]}';
           Global.profile.apiInfo.imgUrl = "https://img-${domain[1]}";
+          // global.setString('appDomain', unitMethod[value]['domain']);
+          // global.apiInfo();
         });
         return;
       }
@@ -538,6 +539,9 @@ class _LoginFromState extends State<LoginFrom> {
           var domain = unitMethod[value]['domain'].split('-');
           Global.profile.apiInfo.baseUrl = 'https://api-${domain[1]}';
           Global.profile.apiInfo.imgUrl = "https://img-${domain[1]}";
+          // global.setString('appDomain', unitMethod[value]['domain']);
+          // global.apiInfo();
+          // global.setString('appDomain', unitMethod[value]['domain']);
         });
         // Future.delayed(const Duration(milliseconds: 200)).then((e) {
         //   global.apiInfo();
