@@ -20,7 +20,7 @@ class _RegFromState extends State<RegFrom> {
   final LoginService loginApi = LoginService();
   late BuildContext dialogContext;
 
-  late String _username = '', _code = '';
+  late String _username = '', _unitcode = '', _code = '';
 
   // 倒计时
   late Timer _timer;
@@ -28,7 +28,8 @@ class _RegFromState extends State<RegFrom> {
 
   late List<dynamic> unitMethod = [];
   late String unitText = '';
-
+  late String unitDomain = '';
+  late String unitCode = '';
   late String serial = '';
 
   late num code;
@@ -39,14 +40,6 @@ class _RegFromState extends State<RegFrom> {
     "imgBlock": '',
   };
 
-  getUserUnit(String user) async {
-    var data = await loginApi.getUserUnits(user);
-    setState(() {
-      unitMethod = data;
-    });
-    print(unitMethod);
-  }
-
   // 图片验证正确
   success() {
     getCode();
@@ -55,7 +48,7 @@ class _RegFromState extends State<RegFrom> {
 
   // 重新请求
   refresh() async {
-    var images = await loginApi.getImage(serial, '');
+    var images = await loginApi.getImage(serial, unitDomain);
     return {
       'top': images['data']['y'],
       "imgMain": images['data']['img'].replaceAll('\n', ''),
@@ -65,7 +58,7 @@ class _RegFromState extends State<RegFrom> {
 
   // 比对
   check(top) async {
-    var state = await loginApi.getValid(serial, top.toString(), '');
+    var state = await loginApi.getValid(serial, top.toString(), unitDomain);
     print('refresh $state');
     if (state['errorCode'] == 0) {
       return true;
@@ -89,32 +82,55 @@ class _RegFromState extends State<RegFrom> {
     _timer = Timer.periodic(oneSec, callback);
   }
 
+  // 获取单位url
+  changeUnitCode() async {
+    var data = await loginApi.getProjectByCode(_unitcode);
+    if (data['data'] != null) {
+      setState(() {
+        var domain = data['data']['domain'].split('-');
+        unitDomain = 'https://api-${domain[1]}';
+        unitCode = data['data']['code'];
+      });
+      print('unitDomain: $unitDomain  unitCode:  $unitCode');
+    } else {
+      Message.show("单位识别码错误，请重新输入");
+      setState(() {
+        unitDomain = '';
+        unitCode = '';
+      });
+    }
+  }
+
   // 获取验证码
   getCode() async {
-    var data = await loginApi.getCode(_username, serial);
+    var data = await loginApi.getRegisterCode(unitDomain, _username, serial);
     print('data   $data');
     // json.decoder(data);
     if (data['errorCode'] == 20201) {
       userCheck();
       return;
+    } else if (data['errorCode'] != 0) {
+      Message.show(data['message']);
+      // countDown();
     } else {
       countDown();
     }
   }
 
   userCheck() async {
-    var data = await loginApi.preCheck(_username);
+    var data = await loginApi.registerPreCheck(unitDomain, _username);
     if (data['errorCode'] == 20200) {
       serial = data['data']['serial'];
       showCaptchaPopup();
     } else {
+      print('datadata $data');
       // var checkData = await loginApi.check(_username, serial);
     }
   }
 
   // 图片验证
   showCaptchaPopup() async {
-    var images = await loginApi.getImage(serial, '');
+    var images = await loginApi.getImage(serial, unitDomain);
     setState(() {
       imgList = {
         'top': images['data']['y'],
@@ -127,21 +143,24 @@ class _RegFromState extends State<RegFrom> {
     });
   }
 
-  // 登录
+  // 注册
   onSubmit() async {
-    var data = await loginApi.login(_username, _code, serial);
-
-    if (data['errorCode'] == 20201) {
-      userCheck();
-      return;
+    var data = await loginApi.getRegisterUnitId(unitDomain, _unitcode);
+    if (data['errorCode'] == 0) {
+      var todo = await loginApi.register(
+          unitDomain, _username, _username, _code, data['data']['id'], serial);
+      if (todo['errorCode'] == 20201) {
+        userCheck();
+        return;
+      } else if (todo['errorCode'] != 0) {
+        Message.show(todo['message']);
+        return;
+      }
+      Message.show('注册已提交，正在审核中！');
+      Future.delayed(const Duration(milliseconds: 500)).then((e) {
+        widget.change('login');
+      });
     }
-    if (data['errorCode'] != 0) {
-      Message.show(data['message']);
-      return;
-    }
-    Future.delayed(Duration.zero).then((e) {
-      Navigator.of(context).pushReplacementNamed('/index');
-    });
   }
 
   @override
@@ -180,7 +199,7 @@ class _RegFromState extends State<RegFrom> {
               // 设置圆角
               shape: MaterialStateProperty.all(const StadiumBorder(
                   side: BorderSide(style: BorderStyle.none)))),
-          child: const Text('登录',
+          child: const Text('注册',
               style: TextStyle(
                   color: Color.fromARGB(255, 255, 255, 255), fontSize: 18)),
           onPressed: () {
@@ -242,22 +261,9 @@ class _RegFromState extends State<RegFrom> {
                   }
                 },
                 onChanged: (value) {
-                  if (phoneReg.hasMatch(value)) {
-                    getUserUnit(value);
-                    print('输入正确的手机号');
-                  }
-                  if (unitMethod.isNotEmpty) {
-                    Future.delayed(const Duration(milliseconds: 200)).then((e) {
-                      setState(() {
-                        unitMethod = [];
-                        unitText = '';
-                      });
-                    });
-                  }
                   setState(() {
                     _username = value;
                   });
-                  print(phoneReg.hasMatch(value));
                 },
                 onSaved: (v) => _username = v!,
               )),
@@ -268,7 +274,7 @@ class _RegFromState extends State<RegFrom> {
     return Container(
         width: 320,
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.only(top: 4, bottom: 4),
         decoration: BoxDecoration(
           color: const Color.fromARGB(245, 245, 245, 245),
           borderRadius: const BorderRadius.all(Radius.circular(25.0)),
@@ -285,52 +291,40 @@ class _RegFromState extends State<RegFrom> {
           ),
           Expanded(
             flex: 4,
-            child: SizedBox(
-                height: 40.0,
-                width: 100,
-                // color: Colors.green,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: InkWell(
-                    onTap: () {
-                      print('object');
-                      if (unitMethod.isNotEmpty) {
-                        showBottomSheet();
-                      } else {
-                        Message.show('未获取到单位信息');
-                      }
-                    },
-                    child: unitText == ''
-                        ? const Text('请输入单位识别码',
-                            style: TextStyle(
-                              color: Color.fromARGB(152, 152, 152, 152),
-                              fontSize: 18,
-                              height: 1.2,
-                              fontFamily: "Courier",
-                            ))
-                        : Text(unitText,
-                            style: const TextStyle(
-                              color: Color.fromARGB(151, 0, 0, 0),
-                              fontSize: 18,
-                              height: 1.2,
-                              fontFamily: "Courier",
-                            )),
-                  ),
-                )),
-          ),
-          const Expanded(
-            flex: 1,
-            child: Icon(
-              IconData(0xe633, fontFamily: 'fcm'),
-              color: Color.fromARGB(97, 24, 24, 24),
-              size: 18,
+            child: TextFormField(
+              maxLength: 10,
+              maxLines: 1,
+              decoration: const InputDecoration(
+                  counterText: '',
+                  hintText: "单位识别码",
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none),
+              validator: (v) {
+                if (v!.isEmpty) {
+                  return '请输入单位识别码';
+                } else if (v!.length != 10) {
+                  return '请输入正确单位识别码';
+                } else {
+                  return null;
+                }
+              },
+              onChanged: (value) {
+                if (value!.length == 10) {
+                  changeUnitCode();
+                }
+                setState(() {
+                  _unitcode = value;
+                });
+              },
+              onSaved: (v) => _unitcode = v!,
             ),
-          ),
+          )
         ]));
   }
 
   Widget buildCodeTextField(BuildContext context) {
-    RegExp codeReg = RegExp(r'^[0-9]');
     return Container(
         width: 320,
         margin: const EdgeInsets.only(bottom: 10),
@@ -384,8 +378,10 @@ class _RegFromState extends State<RegFrom> {
             child: GestureDetector(
               child: Text(_countdownTime > 0 ? '$_countdownTime' : '获取验证码'),
               onTap: () {
-                if (_username.isNotEmpty) {
+                if (_username.isNotEmpty && _unitcode.isNotEmpty) {
                   getCode();
+                } else {
+                  Message.show('手机号或单位识别码未输入！');
                 }
               },
             ),
@@ -396,7 +392,7 @@ class _RegFromState extends State<RegFrom> {
   Widget buildRegisterText(context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -405,7 +401,6 @@ class _RegFromState extends State<RegFrom> {
               child: const Text('返回登录',
                   style: TextStyle(color: Color.fromARGB(102, 48, 48, 48))),
               onTap: () {
-                print("点击注册");
                 widget.change('login');
               },
             )

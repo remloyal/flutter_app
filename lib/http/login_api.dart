@@ -58,31 +58,46 @@ class LoginService {
   getProjectByCode(String code) async {
     var result = await Http.request('$appUrl/project/getByCode',
         method: DioMethod.get, params: {'code': code});
-    return result['data'];
+    return isMap(result);
+  }
+
+  getRegisterCode(String url, String username, String serial) async {
+    var result = await Http.request('$url/reg/code',
+        method: DioMethod.get,
+        params: {'username': username, 'serial': serial});
+    return isMap(result);
   }
 
   registerPreCheck(String url, String username) async {
     var result = await Http.request('$url/reg/preCheck/phone',
         method: DioMethod.get, params: {'cellPhone': username});
-    return result['data'];
+    return isMap(result);
   }
 
   registerCheck(String url, String username) async {
     var result = await Http.request('$url/reg/check/phone/registered',
         method: DioMethod.get, params: {'cellPhone': username});
-    return result['data'];
+    return isMap(result);
   }
 
   getRegisterUnitId(String url, String code) async {
     var result = await Http.request('$url/reg/getUnitByCode',
         method: DioMethod.get, params: {'code': code});
-    return result['data'];
+    print('isMap(result) ${isMap(result)}');
+    return isMap(result);
   }
 
-  register(String url, String param) async {
-    var result = await Http.request('$url/reg/register',
-        method: DioMethod.get, params: {'code': param});
-    return result['data'];
+  register(String url, String username, String nickName, String code,
+      String unitId, String serial) async {
+    var result =
+        await Http.request('$url/reg/register', method: DioMethod.get, params: {
+      'username': username,
+      'nickName': nickName,
+      'code': code,
+      'unitId': unitId,
+      'serial': serial
+    });
+    return jsonDecode(result);
   }
 
   // 退出登录
@@ -101,15 +116,18 @@ class LoginService {
   }
 
   getImage(String serial, String? url) async {
-    var result = await Http.request('${apiInfo.baseUrl}/slider/img',
+    print('urlurl  $url');
+    var result = await Http.request('${url ?? "${apiInfo.baseUrl}/"}slider/img',
         method: DioMethod.get, params: {'serial': serial});
-    return jsonDecode(result);
+    return isMap(result);
   }
 
   getValid(String serial, String code, String? url) async {
-    var result = await Http.request('${apiInfo.baseUrl}/slider/valid',
-        method: DioMethod.get, params: {'serial': serial, 'code': code});
-    return jsonDecode(result);
+    var result = await Http.request(
+        '${url ?? "${apiInfo.baseUrl}/"}slider/valid',
+        method: DioMethod.get,
+        params: {'serial': serial, 'code': code});
+    return isMap(result);
   }
 
   settingInfo(data) {
@@ -123,6 +141,14 @@ class LoginService {
     Global.profile.isLogin = true;
     Global.setBaseUrl();
     Global.saveProfile();
-    print('profile  ${Global.profile.apiInfo}');
+  }
+
+  // 判断类型
+  isMap(data) {
+    if (data is Map) {
+      return data;
+    } else {
+      return jsonDecode(data);
+    }
   }
 }

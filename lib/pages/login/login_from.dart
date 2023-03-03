@@ -397,7 +397,7 @@ class _LoginFromState extends State<LoginFrom> {
   Widget buildRegisterText(context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

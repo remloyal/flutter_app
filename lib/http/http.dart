@@ -18,8 +18,10 @@ class Http {
   static Dio dio = Dio();
   static ApiInfo apiInfo = Global.profile.apiInfo;
 
-  static void init() {
+  static init() {
     if (Global.profile.apiInfo.baseUrl.isNotEmpty) {
+      print(
+          'Global.profile.apiInfo.baseUrl.isNotEmpty  ${Global.profile.apiInfo.baseUrl.isNotEmpty}');
       dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
       dio.interceptors.add(InterceptorsWrapper(
           onRequest: _onRequest, onResponse: _onResponse, onError: _onError));
@@ -36,6 +38,7 @@ class Http {
               (X509Certificate cert, String host, int port) => true;
         };
       }
+      print('dio.options.baseUrl  ${dio.options.baseUrl}');
     }
   }
 
@@ -46,7 +49,7 @@ class Http {
     options.headers['user-agent'] =
         "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
     options.headers['ticket'] = Global.profile.apiInfo.ticket;
-    print(options);
+    print('请求参数options $options');
     handler.next(options);
     // super.onRequest(options, handler);
   }
