@@ -117,14 +117,18 @@ class LoginService {
 
   getImage(String serial, String? url) async {
     print('urlurl  $url');
-    var result = await Http.request('${url ?? apiInfo.baseUrl}/slider/img',
-        method: DioMethod.get, params: {'serial': serial});
+    var result = await Http.request(
+        url != '' ? '$url/slider/img' : '${apiInfo.baseUrl}/slider/img',
+        method: DioMethod.get,
+        params: {'serial': serial});
     return isMap(result);
   }
 
   getValid(String serial, String code, String? url) async {
-    var result = await Http.request('${url ?? apiInfo.baseUrl}/slider/valid',
-        method: DioMethod.get, params: {'serial': serial, 'code': code});
+    var result = await Http.request(
+        url != '' ? '$url/slider/valid' : '${apiInfo.baseUrl}/slider/valid',
+        method: DioMethod.get,
+        params: {'serial': serial, 'code': code});
     return isMap(result);
   }
 

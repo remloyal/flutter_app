@@ -106,10 +106,12 @@ class _LoginFromState extends State<LoginFrom> {
   userCheck() async {
     var data = await loginApi.preCheck(_username);
     if (data['errorCode'] == 20200) {
-      serial = data['data']['serial'];
-      showCaptchaPopup();
+      setState(() {
+        serial = data['data']['serial'];
+        showCaptchaPopup();
+      });
     } else {
-      // var checkData = await loginApi.check(_username, serial);
+      await loginApi.check(_username, serial);
     }
   }
 
@@ -141,7 +143,7 @@ class _LoginFromState extends State<LoginFrom> {
     }
     await loginApi.settingInfo(data['data']);
     Future.delayed(Duration.zero).then((e) {
-      Navigator.of(context).pushReplacementNamed('/index');
+      Navigator.of(context).pushReplacementNamed('index');
     });
   }
 
