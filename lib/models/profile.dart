@@ -1,10 +1,13 @@
 import 'package:fire_control_app/models/api_info.dart';
-// import 'package:fire_control_app/common/global.dart';
 
 /// 全局配置实体
 class Profile {
+
   // 是否登录
   bool isLogin = false;
+
+  // 是否阅读过隐私策略
+  bool isAgree = true;
 
   // 登录的用户id
   int userId = 1915;
@@ -17,10 +20,11 @@ class Profile {
   Profile.fromJson(Map<String, dynamic> json)
       : isLogin = json['isLogin'],
         userId = json['userId'],
+        isAgree = json['isAgree'],
         apiInfo = ApiInfo.fromJson(json['apiInfo']);
 
   Map<String, dynamic> toJson() =>
-      {'isLogin': isLogin, 'userId': userId, 'apiInfo': apiInfo.toJson()};
+      {'isLogin': isLogin, 'userId': userId, 'isAgree': isAgree, 'apiInfo': apiInfo.toJson()};
 
   init(String appDomain) {
     var domain = appDomain.split('-');

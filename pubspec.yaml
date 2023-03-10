@@ -2,7 +2,7 @@ name: fire_control_app
 description: 智慧消防移动端
 publish_to: 'none'
 
-version: 2.0.0
+version: 2.0.0+4
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
@@ -20,6 +20,10 @@ dependencies:
   shared_preferences: ^2.0.17
   provider: ^6.0.5
   fluttertoast: ^8.2.1
+  umeng_push_sdk: ^2.0.0
+  stomp_dart_client: ^0.4.4
+  logger: ^1.2.2
+  package_info_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:

@@ -74,7 +74,7 @@ class _RouteListState extends State<RouteList> {
             onRefresh: _onRefresh,
             child: ListView.builder(
               itemBuilder: (c, i) => _RouteItem(route: _items[i]),
-              itemExtent: 100.0,
+              shrinkWrap: true,
               itemCount: _items.length,
             ),
           ))
@@ -122,7 +122,7 @@ class _RouteItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: Padding(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(10),
             child: Column(children: [
               Row(children: [
                 Container(
@@ -137,7 +137,52 @@ class _RouteItem extends StatelessWidget {
                 OutlinedButton(onPressed: () {}, child: Text("可领取"))
               ]),
               Divider(),
-              Expanded(child: SingleItem(name: "单位名称", content: Text(route.unitName)), flex: 1,)
+              SingleItem(name: "单位名称", content: Text(route.unitName)),
+              Row(children: [
+                Expanded(
+                  child:
+                      SingleItem(name: "巡检类型", content: Text(route.type.desc)),
+                  flex: 1,
+                ),
+                Expanded(
+                  child: SingleItem(
+                      name: "巡检限时",
+                      content: Text(
+                          "${route.limitedTime != null ? '${route.limitedTime}分钟' : '无'}")),
+                  flex: 1,
+                ),
+              ]),
+              Row(children: [
+                Expanded(
+                  child:
+                      SingleItem(name: "巡检方式", content: Text(route.way.desc)),
+                  flex: 1,
+                ),
+                Expanded(
+                  child: SingleItem(
+                      name: "节点数量", content: Text(route.nodeCount.toString())),
+                  flex: 1,
+                ),
+              ]),
+              Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey),
+                    clipBehavior: Clip.hardEdge,
+                    height: 30,
+                    child: Row(children: [
+                      Expanded(
+                          child: Container(
+                              color: Colors.white10,
+                              child: Center(child: Text("今日概况"))),
+                          flex: 1),
+                      Expanded(child: Center(child: Text("额定")), flex: 1),
+                      Expanded(child: Center(child: Text("额定")), flex: 1),
+                      Expanded(child: Center(child: Text("额定")), flex: 1)
+                    ])),
+              )
             ])));
   }
 }
@@ -150,15 +195,18 @@ class SingleItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 30, child: Row(children: [
-      Text(
-        name,
-        style: TextStyle(color: Colors.grey),
-      ),
-      Expanded(
-        child: Padding(padding: EdgeInsets.only(left: 10), child: content),
-        flex: 1,
-      )
-    ]),);
+    return Padding(
+      padding: EdgeInsets.only(bottom: 3),
+      child: Row(children: [
+        Text(
+          name,
+          style: TextStyle(color: Colors.grey),
+        ),
+        Expanded(
+          child: Padding(padding: EdgeInsets.only(left: 10), child: content),
+          flex: 1,
+        )
+      ]),
+    );
   }
 }

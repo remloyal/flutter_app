@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/profile.dart';
 import 'package:fire_control_app/models/unit.dart';
+import 'package:fire_control_app/notification/push.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 全局变量及配置类，配置采用本地存储
@@ -11,6 +13,9 @@ class Global {
   static late SharedPreferences _prefs;
 
   static Profile profile = Profile();
+
+  // 包信息
+  static late PackageInfo packageInfo;
 
   // 单位列表
   static List<Unit> units = [];
@@ -24,6 +29,7 @@ class Global {
   //初始化全局信息，会在APP启动时执行
   static Future init() async {
     WidgetsFlutterBinding.ensureInitialized();
+    packageInfo = await PackageInfo.fromPlatform();
     _prefs = await SharedPreferences.getInstance();
 
     String? cacheProfile = _prefs.getString(_profileKey);
@@ -36,6 +42,10 @@ class Global {
     } else {}
 
     Http.init();
+
+    Push.initPush();
+
+    Push.initWebSocket();
   }
 
   static setBaseUrl() {

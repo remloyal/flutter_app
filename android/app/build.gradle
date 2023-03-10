@@ -35,21 +35,60 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "ltd.zhxf.fire_control_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        applicationId "ltd.zhxf.jsca.xf"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+//        ndk {
+//            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', "x86"
+//        }
+
+        manifestPlaceholders = [
+                UMENG_APPKEY: '5eb65f490cafb2291f000079',
+                UMENG_MESSAGE_SECRET: '90166fa00794f040e690ce6211dd04c3',
+                UMENG_CHANNEL: 'wxsk',
+
+                HUAWEI_APP_ID: '107099991',
+
+                // 未设置
+                HONOR_APP_ID: '220671410',
+
+                XIAOMI_APP_ID: '2882303761520186921',
+                XIAOMI_APP_KEY: '5432018644921',
+
+                // 未设置
+                OPPO_APP_KEY: 'c39dd561327e484bb1228b5459063022',
+                OPPO_APP_SECRET: 'a915f817673a45f08065a2236dfe85a7',
+
+                // 未设置
+                VIVO_APP_ID: '17979',
+                VIVO_APP_KEY: '1b5ce9f6-8304-4afc-b739-0e07fb22775e',
+
+                // 未设置
+                MEIZU_APP_ID: '116090',
+                MEIZU_APP_KEY: '9413f9968d654df092afecf4d3782391',
+        ]
+    }
+
+    signingConfigs {
+        config {
+            keyAlias 'jscaxf'
+            keyPassword '123456'
+            storeFile file('jscaxf.keystore')
+            storePassword '123456'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.config
         }
     }
 }

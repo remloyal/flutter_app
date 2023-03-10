@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:fire_control_app/common/constants.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/models/api_info.dart';
 
@@ -46,8 +48,7 @@ class Http {
   static void _onRequest(
       RequestOptions options, RequestInterceptorHandler handler) {
     options.headers['token'] = Global.profile.apiInfo.token;
-    options.headers['user-agent'] =
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
+    options.headers['user-agent'] = Constants.userAgent;
     options.headers['ticket'] = Global.profile.apiInfo.ticket;
     print('请求参数options $options');
     handler.next(options);
@@ -58,6 +59,15 @@ class Http {
   static void _onResponse(
       Response response, ResponseInterceptorHandler handler) async {
     // 请求成功是对数据做基本处理
+    var data = response.data;
+    if (response.data is String) {
+      data = jsonDecode(response.data);
+    }
+
+    if (data["code"] == 20013) {
+      print(data["message"]);
+      return;
+    }
     handler.next(response);
   }
 

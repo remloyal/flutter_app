@@ -122,7 +122,7 @@ class _IndexPageState extends State<IndexPage> {
   Widget _buildUnit() {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, FireControlRouter.unitSelect);
+        Navigator.pushNamed(context, RouterUtil.unitSelect);
       },
       child: Container(
         height: 40,

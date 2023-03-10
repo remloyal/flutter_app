@@ -3,7 +3,6 @@ import 'package:fire_control_app/common/router.dart';
 import 'package:fire_control_app/states/unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -39,10 +38,8 @@ class FireControlApp extends StatelessWidget {
             Locale('en', 'US'), // 美国英语
             Locale('zh', 'CN'), // 中文简体
           ],
-          // home: const IndexPage(),
-          routes: FireControlRouter.getRoutes(),
-          initialRoute: '/login',
-          builder: FToastBuilder(),
+          initialRoute: Global.profile.isLogin ? RouterUtil.index : RouterUtil.login,
+          routes: RouterUtil.routes,
         ),
       ),
     );

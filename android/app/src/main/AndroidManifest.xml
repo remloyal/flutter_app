@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ltd.zhxf.fire_control_app">
+    package="ltd.zhxf.jsca.xf">
    <application
-        android:label="fire_control_app"
-        android:name="${applicationName}"
+        android:label="智慧消防"
+        android:name=".MainApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

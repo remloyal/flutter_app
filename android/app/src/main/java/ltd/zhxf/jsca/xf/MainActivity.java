@@ -1,4 +1,4 @@
-package ltd.zhxf.fire_control_app;
+package ltd.zhxf.jsca.xf;
 
 import io.flutter.embedding.android.FlutterActivity;
 

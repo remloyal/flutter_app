@@ -6,9 +6,9 @@ class ApiInfo {
   late String appDomain = '';
 
   // 登录的token
-  String token = "2a75c6fd483822569b4d75941f9d9ccf";
+  String token = "286be7edeffe09a618944413c4ffbadd";
   // 登录的ticket
-  String ticket = "78a5ac1bdc6448168a97dfce0d40fa47";
+  String ticket = "14097eeba8854646a12b088253bae89a";
 
   String userId = "1915";
 
