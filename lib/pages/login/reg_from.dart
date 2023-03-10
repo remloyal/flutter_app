@@ -92,6 +92,7 @@ class _RegFromState extends State<RegFrom> {
         unitCode = data['data']['code'];
       });
       print('unitDomain: $unitDomain  unitCode:  $unitCode');
+      Message.show('获取单位成功');
     } else {
       Message.show("单位识别码错误，请重新输入");
       setState(() {
@@ -157,7 +158,7 @@ class _RegFromState extends State<RegFrom> {
         return;
       }
       Message.show('注册已提交，正在审核中！');
-      Future.delayed(const Duration(milliseconds: 500)).then((e) {
+      Future.delayed(const Duration(milliseconds: 1500)).then((e) {
         widget.change('login');
       });
     }
@@ -311,12 +312,12 @@ class _RegFromState extends State<RegFrom> {
                 }
               },
               onChanged: (value) {
-                if (value!.length == 10) {
-                  changeUnitCode();
-                }
                 setState(() {
                   _unitcode = value;
                 });
+                if (value!.length == 10) {
+                  changeUnitCode();
+                }
               },
               onSaved: (v) => _unitcode = v!,
             ),
@@ -370,7 +371,9 @@ class _RegFromState extends State<RegFrom> {
                   return null;
                 },
                 onChanged: (value) {
-                  _code = value;
+                  setState(() {
+                    _code = value;
+                  });
                 },
               )),
           Expanded(

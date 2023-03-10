@@ -4,7 +4,7 @@ import 'package:fire_control_app/models/api_info.dart';
 /// 全局配置实体
 class Profile {
   // 是否登录
-  bool isLogin = true;
+  bool isLogin = false;
 
   // 登录的用户id
   int userId = 1915;

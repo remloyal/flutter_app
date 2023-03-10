@@ -88,7 +88,7 @@ class LoginService {
   }
 
   register(String url, String username, String nickName, String code,
-      String unitId, String serial) async {
+      int unitId, String serial) async {
     var result =
         await Http.request('$url/reg/register', method: DioMethod.get, params: {
       'username': username,
@@ -117,16 +117,14 @@ class LoginService {
 
   getImage(String serial, String? url) async {
     print('urlurl  $url');
-    var result = await Http.request('${url ?? "${apiInfo.baseUrl}/"}slider/img',
+    var result = await Http.request('${url ?? apiInfo.baseUrl}/slider/img',
         method: DioMethod.get, params: {'serial': serial});
     return isMap(result);
   }
 
   getValid(String serial, String code, String? url) async {
-    var result = await Http.request(
-        '${url ?? "${apiInfo.baseUrl}/"}slider/valid',
-        method: DioMethod.get,
-        params: {'serial': serial, 'code': code});
+    var result = await Http.request('${url ?? apiInfo.baseUrl}/slider/valid',
+        method: DioMethod.get, params: {'serial': serial, 'code': code});
     return isMap(result);
   }
 
@@ -139,6 +137,19 @@ class LoginService {
     Global.profile.apiInfo.pronunciation = true;
     Global.profile.apiInfo.shock = true;
     Global.profile.isLogin = true;
+    Global.setBaseUrl();
+    Global.saveProfile();
+  }
+
+  clearInfo(data) {
+    Global.profile.apiInfo.ticket = '';
+    Global.profile.apiInfo.userId = '';
+    Global.profile.apiInfo.userUnit = '';
+    Global.profile.apiInfo.appKey = '';
+    Global.profile.apiInfo.voice = true;
+    Global.profile.apiInfo.pronunciation = true;
+    Global.profile.apiInfo.shock = true;
+    Global.profile.isLogin = false;
     Global.setBaseUrl();
     Global.saveProfile();
   }

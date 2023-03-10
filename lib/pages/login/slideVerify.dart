@@ -63,6 +63,9 @@ class _SlideVerifyState extends State<SlideVerify>
   double sliderDistance = 0;
   double initial = 0.0;
 
+  // 正常 normal 成功 success  失败  fail
+  late String status = 'normal';
+
   late Uint8List imgMainPrice;
   late Uint8List imgBlockPrice;
   @override
@@ -220,15 +223,23 @@ class _SlideVerifyState extends State<SlideVerify>
                         Container(
                           height: 100,
                           width: sliderStartX,
-                          decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 26, 145, 249),
+                          decoration: BoxDecoration(
+                            color: status == 'normal'
+                                ? const Color.fromARGB(255, 26, 145, 249)
+                                : status == 'success'
+                                    ? const Color.fromARGB(255, 119, 250, 102)
+                                    : const Color.fromARGB(255, 255, 94, 94),
                           ),
                         ),
                         Container(
                           height: 100,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 26, 145, 249),
+                            color: status == 'normal'
+                                ? const Color.fromARGB(255, 26, 145, 249)
+                                : status == 'success'
+                                    ? const Color.fromARGB(255, 119, 250, 102)
+                                    : const Color.fromARGB(255, 255, 94, 94),
                             border: Border.all(
                               color: const Color.fromARGB(255, 255, 255, 255),
                               width: 0.0,
@@ -249,21 +260,28 @@ class _SlideVerifyState extends State<SlideVerify>
     var moveX = sliderStartX / (imgWidth / width);
     var start = await widget.check(moveX.toInt());
     if (!start) {
+      setState(() {
+        status = 'fail';
+      });
       Message.show('验证码错误！');
       var imgList = await widget.refresh();
       imgMainPrice = const Base64Decoder().convert(imgList['imgMain']);
       imgBlockPrice = const Base64Decoder().convert(imgList['imgBlock']);
-      Future.delayed(const Duration(milliseconds: 500)).then((e) {
+      Future.delayed(const Duration(milliseconds: 1000)).then((e) {
         setState(() {
           imgTop = imgList['top'];
           imgMainPrice = const Base64Decoder().convert(imgList['imgMain']);
           imgBlockPrice = const Base64Decoder().convert(imgList['imgBlock']);
           sliderStartX = 0;
+          status = 'normal';
         });
       });
     } else {
+      setState(() {
+        status = 'success';
+      });
       Message.show('验证成功！');
-      Future.delayed(const Duration(milliseconds: 500)).then((e) {
+      Future.delayed(const Duration(milliseconds: 1000)).then((e) {
         widget.success();
       });
     }
