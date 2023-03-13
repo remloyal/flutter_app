@@ -64,7 +64,9 @@ class _IndexPageState extends State<IndexPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        backgroundColor: _selectedIndex == 4 ? Colors.blue : null,
+        backgroundColor: _selectedIndex == 4
+            ? FireControlColor.barMineColor
+            : FireControlColor.barColor,
         title: _buildTitle(_selectedIndex != 4),
       ),
       body: PageView(
@@ -76,7 +78,7 @@ class _IndexPageState extends State<IndexPage> {
         items: bottomNavigationBarItems,
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        fixedColor: Colors.pink,
+        fixedColor: FireControlColor.fixedColor,
         onTap: (index) {
           setState(() {
             _pageController.jumpToPage(index);
@@ -110,12 +112,16 @@ class _IndexPageState extends State<IndexPage> {
     return Container(
       height: 40,
       width: 40,
-      margin: EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: GestureDetector(
           onTap: onPressed,
-          child: Icon(iconData, color: FireControlColor.base3)),
+          child: Icon(
+            iconData,
+            color: FireControlColor.base3,
+            size: 18,
+          )),
     );
   }
 
@@ -126,26 +132,35 @@ class _IndexPageState extends State<IndexPage> {
       },
       child: Container(
         height: 40,
-        padding: EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
+        padding: const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(20)),
         child: Row(
           children: [
-            Icon(FcmIcon.unit, color: FireControlColor.base3),
+            const Icon(
+              FcmIcon.unit,
+              color: FireControlColor.base3,
+              size: 18,
+            ),
             Expanded(
                 flex: 1,
                 child: Container(
-                  padding:
-                      EdgeInsets.only(left: 5, top: 0, right: 5, bottom: 0),
+                  padding: const EdgeInsets.only(
+                      left: 5, top: 0, right: 5, bottom: 0),
                   child: Consumer<UnitModel>(
                       builder: (BuildContext context, unitModel, _) => Text(
                             unitModel.unit != null
                                 ? unitModel.unit!.name
                                 : "全部单位(${Global.units.length})",
-                            style: TextStyle(color: FireControlColor.base3),
+                            style: const TextStyle(
+                                color: FireControlColor.base3, fontSize: 18),
                           )),
                 )),
-            Icon(FcmIcon.right_arrow, color: FireControlColor.base3)
+            const Icon(
+              FcmIcon.right_arrow,
+              color: FireControlColor.base3,
+              size: 18,
+            )
           ],
         ),
       ),

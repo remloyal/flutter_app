@@ -1,8 +1,5 @@
-import 'package:fire_control_app/common/global.dart';
-
 /// 接口相关配置实体
 class ApiInfo {
-  final Global global = Global();
   late String appDomain = '';
 
   // 登录的token
@@ -25,6 +22,9 @@ class ApiInfo {
   bool pronunciation = true;
   bool shock = true;
 
+  // 用户信息
+  Map user = {};
+
   ApiInfo();
 
   ApiInfo.fromJson(Map<String, dynamic> json)
@@ -35,9 +35,10 @@ class ApiInfo {
         imgUrl = json['imgUrl'],
         userId = json['userId'],
         userUnit = json['userUnit'],
-        voice = json['voice'],
-        pronunciation = json['pronunciation'],
-        shock = json['shock'];
+        voice = json['voice'] ?? false,
+        pronunciation = json['pronunciation'] ?? false,
+        shock = json['shock'] ?? false,
+        user = json['shock'] ?? {};
 
   Map<String, String> toJson() => {
         'token': token,

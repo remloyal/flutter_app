@@ -10,6 +10,8 @@ void main() {
   Global.init().then((value) => runApp(const FireControlApp()));
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class FireControlApp extends StatelessWidget {
   const FireControlApp({super.key});
 
@@ -38,8 +40,10 @@ class FireControlApp extends StatelessWidget {
             Locale('en', 'US'), // 美国英语
             Locale('zh', 'CN'), // 中文简体
           ],
-          initialRoute: Global.profile.isLogin ? RouterUtil.index : RouterUtil.login,
+          initialRoute:
+              Global.profile.isLogin ? RouterUtil.index : RouterUtil.login,
           routes: RouterUtil.routes,
+          navigatorKey: navigatorKey,
         ),
       ),
     );

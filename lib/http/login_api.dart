@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:fire_control_app/http/Http.dart';
 import 'package:fire_control_app/common/global.dart';
+import 'package:fire_control_app/main.dart';
 
 class LoginService {
   final appUrl = 'https://api.zhxf.ltd';
@@ -116,7 +117,6 @@ class LoginService {
   }
 
   getImage(String serial, String? url) async {
-    print('urlurl  $url');
     var result = await Http.request(
         url != '' ? '$url/slider/img' : '${apiInfo.baseUrl}/slider/img',
         method: DioMethod.get,
@@ -133,7 +133,10 @@ class LoginService {
   }
 
   settingInfo(data) {
+    print('用户登录信息： $data');
     Global.profile.apiInfo.ticket = data['ticket'];
+    Global.profile.apiInfo.token = data['token'];
+    Global.profile.apiInfo.user = data['user'];
     Global.profile.apiInfo.userId = data['user']['id'].toString();
     Global.profile.apiInfo.userUnit = data['user']['unitId'].toString();
     Global.profile.apiInfo.appKey = data['appKey'];
@@ -143,10 +146,15 @@ class LoginService {
     Global.profile.isLogin = true;
     Global.setBaseUrl();
     Global.saveProfile();
+    print('保存用户登录信息： ${Global.profile.apiInfo}');
   }
 
-  clearInfo(data) {
+  // 退出登录
+  static clearInfo() {
+    navigatorKey.currentState?.pushReplacementNamed('login');
     Global.profile.apiInfo.ticket = '';
+    Global.profile.apiInfo.token = '';
+    Global.profile.apiInfo.user = {};
     Global.profile.apiInfo.userId = '';
     Global.profile.apiInfo.userUnit = '';
     Global.profile.apiInfo.appKey = '';

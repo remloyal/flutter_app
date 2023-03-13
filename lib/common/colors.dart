@@ -1,10 +1,14 @@
-
 import 'package:flutter/material.dart';
 
 class FireControlColor {
-
   // 基础颜色
   static const Color baseColor = Color(0xffe53935);
+  static const Color barColor = Color(0xffe53935);
+  static const Color fixedColor = Color(0xffe53935);
+  static const Color barMineColor = Color(0xffffebee);
+  static const Color bgColor = Color(0xffF5F5F5);
+  static const Color textColor = Color.fromARGB(255, 255, 255, 255);
+
   // 基础字体颜色
   static const Color base3 = Color(0xff030303);
 

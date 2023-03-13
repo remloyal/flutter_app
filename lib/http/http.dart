@@ -5,6 +5,8 @@ import 'package:dio/io.dart';
 import 'package:fire_control_app/common/constants.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/models/api_info.dart';
+import 'package:fire_control_app/http/login_api.dart';
+import 'package:fire_control_app/utils/toast.dart';
 
 enum DioMethod {
   get,
@@ -25,6 +27,7 @@ class Http {
       print(
           'Global.profile.apiInfo.baseUrl.isNotEmpty  ${Global.profile.apiInfo.baseUrl.isNotEmpty}');
       dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
+      // dio.options.contentType = "application/json";
       dio.interceptors.add(InterceptorsWrapper(
           onRequest: _onRequest, onResponse: _onResponse, onError: _onError));
       // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
@@ -48,9 +51,13 @@ class Http {
   static void _onRequest(
       RequestOptions options, RequestInterceptorHandler handler) {
     options.headers['token'] = Global.profile.apiInfo.token;
-    options.headers['user-agent'] = Constants.userAgent;
+    options.headers['User-Agent'] = Constants.userAgent;
     options.headers['ticket'] = Global.profile.apiInfo.ticket;
-    print('请求参数options $options');
+
+    // options.extra['token'] = Global.profile.apiInfo.token;
+    // options.extra['user-agent'] = Constants.userAgent;
+    // options.extra['ticket'] = Global.profile.apiInfo.ticket;
+
     handler.next(options);
     // super.onRequest(options, handler);
   }
@@ -66,7 +73,13 @@ class Http {
 
     if (data["code"] == 20013) {
       print(data["message"]);
+      Message.error(data["message"]);
+      // LoginService.clearInfo();
       return;
+    }
+
+    if (data["message"]) {
+      Message.error(data["message"]);
     }
     handler.next(response);
   }
