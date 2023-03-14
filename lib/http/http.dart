@@ -24,7 +24,7 @@ class Http {
 
   static init() {
     if (Global.profile.apiInfo.baseUrl.isNotEmpty) {
-      // dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
+      dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
       // dio.options.contentType = "application/json";
     }
 
@@ -51,9 +51,11 @@ class Http {
   /// 请求拦截器
   static void _onRequest(
       RequestOptions options, RequestInterceptorHandler handler) {
-    options.headers['token'] = Global.profile.apiInfo.token;
     options.headers['User-Agent'] = Constants.userAgent;
-    options.headers['ticket'] = Global.profile.apiInfo.ticket;
+    if (Global.profile.isLogin) {
+      options.headers['token'] = Global.profile.apiInfo.token;
+      options.headers['ticket'] = Global.profile.apiInfo.ticket;
+    }
 
     handler.next(options);
   }
@@ -67,13 +69,13 @@ class Http {
       data = jsonDecode(response.data);
     }
 
-    if (data['code'] != 200) {
-      print(data["message"]);
-      Message.error(data["message"]);
-      if (data["code"] == 20013) {
-        LoginService.clearInfo();
-        return;
-      }
+    if (data?['code'] != 200 || response.statusCode != 200) {
+      print(data?["message"]);
+      data?["message"] != null ? Message.error(data?["message"]) : '';
+    }
+    if (data["code"] == 20013) {
+      LoginService.clearInfo();
+      return;
     }
 
     handler.next(response);

@@ -6,7 +6,8 @@ class FireControlColor {
   static const Color barColor = Color(0xffe53935);
   static const Color fixedColor = Color(0xffe53935);
   static const Color barMineColor = Color(0xffffebee);
-  static const Color bgColor = Color(0xffF5F5F5);
+  static const Color bgColor = Color.fromARGB(255, 236, 236, 236);
+  static const Color cardColor = Color(0xffFFFFFF);
   static const Color textColor = Color.fromARGB(255, 255, 255, 255);
 
   // 基础字体颜色

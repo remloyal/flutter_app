@@ -69,10 +69,13 @@ class _IndexPageState extends State<IndexPage> {
             : FireControlColor.barColor,
         title: _buildTitle(_selectedIndex != 4),
       ),
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        children: const [Home(), Inspection(), Alarm(), Device(), Mine()],
+      body: Container(
+        decoration: const BoxDecoration(color: FireControlColor.bgColor),
+        child: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: _pageController,
+          children: const [Home(), Inspection(), Alarm(), Device(), Mine()],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: bottomNavigationBarItems,

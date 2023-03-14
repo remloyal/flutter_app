@@ -29,22 +29,25 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
                   tabs: tabs.map((e) => Tab(text: e)).toList(),
                   controller: _tabController,
                   isScrollable: true,
-                )
-            ),
+                  labelColor: Colors.red,
+                  // dividerColor: const Color.fromARGB(255, 245, 0, 0),
+                  indicatorColor: Colors.red,
+                  unselectedLabelColor: Color.fromARGB(255, 0, 0, 0),
+                )),
             IconButton(onPressed: () {}, icon: Icon(Icons.warning))
           ],
         ),
         Expanded(
           flex: 1,
-          child: TabBarView( //构建
+          child: TabBarView(
+              //构建
               controller: _tabController,
               children: tabs.map((e) {
                 return Container(
                   alignment: Alignment.center,
                   child: Text(e, textScaleFactor: 5),
                 );
-              }).toList()
-          ),
+              }).toList()),
         )
       ],
     );
@@ -56,5 +59,4 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
     _tabController.dispose();
     super.dispose();
   }
-
 }

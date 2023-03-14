@@ -144,6 +144,7 @@ class LoginService {
     Global.profile.apiInfo.pronunciation = true;
     Global.profile.apiInfo.shock = true;
     Global.profile.isLogin = true;
+    Http.dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
     Global.setBaseUrl();
     Global.saveProfile();
     print('保存用户登录信息： ${Global.profile.apiInfo}');
@@ -162,6 +163,7 @@ class LoginService {
     Global.profile.apiInfo.pronunciation = true;
     Global.profile.apiInfo.shock = true;
     Global.profile.isLogin = false;
+    Http.dio.options.baseUrl = '';
     Global.setBaseUrl();
     Global.saveProfile();
   }
