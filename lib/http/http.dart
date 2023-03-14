@@ -24,26 +24,27 @@ class Http {
 
   static init() {
     if (Global.profile.apiInfo.baseUrl.isNotEmpty) {
-      print(
-          'Global.profile.apiInfo.baseUrl.isNotEmpty  ${Global.profile.apiInfo.baseUrl.isNotEmpty}');
-      dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
+      // dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
       // dio.options.contentType = "application/json";
-      dio.interceptors.add(InterceptorsWrapper(
-          onRequest: _onRequest, onResponse: _onResponse, onError: _onError));
-      // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
-      if (!Global.isRelease) {
-        // ignore: deprecated_member_use
-        (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-            (client) {
+    }
+
+    dio.interceptors.add(InterceptorsWrapper(
+        onRequest: _onRequest, onResponse: _onResponse, onError: _onError));
+
+    // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
+    if (!Global.isRelease) {
+      // 抓包代理设置
+      dio.httpClientAdapter = IOHttpClientAdapter()
+        ..onHttpClientCreate = (HttpClient client) {
           // client.findProxy = (uri) {
+          //   //proxy all request to localhost:8888
           //   return 'PROXY 192.168.1.200:8866';
           // };
           //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
           client.badCertificateCallback =
               (X509Certificate cert, String host, int port) => true;
+          return client;
         };
-      }
-      print('dio.options.baseUrl  ${dio.options.baseUrl}');
     }
   }
 
@@ -54,12 +55,7 @@ class Http {
     options.headers['User-Agent'] = Constants.userAgent;
     options.headers['ticket'] = Global.profile.apiInfo.ticket;
 
-    // options.extra['token'] = Global.profile.apiInfo.token;
-    // options.extra['user-agent'] = Constants.userAgent;
-    // options.extra['ticket'] = Global.profile.apiInfo.ticket;
-
     handler.next(options);
-    // super.onRequest(options, handler);
   }
 
   /// 相应拦截器
@@ -71,16 +67,15 @@ class Http {
       data = jsonDecode(response.data);
     }
 
-    if (data["code"] == 20013) {
+    if (data['code'] != 200) {
       print(data["message"]);
       Message.error(data["message"]);
-      // LoginService.clearInfo();
-      return;
+      if (data["code"] == 20013) {
+        LoginService.clearInfo();
+        return;
+      }
     }
 
-    if (data["message"]) {
-      Message.error(data["message"]);
-    }
     handler.next(response);
   }
 

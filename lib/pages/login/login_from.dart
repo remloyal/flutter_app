@@ -59,8 +59,8 @@ class _LoginFromState extends State<LoginFrom> {
     var images = await loginApi.getImage(serial, '');
     return {
       'top': images['data']['y'],
-      "imgMain": images['data']['img'].replaceAll('\n', ''),
-      "imgBlock": images['data']['mark'].replaceAll('\n', ''),
+      "imgMain": images['data']['img'].replaceAll('\r\n', ''),
+      "imgBlock": images['data']['mark'].replaceAll('\r\n', ''),
     };
   }
 
@@ -121,8 +121,8 @@ class _LoginFromState extends State<LoginFrom> {
     setState(() {
       imgList = {
         'top': images['data']['y'],
-        "imgMain": images['data']['img'].replaceAll('\n', ''),
-        "imgBlock": images['data']['mark'].replaceAll('\n', ''),
+        "imgMain": images['data']['img'].replaceAll('\r\n', ''),
+        "imgBlock": images['data']['mark'].replaceAll('\r\n', ''),
       };
       Future.delayed(const Duration(milliseconds: 200)).then((e) {
         showCaptcha();

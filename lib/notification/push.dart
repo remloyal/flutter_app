@@ -16,7 +16,7 @@ import 'package:umeng_push_sdk/umeng_push_sdk.dart';
 class Push {
   static void initPush() async {
     if (!Global.isRelease) {
-      UmengPushSdk.setLogEnable(true);
+      // UmengPushSdk.setLogEnable(true);
     }
 
     final Profile profile = Global.profile;
