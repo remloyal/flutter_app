@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:fire_control_app/common/colors.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
+import '../../states/unit_model.dart';
+import 'package:fire_control_app/models/home.dart';
+import 'package:fire_control_app/http/home_api.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -21,59 +25,93 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  final Params _alarmStatsParam = Params();
+  final Params _inspectStatsParam = Params();
+  final DeviceParams _deviceStatsParam = DeviceParams();
+  late AlarmStats _alarmStats =
+      AlarmStats(alarm: 0, danger: 0, trouble: 0, fault: 0, fire: 0, risk: 0);
+
+  late InspectStats _inspectStats = InspectStats(
+      completionRate: '0',
+      ratedTasks: 0,
+      completionTasks: 0,
+      inspectNumber: 0,
+      inspectRoutes: 0);
+
+  late DeviceStats _deviceStats = DeviceStats(
+      total: 0,
+      onlineRate: '0',
+      online: 0,
+      offline: 0,
+      abnormalRate: '0',
+      normal: 0,
+      abnormal: 0);
+
+  final List date = [1, 7, 30];
   void _onRefresh() async {
-    // monitor network fetch
     await Future.delayed(const Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
-    items = [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-    ];
+    init();
+    print('刷新数据');
     _refreshController.refreshCompleted();
-    if (mounted) {
-      setState(() {});
-    }
   }
 
-  void _onLoading() async {
-    // monitor network fetch
-    await Future.delayed(const Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    items.add((items.length + 1).toString());
-    if (mounted) {
-      setState(() {});
-    }
-    _refreshController.loadComplete();
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    alarmInit();
+    inspectInit();
+    deviceInit();
+  }
+
+  void alarmInit() async {
+    var data = await HomeApi.useAlarmStats(_alarmStatsParam);
+    setState(() {
+      _alarmStats = data;
+    });
+  }
+
+  void inspectInit() async {
+    var data = await HomeApi.useInspectStats(_inspectStatsParam);
+    print(data.toString());
+    setState(() {
+      _inspectStats = data;
+    });
+  }
+
+  void deviceInit() async {
+    var data = await HomeApi.useDeviceStats(_alarmStatsParam);
+    setState(() {
+      _deviceStats = data;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-        // enablePullUp: true,
-        controller: _refreshController,
-        onRefresh: _onRefresh,
-        // onLoading: _onLoading,
-        child: SingleChildScrollView(
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              head(),
-              alarmStatistics(),
-              patrolStatistics(),
-              deviceStatistics()
-            ],
-          ),
-        ));
+    return Consumer<UnitModel>(
+      builder: (ctx, person, child) => SmartRefresher(
+          // enablePullUp: true,
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                head(),
+                alarmStatistics(),
+                patrolStatistics(),
+                deviceStatistics()
+              ],
+            ),
+          )),
+    );
   }
 
   onTop() {
@@ -125,15 +163,15 @@ class _HomePageState extends State<HomePage> {
                       InkWell(
                         onTap: data['onTap'],
                         child: Container(
-                          width: 80,
-                          height: 80,
+                          width: 70,
+                          height: 70,
                           margin: const EdgeInsets.only(bottom: 6),
                           decoration: BoxDecoration(
                               color: data['bgColor'],
                               // border:
                               //     Border(left: BorderSide(width: 1, color: Colors.red)),
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(40))),
+                                  const BorderRadius.all(Radius.circular(35))),
                           child: Icon(
                             data['iconData'],
                             color: data['color'],
@@ -149,47 +187,46 @@ class _HomePageState extends State<HomePage> {
 
   // 告警统计
   alarmStatistics() {
-    final Map alarmStats = {'fire': ''};
     final List alarms = [
       {
         'name': '火情',
         'icon': const IconData(0xe66c, fontFamily: 'fcm'),
-        'amount': alarmStats['fire'],
+        'amount': _alarmStats.fire,
         'color': const Color(0xffE53935),
         'type': 'fire',
       },
       {
         'name': '报警',
         'icon': const IconData(0xe6d3, fontFamily: 'fcm'),
-        'amount': alarmStats['alarm'],
+        'amount': _alarmStats.alarm,
         'color': const Color(0xffFD9B88),
         'type': 'alarm',
       },
       {
         'name': '故障',
         'icon': const IconData(0xe612, fontFamily: 'fcm'),
-        'amount': alarmStats['fault'],
+        'amount': _alarmStats.fault,
         'color': const Color(0xffFFB317),
         'type': 'fault',
       },
       {
         'name': '隐患',
         'icon': const IconData(0xe637, fontFamily: 'fcm'),
-        'amount': alarmStats['trouble'],
+        'amount': _alarmStats.trouble,
         'color': const Color(0xffFFB317),
         'type': 'trouble',
       },
       {
         'name': '危险品',
         'icon': const IconData(0xe69d, fontFamily: 'fcm'),
-        'amount': alarmStats['danger'],
+        'amount': _alarmStats.danger,
         'color': const Color(0xffFD9B88),
         'type': 'danger',
       },
       {
         'name': '风险',
         'icon': const IconData(0xe627, fontFamily: 'fcm'),
-        'amount': alarmStats['risk'],
+        'amount': _alarmStats.risk,
         'color': const Color(0xff1994DE),
         'type': 'risk',
       },
@@ -200,7 +237,7 @@ class _HomePageState extends State<HomePage> {
               width: 3,
               height: 20,
               color: FireControlColor.baseColor,
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 0)),
+              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0)),
           const Expanded(
             flex: 1,
             child: Text('告警统计'),
@@ -209,57 +246,149 @@ class _HomePageState extends State<HomePage> {
             names: const ['今日', '本周', '本月'],
             height: 30,
             onTap: (index) {
-              print(index);
-              // if (index == 1) {
-              //   _param.status = 2;
-              // } else {
-              //   _param.status = 1;
-              // }
+              _alarmStatsParam.type = date[index];
+              print(_alarmStatsParam.type);
               // _onRefresh();
+              alarmInit();
             },
           ),
         ]),
-        body: Wrap(
-          spacing: 6, //主轴上子控件的间距
-          runSpacing: 6, //交叉轴上子控件之间的间距
-          runAlignment: WrapAlignment.start,
+        body: Column(
           children: [
-            ...alarms.map((data) {
-              return Container(
-                // height: 50,
-                width: 114,
-                padding: const EdgeInsets.all(10),
-                // margin: const EdgeInsets.all(4),
-                color: const Color(0xffF5F5F5),
-                child: Flex(
-                    direction: Axis.horizontal,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Icon(
-                          data['icon'],
-                          color: data['color'],
-                          size: 34,
-                        ),
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: Column(children: [
-                            Text(
-                              '2',
-                              style: TextStyle(
-                                fontSize: 24,
+            Flex(
+              direction: Axis.horizontal,
+              children: [
+                ...alarms.sublist(0, 3).map((data) {
+                  return Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 5, bottom: 10),
+                        // margin: const EdgeInsets.all(4),
+                        color: const Color(0xffF5F5F5),
+                        child: Flex(
+                            direction: Axis.horizontal,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(
+                                data['icon'],
                                 color: data['color'],
+                                size: 30,
                               ),
-                            ),
-                            Text(data['name']),
-                          ])),
-                    ]),
-              );
-            }).toList()
-          ], //要显示的子控件集合
-        ));
+                              Column(children: [
+                                Text(
+                                  data['amount'].toString(),
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: data['color'],
+                                  ),
+                                ),
+                                Text(
+                                  data['name'],
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    // color: data['color'],
+                                  ),
+                                ),
+                              ])
+                            ]),
+                      ));
+                }).toList()
+              ],
+            ),
+            Flex(
+              direction: Axis.horizontal,
+              children: [
+                ...alarms.sublist(3, 6).map((data) {
+                  return Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(left: 5, right: 5),
+                        // margin: const EdgeInsets.all(4),
+                        color: const Color(0xffF5F5F5),
+                        child: Flex(
+                            direction: Axis.horizontal,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(
+                                data['icon'],
+                                color: data['color'],
+                                size: 30,
+                              ),
+                              Column(children: [
+                                Text(
+                                  data['amount'].toString(),
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: data['color'],
+                                  ),
+                                ),
+                                Text(
+                                  data['name'],
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    // color: data['color'],
+                                  ),
+                                ),
+                              ])
+                            ]),
+                      ));
+                }).toList()
+              ],
+            )
+          ],
+        )
+        // Wrap(
+        //   spacing: 6, //主轴上子控件的间距
+        //   runSpacing: 6, //交叉轴上子控件之间的间距
+        //   runAlignment: WrapAlignment.start,
+        //   children: [
+        //     ...alarms.map((data) {
+        //       return Container(
+        //         // height: 80,
+        //         width: 100,
+        //         padding: const EdgeInsets.all(10),
+        //         // margin: const EdgeInsets.all(4),
+        //         color: const Color(0xffF5F5F5),
+        //         child: Flex(
+        //             direction: Axis.horizontal,
+        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //             children: [
+        //               Icon(
+        //                 data['icon'],
+        //                 color: data['color'],
+        //                 size: 30,
+        //               ),
+        //               Column(children: [
+        //                 Text(
+        //                   '2',
+        //                   textAlign: TextAlign.right,
+        //                   style: TextStyle(
+        //                     fontSize: 20,
+        //                     color: data['color'],
+        //                   ),
+        //                 ),
+        //                 Text(
+        //                   data['name'],
+        //                   textAlign: TextAlign.right,
+        //                   style: const TextStyle(
+        //                     fontSize: 12,
+        //                     // color: data['color'],
+        //                   ),
+        //                 ),
+        //               ])
+        //             ]),
+        //       );
+        //     }).toList()
+        //   ], //要显示的子控件集合
+        // )
+        );
   }
 
   // 巡检统计
@@ -280,6 +409,8 @@ class _HomePageState extends State<HomePage> {
             height: 30,
             onTap: (index) {
               print(index);
+              _inspectStatsParam.type = date[index];
+              inspectInit();
               // if (index == 1) {
               //   _param.status = 2;
               // } else {
@@ -304,12 +435,12 @@ class _HomePageState extends State<HomePage> {
                     // border:
                     //     Border(left: BorderSide(width: 1, color: Colors.red)),
                     borderRadius: BorderRadius.all(Radius.circular(35))),
-                child: Column(children: const [
+                child: Column(children: [
                   Text(
-                    '22%',
-                    style: TextStyle(color: Color(0xff4CAF50)),
+                    '${_inspectStats.completionRate}%',
+                    style: const TextStyle(color: Color(0xff4CAF50)),
                   ),
-                  Text(
+                  const Text(
                     '完成率',
                     style: TextStyle(color: Color(0xff4CAF50)),
                   ),
@@ -339,16 +470,16 @@ class _HomePageState extends State<HomePage> {
               flex: 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
-                    '524',
-                    style: TextStyle(
+                    _inspectStats.ratedTasks.toString(),
+                    style: const TextStyle(
                         fontSize: 14,
                         height: 2,
                         color: Color.fromARGB(255, 0, 0, 0)),
                   ),
-                  Text('0',
-                      style: TextStyle(
+                  Text(_inspectStats.completionTasks.toString(),
+                      style: const TextStyle(
                           fontSize: 14,
                           height: 2,
                           color: Color.fromARGB(255, 0, 0, 0))),
@@ -378,16 +509,16 @@ class _HomePageState extends State<HomePage> {
               flex: 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
-                    '524',
-                    style: TextStyle(
+                    _inspectStats.inspectRoutes.toString(),
+                    style: const TextStyle(
                         fontSize: 14,
                         height: 2,
                         color: Color.fromARGB(255, 255, 0, 0)),
                   ),
-                  Text('0',
-                      style: TextStyle(
+                  Text(_inspectStats.inspectNumber.toString(),
+                      style: const TextStyle(
                           fontSize: 14,
                           height: 2,
                           color: Color.fromARGB(255, 255, 0, 0))),
@@ -411,22 +542,9 @@ class _HomePageState extends State<HomePage> {
             flex: 1,
             child: Text('设备统计'),
           ),
-          // ButtonGroup(
-          //   names: const ['今日', '本周', '本月'],
-          //   height: 30,
-          //   onTap: (index) {
-          //     print(index);
-          //     // if (index == 1) {
-          //     //   _param.status = 2;
-          //     // } else {
-          //     //   _param.status = 1;
-          //     // }
-          //     // _onRefresh();
-          //   },
-          // ),
           Container(
             padding: const EdgeInsets.only(right: 10),
-            child: const Text('79576个'),
+            child: Text('${_deviceStats.total.toString()}个'),
           )
         ]),
         body: Flex(
@@ -446,19 +564,19 @@ class _HomePageState extends State<HomePage> {
                           // border:
                           //     Border(left: BorderSide(width: 1, color: Colors.red)),
                           borderRadius: BorderRadius.all(Radius.circular(35))),
-                      child: Column(children: const [
+                      child: Column(children: [
                         Text(
-                          '22%',
-                          style: TextStyle(color: Color(0xff4CAF50)),
+                          '${_deviceStats.onlineRate}%',
+                          style: const TextStyle(color: Color(0xff4CAF50)),
                         ),
-                        Text(
+                        const Text(
                           '完成率',
                           style: TextStyle(color: Color(0xff4CAF50)),
                         ),
                       ]),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 10, right: 20),
+                      margin: const EdgeInsets.only(left: 10, right: 10),
                       child: Column(
                         children: const [
                           Text(
@@ -478,16 +596,16 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          '524',
-                          style: TextStyle(
+                          _deviceStats.online.toString(),
+                          style: const TextStyle(
                               fontSize: 14,
                               height: 2,
                               color: Color(0xff4CAF90)),
                         ),
-                        Text('0',
-                            style: TextStyle(
+                        Text(_deviceStats.offline.toString(),
+                            style: const TextStyle(
                                 fontSize: 14,
                                 height: 2,
                                 color: Color.fromARGB(255, 255, 0, 0))),
@@ -509,16 +627,17 @@ class _HomePageState extends State<HomePage> {
                           // border:
                           //     Border(left: BorderSide(width: 1, color: Colors.red)),
                           borderRadius: BorderRadius.all(Radius.circular(35))),
-                      child: Column(children: const [
-                        Text('22%', style: TextStyle(color: Color(0xffE53935))),
-                        Text(
+                      child: Column(children: [
+                        Text('${_deviceStats.abnormalRate}%',
+                            style: const TextStyle(color: Color(0xffE53935))),
+                        const Text(
                           '异常率',
                           style: TextStyle(color: Color(0xffE53935)),
                         ),
                       ]),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(left: 10, right: 20),
+                      margin: const EdgeInsets.only(left: 10, right: 10),
                       child: Column(
                         children: const [
                           Text(
@@ -538,16 +657,16 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          '524',
-                          style: TextStyle(
+                          _deviceStats.normal.toString(),
+                          style: const TextStyle(
                               fontSize: 14,
                               height: 2,
                               color: Color(0xff4CAF90)),
                         ),
-                        Text('0',
-                            style: TextStyle(
+                        Text(_deviceStats.abnormal.toString(),
+                            style: const TextStyle(
                                 fontSize: 14,
                                 height: 2,
                                 color: Color.fromARGB(255, 255, 0, 0))),
