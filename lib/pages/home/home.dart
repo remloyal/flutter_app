@@ -7,6 +7,7 @@ import 'package:fire_control_app/widgets/button_group.dart';
 import '../../states/unit_model.dart';
 import 'package:fire_control_app/models/home.dart';
 import 'package:fire_control_app/http/home_api.dart';
+import 'package:fire_control_app/widgets/keep_alive.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -51,6 +52,7 @@ class _HomePageState extends State<HomePage> {
       abnormal: 0);
 
   final List date = [1, 7, 30];
+  // late Params unitId;
   void _onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
@@ -87,7 +89,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void deviceInit() async {
-    var data = await HomeApi.useDeviceStats(_alarmStatsParam);
+    var data = await HomeApi.useDeviceStats(_deviceStatsParam);
     setState(() {
       _deviceStats = data;
     });
@@ -95,23 +97,31 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UnitModel>(
-      builder: (ctx, person, child) => SmartRefresher(
-          // enablePullUp: true,
-          controller: _refreshController,
-          onRefresh: _onRefresh,
-          child: SingleChildScrollView(
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                head(),
-                alarmStatistics(),
-                patrolStatistics(),
-                deviceStatistics()
-              ],
-            ),
-          )),
-    );
+    return SmartRefresher(
+        // enablePullUp: true,
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+            child: Consumer<UnitModel>(builder: (ctx, unit, child) {
+          if (unit.unit != null) {
+            if (unit.unit?.unitId != _alarmStatsParam.unitId) {
+              _alarmStatsParam.unitId = unit.unit?.unitId;
+              _inspectStatsParam.unitId = unit.unit?.unitId;
+              _deviceStatsParam.unitId = unit.unit?.unitId;
+              init();
+            }
+          }
+          return KeepAliveWrapper(
+              child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              head(),
+              alarmStatistics(),
+              patrolStatistics(),
+              deviceStatistics()
+            ],
+          ));
+        })));
   }
 
   onTop() {
@@ -570,7 +580,7 @@ class _HomePageState extends State<HomePage> {
                           style: const TextStyle(color: Color(0xff4CAF50)),
                         ),
                         const Text(
-                          '完成率',
+                          '在线率',
                           style: TextStyle(color: Color(0xff4CAF50)),
                         ),
                       ]),

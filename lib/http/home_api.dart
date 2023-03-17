@@ -17,7 +17,7 @@ class HomeApi {
   }
 
   // 巡检统计
-  static Future<DeviceStats> useDeviceStats(Params param) async {
+  static Future<DeviceStats> useDeviceStats(DeviceParams param) async {
     var response = await Http.dio
         .get('/mobile/statistics/device', queryParameters: param.toJson());
     return DeviceStats.fromJson(response.data['data']);

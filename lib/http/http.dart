@@ -71,7 +71,10 @@ class Http {
 
     if (data?['code'] != 200 || response.statusCode != 200) {
       print(data?["message"]);
-      data?["message"] != null ? Message.error(data?["message"]) : '';
+      // data?["message"] != null ? Message.error(data?["message"]) : '';
+      if (data.containsKey('message') && data?["message"] != '') {
+        Message.error(data["message"]);
+      }
     }
     if (data["code"] == 20013) {
       LoginService.clearInfo();

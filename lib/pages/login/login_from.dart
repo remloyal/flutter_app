@@ -57,10 +57,12 @@ class _LoginFromState extends State<LoginFrom> {
   // 重新请求
   refresh() async {
     var images = await loginApi.getImage(serial, '');
+    var imgMain = await loginApi.formatBase64(images['data']['img']);
+    var imgBlock = await loginApi.formatBase64(images['data']['mark']);
     return {
       'top': images['data']['y'],
-      "imgMain": images['data']['img'].replaceAll('\r\n', ''),
-      "imgBlock": images['data']['mark'].replaceAll('\r\n', ''),
+      "imgMain": imgMain,
+      "imgBlock": imgBlock,
     };
   }
 
@@ -118,11 +120,13 @@ class _LoginFromState extends State<LoginFrom> {
   // 图片验证
   showCaptchaPopup() async {
     var images = await loginApi.getImage(serial, '');
+    var imgMain = await loginApi.formatBase64(images['data']['img']);
+    var imgBlock = await loginApi.formatBase64(images['data']['mark']);
     setState(() {
       imgList = {
         'top': images['data']['y'],
-        "imgMain": images['data']['img'].replaceAll('\r\n', ''),
-        "imgBlock": images['data']['mark'].replaceAll('\r\n', ''),
+        "imgMain": imgMain,
+        "imgBlock": imgBlock,
       };
       Future.delayed(const Duration(milliseconds: 200)).then((e) {
         showCaptcha();
@@ -462,8 +466,13 @@ class _LoginFromState extends State<LoginFrom> {
           var controllr =
               FixedExtentScrollController(initialItem: selectedValue);
           return Container(
-            height: 350,
-            color: Colors.grey[200],
+            height: 300,
+            // color: Colors.grey[200],
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                color: Colors.grey[200]),
             child: Column(
               children: <Widget>[
                 Row(
@@ -512,7 +521,10 @@ class _LoginFromState extends State<LoginFrom> {
                         },
                         children: unitMethod.map((data) {
                           return Center(
-                            child: Text(data['name'] + ' - ${data['code']}'),
+                            child: Text(
+                              data['name'] + ' - ${data['code']}',
+                              style: const TextStyle(fontSize: 16),
+                            ),
                           );
                         }).toList(),
                       ),

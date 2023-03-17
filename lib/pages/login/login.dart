@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
         body: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            padding: const EdgeInsets.only(top: 60),
+            padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
             decoration: const BoxDecoration(
               color: Color.fromARGB(255, 255, 0, 0),
               image: DecorationImage(

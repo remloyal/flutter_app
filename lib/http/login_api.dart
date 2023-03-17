@@ -176,4 +176,11 @@ class LoginService {
       return jsonDecode(data);
     }
   }
+
+  // Base64 格式化
+  formatBase64(String base) {
+    var data = base.replaceAll('\n', '');
+    data = data.replaceAll('\r', '');
+    return data;
+  }
 }

@@ -83,9 +83,11 @@ class _SlideVerifyState extends State<SlideVerify>
       BuildContext? contextImg = _keyImg.currentContext;
       RenderBox? renderBoxImg = contextImg?.findRenderObject() as RenderBox?;
       Size? sizeImg = renderBoxImg?.paintBounds.size;
-      print('宽高 $size  $sizeImg');
-      setState(() {
-        sliderWidth = size!.width;
+      Future.delayed(const Duration(milliseconds: 50)).then((e) {
+        setState(() {
+          sliderWidth = size!.width;
+          _getSize();
+        });
       });
     });
   }
@@ -102,7 +104,7 @@ class _SlideVerifyState extends State<SlideVerify>
     // print(context.size);
     return Container(
       padding: const EdgeInsets.all(0),
-      height: sliderHeight - 50,
+      height: imgHeight + 50,
       // constraints: const BoxConstraints(maxHeight: 250),
       child:
           Column(children: [imageAssembly(context), sliderAssembly(context)]),
@@ -202,15 +204,15 @@ class _SlideVerifyState extends State<SlideVerify>
                     onPanUpdate: (updateDetails) {
                       sliderDistance =
                           updateDetails.globalPosition.dx - initial;
-                      setState(() {
-                        if (sliderDistance >= (context.size!.width - 40)) {
-                          sliderStartX = (context.size!.width - 40);
-                        } else if (sliderDistance < 0) {
-                          sliderStartX = 0;
-                        } else {
-                          sliderStartX = sliderDistance * (imgWidth / width);
-                        }
-                      });
+                      if (sliderDistance >= (context.size!.width - 40)) {
+                        sliderStartX = (context.size!.width - 40);
+                      } else if (sliderDistance < 0) {
+                        sliderStartX = 0;
+                      } else {
+                        sliderStartX = sliderDistance;
+                      }
+                      print('sliderStartX==>  $sliderStartX');
+                      setState(() {});
                     },
                     onPanEnd: (endDetails) {
                       //结束

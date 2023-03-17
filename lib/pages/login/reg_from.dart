@@ -49,10 +49,12 @@ class _RegFromState extends State<RegFrom> {
   // 重新请求
   refresh() async {
     var images = await loginApi.getImage(serial, unitDomain);
+    var imgMain = await loginApi.formatBase64(images['data']['img']);
+    var imgBlock = await loginApi.formatBase64(images['data']['mark']);
     return {
       'top': images['data']['y'],
-      "imgMain": images['data']['img'].replaceAll('\n', ''),
-      "imgBlock": images['data']['mark'].replaceAll('\n', ''),
+      "imgMain": imgMain,
+      "imgBlock": imgBlock,
     };
   }
 
@@ -132,11 +134,13 @@ class _RegFromState extends State<RegFrom> {
   // 图片验证
   showCaptchaPopup() async {
     var images = await loginApi.getImage(serial, unitDomain);
+    var imgMain = await loginApi.formatBase64(images['data']['img']);
+    var imgBlock = await loginApi.formatBase64(images['data']['mark']);
     setState(() {
       imgList = {
         'top': images['data']['y'],
-        "imgMain": images['data']['img'].replaceAll('\n', ''),
-        "imgBlock": images['data']['mark'].replaceAll('\n', ''),
+        "imgMain": imgMain,
+        "imgBlock": imgBlock,
       };
       Future.delayed(const Duration(milliseconds: 200)).then((e) {
         showCaptcha();
