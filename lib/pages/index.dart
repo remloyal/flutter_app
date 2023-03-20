@@ -64,6 +64,7 @@ class _IndexPageState extends State<IndexPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
+        elevation: _selectedIndex == 4 ? 0 : 3,
         backgroundColor: _selectedIndex == 4
             ? FireControlColor.barMineColor
             : FireControlColor.barColor,
@@ -102,7 +103,16 @@ class _IndexPageState extends State<IndexPage> {
         }, FcmIcon.message),
         Expanded(
           flex: 1,
-          child: isBuildUnit ? _buildUnit() : Container(),
+          child: isBuildUnit
+              ? _buildUnit()
+              : Column(
+                  children: const [
+                    Text(
+                      '我的',
+                      style: TextStyle(fontSize: 18),
+                    )
+                  ],
+                ),
         ),
         _buildCircleButton(() {
           print("打开扫一扫");
