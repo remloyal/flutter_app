@@ -1,5 +1,5 @@
 class Params {
-  int? unitId;
+  dynamic unitId;
   int type = 1;
   Map<String, dynamic> toJson() => {
         'unitId': unitId,
@@ -8,7 +8,7 @@ class Params {
 }
 
 class DeviceParams {
-  int? unitId;
+  dynamic unitId;
   Map<String, dynamic> toJson() => {
         'unitId': unitId,
       };
@@ -51,15 +51,15 @@ class AlarmStats {
 
 class InspectStats {
   // 完成率
-  String completionRate;
+  dynamic completionRate;
   // 额定任务
-  int ratedTasks;
+  dynamic ratedTasks;
   // 完成任务
-  int completionTasks;
+  dynamic completionTasks;
   // 巡检路线
-  int inspectRoutes;
+  dynamic inspectRoutes;
   // 巡检人数
-  int inspectNumber;
+  dynamic inspectNumber;
 
   InspectStats({
     required this.completionRate,
@@ -70,11 +70,11 @@ class InspectStats {
   });
 
   InspectStats.fromJson(Map<String, dynamic> json)
-      : completionRate = json['completionRate'],
-        ratedTasks = json['ratedTasks'],
-        completionTasks = json['completionTasks'],
-        inspectRoutes = json['inspectRoutes'],
-        inspectNumber = json['inspectNumber'];
+      : completionRate = json['completionRate'] as String,
+        ratedTasks = json['ratedTasks'] ?? 0,
+        completionTasks = json['completionTasks'] ?? 0,
+        inspectRoutes = json['inspectRoutes'] ?? 0,
+        inspectNumber = json['inspectNumber'] ?? 0;
 
   Map<String, dynamic> toJson() => {
         'completionRate': completionRate,

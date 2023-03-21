@@ -48,3 +48,36 @@ class _CardParentState extends State<CardParent> {
     );
   }
 }
+
+class XfItem extends StatelessWidget {
+  final String label;
+  final String content;
+  final double? rowHeight;
+  const XfItem(
+      {super.key, required this.label, required this.content, this.rowHeight});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: rowHeight ?? 2, bottom: rowHeight ?? 2),
+      child: Row(
+        children: [
+          Text(
+            '$label：',
+            style: const TextStyle(fontSize: 12, color: Color(0xff999999)),
+          ),
+          Expanded(
+            child: Text(
+              content,
+              softWrap: true,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              style: const TextStyle(fontSize: 12),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
