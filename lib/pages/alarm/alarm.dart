@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/alarm_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/analog_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/danger_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/fault_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/fire_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/remind_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/risk_list.dart';
+import 'package:fire_control_app/pages/alarm/alarm_main/trouble_list.dart';
+
 
 class Alarm extends StatefulWidget {
   const Alarm({super.key});
@@ -42,12 +51,7 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
           child: TabBarView(
               //构建
               controller: _tabController,
-              children: tabs.map((e) {
-                return Container(
-                  alignment: Alignment.center,
-                  child: Text(e, textScaleFactor: 5),
-                );
-              }).toList()),
+              children: [FireList(),AlarmList(),FaultList(),TroubleList(),DangerList(),RiskList(),ReminfList()]),
         )
       ],
     );

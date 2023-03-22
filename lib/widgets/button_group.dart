@@ -31,7 +31,7 @@ class _ButtonGroupState extends State<ButtonGroup> {
         isSelected: _selected,
         selectedColor: Colors.red,
         selectedBorderColor: Colors.red,
-        // highlightColor: Colors.red,
+        fillColor: const Color(0xffFFEBEE),
         onPressed: (index) {
           for (int i = 0; i < _selected.length; i++) {
             _selected[i] = false;

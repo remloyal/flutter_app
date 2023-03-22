@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:fire_control_app/models/device_entity.dart';
 import 'package:fire_control_app/http/device_api.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:fire_control_app/utils/value..dart';
+import 'package:fire_control_app/utils/value.dart';
 import 'package:fire_control_app/widgets/keep_alive.dart';
 
 class Device extends StatefulWidget {
