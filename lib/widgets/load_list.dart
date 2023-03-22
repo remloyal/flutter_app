@@ -54,6 +54,7 @@ class _LoadListState extends State<LoadList> {
               // The green box must be a child of the AnimatedOpacity widget.
               child: FloatingActionButton(
                   mini: true,
+                  heroTag: widget.key,
                   backgroundColor: const Color(0xff228CF5),
                   foregroundColor: const Color(0xffFFFFFF),
                   onPressed: () {

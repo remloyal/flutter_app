@@ -13,6 +13,13 @@ class AlarmApi {
   static useAlarmList(params) async {
     var response = await Http.dio
         .get('/mobile/alarm/list', queryParameters: params.toJson());
-    return FireCase.fromJson(response.data);
+    return AlarmCase.fromJson(response.data);
+  }
+
+  // 设备故障列表
+  static useFaultList(params) async {
+    var response = await Http.dio
+        .get('/mobile/alarm/list', queryParameters: params.toJson());
+    return FaultCase.fromJson(response.data);
   }
 }

@@ -8,7 +8,6 @@ import 'package:fire_control_app/pages/alarm/alarm_main/remind_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/risk_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/trouble_list.dart';
 
-
 class Alarm extends StatefulWidget {
   const Alarm({super.key});
 
@@ -34,16 +33,19 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
           children: [
             Expanded(
                 flex: 1,
-                child: TabBar(
-                  tabs: tabs.map((e) => Tab(text: e)).toList(),
-                  controller: _tabController,
-                  isScrollable: true,
-                  labelColor: Colors.red,
-                  // dividerColor: const Color.fromARGB(255, 245, 0, 0),
-                  indicatorColor: Colors.red,
-                  unselectedLabelColor: Color.fromARGB(255, 0, 0, 0),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8),
+                  child: TabBar(
+                    tabs: tabs.map((e) => Tab(text: e)).toList(),
+                    controller: _tabController,
+                    isScrollable: true,
+                    labelColor: Colors.red,
+                    // dividerColor: const Color.fromARGB(255, 245, 0, 0),
+                    indicatorColor: Colors.red,
+                    unselectedLabelColor: const Color.fromARGB(255, 0, 0, 0),
+                  ),
                 )),
-            IconButton(onPressed: () {}, icon: Icon(Icons.warning))
+            IconButton(onPressed: () {}, icon: const Icon(Icons.warning))
           ],
         ),
         Expanded(
@@ -51,7 +53,15 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
           child: TabBarView(
               //构建
               controller: _tabController,
-              children: [FireList(),AlarmList(),FaultList(),TroubleList(),DangerList(),RiskList(),ReminfList()]),
+              children: const [
+                FireList(),
+                AlarmList(),
+                FaultList(),
+                TroubleList(),
+                DangerList(),
+                RiskList(),
+                ReminfList()
+              ]),
         )
       ],
     );

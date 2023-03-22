@@ -132,7 +132,11 @@ class _DeviceState extends State<Device> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Text('${_device.totalRow ?? 0}'),
+                  Text(
+                    '共 ${_device.totalRow ?? 0} 条',
+                    style:
+                        const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
+                  ),
                   InkWell(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
