@@ -7,6 +7,7 @@ import 'package:fire_control_app/pages/alarm/alarm_main/fire_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/remind_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/risk_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/trouble_list.dart';
+import 'package:fire_control_app/common/colors.dart';
 
 class Alarm extends StatefulWidget {
   const Alarm({super.key});
@@ -33,8 +34,9 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
           children: [
             Expanded(
                 flex: 1,
-                child: Padding(
+                child: Container(
                   padding: const EdgeInsets.only(left: 8, right: 8),
+                  color: FireControlColor.cardColor,
                   child: TabBar(
                     tabs: tabs.map((e) => Tab(text: e)).toList(),
                     controller: _tabController,
@@ -45,7 +47,27 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
                     unselectedLabelColor: const Color.fromARGB(255, 0, 0, 0),
                   ),
                 )),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.warning))
+            Container(
+                color: FireControlColor.cardColor,
+                height: 48,
+                padding: const EdgeInsets.only(right: 6),
+                child: InkWell(
+                  onTap: () {
+                    print('说明');
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.info_outline,
+                        size: 20,
+                      ),
+                      Text(
+                        '说明',
+                        style: TextStyle(fontSize: 14),
+                      )
+                    ],
+                  ),
+                ))
           ],
         ),
         Expanded(

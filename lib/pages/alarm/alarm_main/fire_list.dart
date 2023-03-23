@@ -213,7 +213,7 @@ class _FireListState extends State<FireList> {
                 Text(
                   item.startTime,
                   style:
-                      const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                      const TextStyle(fontSize: 12, color: Color(0xff999999)),
                 ),
               ],
             ),
@@ -228,7 +228,7 @@ class _FireListState extends State<FireList> {
                   Text(
                     item.endTime,
                     style:
-                        const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                        const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
                 ],
               )

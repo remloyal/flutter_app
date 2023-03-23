@@ -212,7 +212,7 @@ class _AlarmListState extends State<AlarmList> {
                 Text(
                   item.startTime,
                   style:
-                      const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                      const TextStyle(fontSize: 12, color: Color(0xff999999)),
                 ),
               ],
             ),
@@ -227,7 +227,7 @@ class _AlarmListState extends State<AlarmList> {
                   Text(
                     item.resetTime,
                     style:
-                        const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                        const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
                 ],
               ),
@@ -242,7 +242,7 @@ class _AlarmListState extends State<AlarmList> {
                   Text(
                     item.confirmTime,
                     style:
-                        const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                        const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
                 ],
               ),

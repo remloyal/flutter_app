@@ -35,7 +35,7 @@ class _FaultListState extends State<FaultList> {
             Container(
               padding: const EdgeInsets.all(8.0),
               child: ButtonGroup(
-                names: const ['告警中', '已关闭'],
+                names: const ['告警中', '已复位'],
                 height: 30,
                 onTap: (index) {
                   print(index);
@@ -208,7 +208,7 @@ class _FaultListState extends State<FaultList> {
                 Text(
                   item.startTime,
                   style:
-                      const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                      const TextStyle(fontSize: 12, color: Color(0xff999999)),
                 ),
               ],
             ),
@@ -223,7 +223,7 @@ class _FaultListState extends State<FaultList> {
                   Text(
                     item.resetTime,
                     style:
-                        const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                        const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
                 ],
               ),
@@ -238,7 +238,7 @@ class _FaultListState extends State<FaultList> {
                   Text(
                     item.confirmTime,
                     style:
-                        const TextStyle(fontSize: 14, color: Color(0xff999999)),
+                        const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
                 ],
               ),

@@ -64,7 +64,7 @@ class _IndexPageState extends State<IndexPage> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        elevation: _selectedIndex == 4 ? 0 : 3,
+        elevation: _selectedIndex == 4 ? 0 : 1,
         backgroundColor: _selectedIndex == 4
             ? FireControlColor.barMineColor
             : FireControlColor.barColor,

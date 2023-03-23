@@ -109,6 +109,7 @@ class _LoadListState extends State<LoadList> {
         if (_recordParam.unitId != unitModel.unit?.unitId) {
           _recordParam.unitId = unitModel.unit?.unitId;
           _recordParam.currentPage = 1;
+          print('更新数据');
           _loadData(isRefresh: true);
           _listController.animateTo(
             .0,
@@ -136,10 +137,8 @@ class _LoadListState extends State<LoadList> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _recordParam = widget.param;
-      record = widget.precedent;
-    });
+    _recordParam = widget.param;
+    record = widget.precedent;
     _loadData();
     // widget.itemParam
     _listController.addListener(() {
@@ -159,6 +158,7 @@ class _LoadListState extends State<LoadList> {
     });
     // 监听父级改变
     _recordParam.addListener(() {
+      print('更新数据');
       _onRefresh();
       _listController.animateTo(
         .0,

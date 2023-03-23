@@ -66,3 +66,8 @@ formatDuration(start, end) {
   }
   return '';
 }
+
+formatTime(time) {
+  var date = DateTime.fromMillisecondsSinceEpoch(time);
+  return date;
+}
