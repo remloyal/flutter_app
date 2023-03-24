@@ -7,4 +7,10 @@ class InspectionApi {
         .get('/mobile/inspection/tasks', queryParameters: param.toJson());
     return RouteResponse.fromJson(response.data);
   }
+
+  static Future<PlanCase> getReceiveTaskList(PlanParam param) async {
+    var response = await Http.dio
+        .get('/mobile/inspection/receives', queryParameters: param.toJson());
+    return PlanCase.fromJson(response.data['data']);
+  }
 }

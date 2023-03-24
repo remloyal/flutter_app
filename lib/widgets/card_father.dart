@@ -72,16 +72,20 @@ class XfItem extends StatelessWidget {
             style: const TextStyle(fontSize: 12, color: Color(0xff999999)),
           ),
           Expanded(
-            child: contentWidget ??
-                Text(
-                  content ?? '',
-                  softWrap: true,
-                  textAlign: TextAlign.left,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                  style: const TextStyle(fontSize: 12),
-                ),
-          )
+              child: contentWidget ??
+                  SelectableText.rich(TextSpan(
+                    text: content ?? '-',
+                    style: const TextStyle(fontSize: 12),
+                  ))
+              // Text(
+              //   content ?? '',
+              //   softWrap: true,
+              //   textAlign: TextAlign.left,
+              //   overflow: TextOverflow.ellipsis,
+              //   maxLines: 3,
+              //   style: const TextStyle(fontSize: 12),
+              // ),
+              )
         ],
       ),
     );

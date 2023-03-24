@@ -44,7 +44,7 @@ class _ButtonGroupState extends State<ButtonGroup> {
         children: widget.names
             .map((e) => Padding(
                 padding: const EdgeInsets.only(
-                    left: 15, top: 0, right: 15, bottom: 0),
+                    left: 10, top: 0, right: 10, bottom: 0),
                 child: Text(
                   e,
                   style: const TextStyle(fontSize: 14),
