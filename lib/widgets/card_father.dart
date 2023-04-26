@@ -72,22 +72,68 @@ class XfItem extends StatelessWidget {
             style: const TextStyle(fontSize: 12, color: Color(0xff999999)),
           ),
           Expanded(
-              child: contentWidget ??
-                  SelectableText.rich(TextSpan(
-                    text: content ?? '-',
-                    style: const TextStyle(fontSize: 12),
-                  ))
-              // Text(
-              //   content ?? '',
-              //   softWrap: true,
-              //   textAlign: TextAlign.left,
-              //   overflow: TextOverflow.ellipsis,
-              //   maxLines: 3,
-              //   style: const TextStyle(fontSize: 12),
-              // ),
-              )
+            child: contentWidget ??
+                // SelectableText.rich(TextSpan(
+                //   text: content ?? '-',
+                //   style: const TextStyle(fontSize: 12),
+                // ))
+                // SelectableText(
+                //   content ?? '-',
+                //   style: const TextStyle(fontSize: 12),
+                //   // ignore: deprecated_member_use
+                //   toolbarOptions: ToolbarOptions(
+                //       copy: true, selectAll: true, paste: true, cut: true),
+                // )
+                Text(
+                  content ?? '',
+                  softWrap: true,
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  style: const TextStyle(fontSize: 12),
+                ),
+          )
         ],
       ),
     );
+  }
+}
+
+class CardTitle extends StatelessWidget {
+  const CardTitle({super.key, required this.text, this.right});
+  final String text;
+  final Widget? right;
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      Row(children: [
+        Container(
+          width: 4,
+          height: 13,
+          // color: FireControlColor.baseColor,
+          margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+          decoration: BoxDecoration(
+            color: FireControlColor.baseColor,
+            border: Border.all(width: 1, color: Colors.red),
+            borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(
+            text,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ),
+        right ??
+            Container(
+              height: 0,
+            )
+      ]),
+      const Divider(
+        indent: 0.0,
+        color: Color.fromARGB(255, 190, 190, 190),
+      ),
+    ]);
   }
 }

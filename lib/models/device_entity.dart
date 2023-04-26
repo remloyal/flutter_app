@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class DeviceList {
   late int currentPage;
   late int totalPage;
@@ -119,17 +121,36 @@ class DeviceItem {
   }
 }
 
-class DeviceParams {
+class DeviceParams extends ChangeNotifier {
   dynamic unitId;
   String? keyword;
   int currentPage = 1;
   int pageSize = 10;
+  int? buildId;
+  int? floorId;
+  int? roomId;
+  int? deviceTypeId;
+  int? alarm;
+  int? online;
+  int? stop;
+  int? expire;
+
   Map<String, dynamic> toJson() => {
         'unitId': unitId,
         'keyword': keyword,
         'currentPage': currentPage,
         'pageSize': pageSize,
+        'buildId': buildId,
+        'floorId': floorId,
+        'roomId': roomId,
+        'deviceTypeId': deviceTypeId,
+        'alarm': alarm,
+        'online': online,
+        'stop': stop,
+        'expire': expire,
       };
 
-  void addAll(result) {}
+  void change() {
+    notifyListeners();
+  }
 }
