@@ -1,23 +1,20 @@
-import 'package:fire_control_app/models/inspection.dart';
-
-class Response<T> {
-  int currentPage = 1;
+abstract class ListResponse<T extends ListItemData> {
+  int currentPage;
   int totalRow;
   int totalPage;
-  int? pageSize = 10;
-  String? orderByClause;
-  bool? needCount;
-  int? fromRow;
-  List<T>? result;
+  List<dynamic>? result;
 
-  Response({
-    this.currentPage = 1,
-    this.totalRow = 0,
-    this.totalPage = 0,
-    this.result,
-    this.fromRow,
-    this.needCount,
-    this.orderByClause,
-    this.pageSize,
-  });
+  ListResponse.fromJson(Map<String, dynamic> json)
+      : currentPage = json['currentPage'] ?? 1,
+        totalRow = json['totalRow'] ?? 0,
+        totalPage = json['totalPage'] ?? 0,
+        result = json['result'] ?? [];
+
+  List<T> get records => result!.map((e) => generateRecord(e)).toList();
+
+  T generateRecord(Map<String, dynamic> data);
+}
+
+abstract class ListItemData {
+
 }

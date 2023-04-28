@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/inspection_api.dart';
 import 'package:fire_control_app/models/inspection.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
@@ -15,21 +15,17 @@ class PlanList extends StatefulWidget {
   State<StatefulWidget> createState() => _PlanListState();
 }
 
-final _userId = Global.profile.userId;
-
-class _PlanListState extends State<PlanList> {
+class _PlanListState extends State<PlanList> with ListBuilder<InspectionPlan> {
   final PlanParam _routeParam = PlanParam();
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: InspectionApi.getReceiveTaskList,
-        param: _routeParam,
-        precedent: PlanCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<PlanApi, PlanParam>(
+        api: PlanApi(), param: _routeParam, listBuilder: this);
   }
 
-  _header(data) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -41,7 +37,6 @@ class _PlanListState extends State<PlanList> {
                 names: const ['执行中', '已完成', '未完成'],
                 height: 30,
                 onTap: (index) {
-                  print(index);
                   _routeParam.status = index + 1;
                   _routeParam.change();
                 },
@@ -50,7 +45,7 @@ class _PlanListState extends State<PlanList> {
             Row(
               children: [
                 Text(
-                  '共 ${data.totalRow ?? 0} 条',
+                  '共 $total 条',
                   style:
                       const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                 ),
@@ -86,14 +81,17 @@ class _PlanListState extends State<PlanList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, InspectionPlan item) {
     return _PlanItem(item: item);
   }
 }
 
 class _PlanItem extends StatelessWidget {
-  final PlanResult item;
-  const _PlanItem({required this.item});
+  final _userId = Global.profile.userId;
+  final InspectionPlan item;
+
+  _PlanItem({required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +100,7 @@ class _PlanItem extends StatelessWidget {
         Container(
             width: 3,
             height: 16,
-            color: FireControlColor.baseColor,
+            color: FcColor.baseColor,
             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0)),
         Expanded(
           flex: 1,
@@ -201,7 +199,7 @@ class _PlanItem extends StatelessWidget {
                 style: TextStyle(fontSize: 13, color: Color(0xff999999)),
               ),
               Text(
-                '${item.userName}',
+                item.userName,
                 style: TextStyle(
                     fontSize: 12,
                     color: _userId != item.userId

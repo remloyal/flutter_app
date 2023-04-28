@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/profile.dart';
 import 'package:fire_control_app/models/unit.dart';
-import 'package:fire_control_app/notification/push.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 全局变量及配置类，配置采用本地存储
 class Global {
+
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+
   static late SharedPreferences _prefs;
 
   static Profile profile = Profile();
@@ -42,10 +45,6 @@ class Global {
     } else {}
 
     Http.init();
-
-    Push.initPush();
-
-    Push.initWebSocket();
   }
 
   static setBaseUrl() {

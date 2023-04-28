@@ -15,18 +15,14 @@ class Device extends StatefulWidget {
   State<Device> createState() => _DeviceState();
 }
 
-class _DeviceState extends State<Device> {
+class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
   late DeviceParams _deviceParam = DeviceParams();
   List data = [];
-  List _position = [];
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: DeviceApi.useDeviceList,
-        param: _deviceParam,
-        precedent: DeviceList(),
-        setTtem: _buildItem,
-        header: _header);
+    return LoadList<DeviceApi, DeviceParams>(
+        api: DeviceApi(), param: _deviceParam, listBuilder: this);
   }
 
   @override
@@ -43,7 +39,8 @@ class _DeviceState extends State<Device> {
     }
   }
 
-  _header(device) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -75,7 +72,7 @@ class _DeviceState extends State<Device> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${device.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -124,7 +121,8 @@ class _DeviceState extends State<Device> {
         ));
   }
 
-  _buildItem(DeviceItem item) {
+  @override
+  Widget buildItem(BuildContext context, DeviceItem item) {
     return InkWell(
       highlightColor: Colors.amberAccent,
       onTap: () {

@@ -1,62 +1,30 @@
 import 'package:fire_control_app/models/param.dart';
 import 'package:fire_control_app/models/response.dart';
-import 'package:flutter/material.dart';
 
 // 路线
-class RouteResponse extends Response<InspectionRoute> {
-  RouteResponse(
-      {super.currentPage,
-      super.totalRow,
-      super.totalPage,
-      super.result,
-      super.fromRow,
-      super.needCount,
-      super.orderByClause,
-      super.pageSize});
+class RouteResponse extends ListResponse<InspectionRoute> {
+  RouteResponse.fromJson(super.json) : super.fromJson();
 
-  RouteResponse.fromJson(Map<String, dynamic> json)
-      : super(
-            currentPage: json['currentPage'],
-            totalRow: json['totalRow'],
-            totalPage: json['totalPage'],
-            fromRow: json['fromRow'],
-            needCount: json['needCount'],
-            orderByClause: json['orderByClause'],
-            pageSize: json['pageSize'],
-            result: (json['result'] as List)
-                .map((e) => InspectionRoute.fromJson(e))
-                .toList());
-
-  Map<String, dynamic> toJson() => {
-        'currentPage': currentPage,
-        'totalPage': totalPage,
-        'totalRow': totalRow,
-        'pageSize': pageSize,
-        'orderByClause': orderByClause,
-        'needCount': needCount,
-        'result': result,
-        'fromRow': fromRow,
-      };
+  @override
+  InspectionRoute generateRecord(Map<String, dynamic> data) =>
+      InspectionRoute.fromJson(data);
 }
 
-class RouteParam extends Param with ChangeNotifier {
+class RouteParam extends Param {
   int status;
 
   RouteParam({this.status = 1}) : super();
 
   @override
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> map = {'status': status};
-    map.addAll(super.toJson());
-    return map;
-  }
-
-  void change() {
-    notifyListeners();
+    return {
+      ...super.toJson(),
+      'status': status
+    };
   }
 }
 
-class InspectionRoute {
+class InspectionRoute implements ListItemData {
   int amount;
   int canReceive;
   int finishedAmount;
@@ -165,46 +133,15 @@ extension InspectionTypeExtension on InspectionType {
 }
 
 // 任务
-class PlanCase extends Response<PlanResult> {
-  PlanCase(
-      {super.currentPage,
-      super.totalRow,
-      super.totalPage,
-      super.result,
-      super.fromRow,
-      super.needCount,
-      super.orderByClause,
-      super.pageSize});
+class PlanResponse extends ListResponse<InspectionPlan> {
+  PlanResponse.fromJson(super.json) : super.fromJson();
 
-  PlanCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <PlanResult>[];
-      json['result'].forEach((v) {
-        result!.add(PlanResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() => {
-        'currentPage': currentPage,
-        'totalPage': totalPage,
-        'totalRow': totalRow,
-        'pageSize': pageSize,
-        'orderByClause': orderByClause,
-        'needCount': needCount,
-        'result': result,
-        'fromRow': fromRow,
-      };
+  @override
+  InspectionPlan generateRecord(Map<String, dynamic> data) =>
+      InspectionPlan.fromJson(data);
 }
 
-class PlanResult {
+class InspectionPlan extends ListItemData{
   late int taskId;
   late String name;
   late String unitName;
@@ -220,7 +157,7 @@ class PlanResult {
   late int? limitedTime;
   late String idCode;
 
-  PlanResult(
+  InspectionPlan(
       {taskId,
       name,
       unitName,
@@ -236,7 +173,7 @@ class PlanResult {
       limitedTime,
       idCode});
 
-  PlanResult.fromJson(Map<String, dynamic> json) {
+  InspectionPlan.fromJson(Map<String, dynamic> json) {
     taskId = json['taskId'];
     name = json['name'];
     unitName = json['unitName'];
@@ -271,7 +208,7 @@ class PlanResult {
       };
 }
 
-class PlanParam extends Param with ChangeNotifier {
+class PlanParam extends Param {
   int status = 1;
   dynamic keyword;
   dynamic beginTime;
@@ -291,8 +228,4 @@ class PlanParam extends Param with ChangeNotifier {
         'type': type,
         'planType': planType,
       };
-
-  void change() {
-    notifyListeners();
-  }
 }

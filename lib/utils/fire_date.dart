@@ -61,7 +61,7 @@ formatDuration(start, end) {
   if (difference.inMinutes > 0) {
     return '$minutes分$seconds秒';
   }
-  if (difference.inSeconds > 0) {
+  if (difference.inSeconds >= 0) {
     return '$seconds秒';
   }
   return '';

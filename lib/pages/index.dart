@@ -1,10 +1,11 @@
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/http/unit_api.dart';
 import 'package:fire_control_app/common/router.dart';
+import 'package:fire_control_app/pages/notification/push.dart';
 import 'package:fire_control_app/states/unit_model.dart';
 import 'package:flutter/material.dart';
-import 'package:fire_control_app/common/fcm_icon.dart';
+import 'package:fire_control_app/common/fc_icon.dart';
 import 'package:fire_control_app/pages/home/home.dart';
 import 'package:fire_control_app/pages/inspection/inspection.dart';
 import 'package:fire_control_app/pages/alarm/alarm.dart';
@@ -33,6 +34,7 @@ class _IndexPageState extends State<IndexPage> {
       setState(() {});
     });
     super.initState();
+    PushHelper.initNotify();
   }
 
   @override
@@ -66,12 +68,12 @@ class _IndexPageState extends State<IndexPage> {
         titleSpacing: 0,
         elevation: _selectedIndex == 4 ? 0 : 1,
         backgroundColor: _selectedIndex == 4
-            ? FireControlColor.barMineColor
-            : FireControlColor.barColor,
+            ? FcColor.barMineColor
+            : FcColor.barColor,
         title: _buildTitle(_selectedIndex != 4),
       ),
       body: Container(
-        decoration: const BoxDecoration(color: FireControlColor.bgColor),
+        decoration: const BoxDecoration(color: FcColor.bgColor),
         child: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
@@ -82,7 +84,7 @@ class _IndexPageState extends State<IndexPage> {
         items: bottomNavigationBarItems,
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        fixedColor: FireControlColor.fixedColor,
+        fixedColor: FcColor.fixedColor,
         onTap: (index) {
           setState(() {
             _pageController.jumpToPage(index);
@@ -133,7 +135,7 @@ class _IndexPageState extends State<IndexPage> {
           onTap: onPressed,
           child: Icon(
             iconData,
-            color: FireControlColor.base3,
+            color: FcColor.base3,
             size: 18,
           )),
     );
@@ -153,7 +155,7 @@ class _IndexPageState extends State<IndexPage> {
           children: [
             const Icon(
               FcmIcon.unit,
-              color: FireControlColor.base3,
+              color: FcColor.base3,
               size: 18,
             ),
             Expanded(
@@ -167,12 +169,12 @@ class _IndexPageState extends State<IndexPage> {
                                 ? unitModel.unit!.name
                                 : "全部单位(${Global.units.length})",
                             style: const TextStyle(
-                                color: FireControlColor.base3, fontSize: 18),
+                                color: FcColor.base3, fontSize: 18),
                           )),
                 )),
             const Icon(
-              FcmIcon.right_arrow,
-              color: FireControlColor.base3,
+              FcmIcon.rightArrow,
+              color: FcColor.base3,
               size: 18,
             )
           ],

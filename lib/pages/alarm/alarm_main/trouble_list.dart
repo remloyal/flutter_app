@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/details/trouble_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -15,19 +16,18 @@ class TroubleList extends StatefulWidget {
   State<TroubleList> createState() => _TroubleListState();
 }
 
-class _TroubleListState extends State<TroubleList> {
+class _TroubleListState extends State<TroubleList>
+    with ListBuilder<TroubleItem> {
   final TroubleParams _alarmParam = TroubleParams();
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: AlarmApi.useTroubleList,
-        param: _alarmParam,
-        precedent: TroubleCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<TroubleApi, TroubleParams>(
+        api: TroubleApi(), param: _alarmParam, listBuilder: this);
   }
 
-  _header(fire) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -59,7 +59,7 @@ class _TroubleListState extends State<TroubleList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${fire.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -88,11 +88,12 @@ class _TroubleListState extends State<TroubleList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, TroubleItem item) {
     return InkWell(
       onTap: () {
-        print('${item}');
-        // _refresh();
+        Navigator.pushNamed(context, TroubleDetailPage.routeName,
+            arguments: item.id);
       },
       child: CardParent(
         header: Row(
@@ -205,7 +206,7 @@ class _TroubleListState extends State<TroubleList> {
               label: item.status == 1 ? '处理人员' : '上报人员',
               contentWidget: Row(children: [
                 Text(
-                  item.nickName,
+                  item.nickName ?? '-',
                   style: const TextStyle(fontSize: 12),
                 ),
                 if (item.phone != null)

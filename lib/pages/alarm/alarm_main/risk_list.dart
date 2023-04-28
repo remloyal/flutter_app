@@ -14,19 +14,17 @@ class RiskList extends StatefulWidget {
   State<RiskList> createState() => _RiskListState();
 }
 
-class _RiskListState extends State<RiskList> {
+class _RiskListState extends State<RiskList> with ListBuilder<RiskItem> {
   final RiskParams _alarmParam = RiskParams();
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: AlarmApi.useRiskList,
-        param: _alarmParam,
-        precedent: RiskCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<RiskApi, RiskParams>(
+        api: RiskApi(), param: _alarmParam, listBuilder: this);
   }
 
-  _header(fire) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -58,7 +56,7 @@ class _RiskListState extends State<RiskList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${fire.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -87,7 +85,8 @@ class _RiskListState extends State<RiskList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, RiskItem item) {
     return InkWell(
       onTap: () {
         print('${item}');

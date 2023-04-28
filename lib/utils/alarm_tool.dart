@@ -6,7 +6,7 @@ final List troubleTypes = [
   {'name': '缺失', 'value': 4},
 ];
 
-getTroubleTypeDesc(int type) {
+getTroubleTypeDesc(int? type) {
   for (var i = 0; i < troubleTypes.length; i++) {
     if (troubleTypes[i]['value'] == type) {
       return troubleTypes[i]['name'];

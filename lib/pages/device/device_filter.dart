@@ -144,7 +144,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CardTitle(text: '设备类型'),
+          const CardHeader(title: '设备类型'),
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Cell(
@@ -236,7 +236,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
               },
             ),
           ),
-          const CardTitle(text: '设备状态'),
+          const CardHeader(title: '设备状态'),
           ButtonBarState(
             index: _deviceParam.alarm,
             names: const [
@@ -249,7 +249,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
               _deviceParam.alarm = index;
             },
           ),
-          const CardTitle(text: '在线状态'),
+          const CardHeader(title: '在线状态'),
           ButtonBarState(
             index: _deviceParam.online,
             names: const [
@@ -264,7 +264,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
               });
             },
           ),
-          const CardTitle(text: '封停状态'),
+          const CardHeader(title: '封停状态'),
           ButtonBarState(
             index: _deviceParam.stop,
             names: const [
@@ -278,7 +278,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
               });
             },
           ),
-          const CardTitle(text: '设备位置'),
+          const CardHeader(title: '设备位置'),
           Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Cell(
@@ -339,7 +339,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
                       });
                 },
               )),
-          const CardTitle(text: '搜索'),
+          const CardHeader(title: '搜索'),
           TextField(
             controller: _search
               ..selection = TextSelection.fromPosition(

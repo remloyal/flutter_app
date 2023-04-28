@@ -1,99 +1,42 @@
+import 'package:fire_control_app/models/param.dart';
+import 'package:fire_control_app/models/response.dart';
 import 'package:flutter/material.dart';
 
-class FireCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<FireResult>? result;
-  int? fromRow;
+class FireResponse extends ListResponse<FireItem> {
+  FireResponse.fromJson(super.json) : super.fromJson();
 
-  FireCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<FireResult>? result,
-      int? fromRow});
-
-  FireCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <FireResult>[];
-      json['result'].forEach((v) {
-        result!.add(FireResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  FireItem generateRecord(Map<String, dynamic> data) =>
+      FireItem.fromJson(data);
 }
 
-class FireResult {
-  int? id;
-  String? deviceName;
-  String? unitName;
-  String? buildingName;
-  String? floorNumber;
-  String? roomNumber;
-  String? nickName;
-  dynamic phone;
-  dynamic startTime;
-  dynamic endTime;
-  int? status;
-  int? fireType;
+class FireItem extends ListItemData {
+  int id;
+  String deviceName;
+  String unitName;
+  String buildingName;
+  String floorNumber;
+  String roomNumber;
+  String nickName;
+  String? phone;
+  String startTime;
+  String endTime;
+  int status;
+  int fireType;
 
-  FireResult(
-      {int? id,
-      String? deviceName,
-      String? unitName,
-      String? buildingName,
-      String? floorNumber,
-      String? roomNumber,
-      String? nickName,
-      dynamic phone,
-      dynamic startTime,
-      dynamic endTime,
-      int? status,
-      int? fireType});
-
-  FireResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    deviceName = json['deviceName'];
-    unitName = json['unitName'];
-    buildingName = json['buildingName'];
-    floorNumber = json['floorNumber'];
-    roomNumber = json['roomNumber'];
-    nickName = json['nickName'];
-    phone = json['phone'];
-    startTime = json['startTime'] ?? '';
-    endTime = json['endTime'] ?? '';
-    status = json['status'];
-    fireType = json['fireType'];
-  }
+  FireItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        deviceName = json['deviceName'],
+        unitName = json['unitName'],
+        buildingName = json['buildingName'],
+        floorNumber = json['floorNumber'],
+        roomNumber = json['roomNumber'],
+        nickName = json['nickName'],
+        phone = json['phone'],
+        startTime = json['startTime'] ?? '',
+        endTime = json['endTime'] ?? '',
+        status = json['status'],
+        fireType = json['fireType'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -113,33 +56,23 @@ class FireResult {
   }
 }
 
-class FireParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
+class FireParams extends Param {
   dynamic beginTime;
   dynamic endTime;
   int sourceType = 0;
   int status = 0;
 
+  @override
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
+        ...super.toJson(),
         'beginTime': beginTime,
         'endTime': endTime,
         'sourceType': sourceType,
         'status': status,
       };
-  void change() {
-    notifyListeners();
-  }
 }
 
-class AlarmParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
+class AlarmParams extends Param {
   dynamic beginTime;
   dynamic endTime;
   dynamic keyword;
@@ -147,10 +80,9 @@ class AlarmParams extends ChangeNotifier {
   dynamic deviceTypeId;
   int status = 0;
 
+  @override
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
+        ...super.toJson(),
         'beginTime': beginTime,
         'endTime': endTime,
         'keyword': keyword,
@@ -158,111 +90,47 @@ class AlarmParams extends ChangeNotifier {
         'deviceTypeId': deviceTypeId,
         'status': status,
       };
-  void change() {
-    notifyListeners();
-  }
 }
 
-class AlarmCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<AlarmResult>? result;
-  int? fromRow;
+class AlarmResponse extends ListResponse<AlarmItem> {
+  AlarmResponse.fromJson(super.json) : super.fromJson();
 
-  AlarmCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<AlarmResult>? result,
-      int? fromRow});
-
-  AlarmCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <AlarmResult>[];
-      json['result'].forEach((v) {
-        result!.add(AlarmResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  AlarmItem generateRecord(Map<String, dynamic> data) =>
+      AlarmItem.fromJson(data);
 }
 
-class AlarmResult {
-  int? id;
-  String? unitName;
-  String? buildingName;
-  String? floorNumber;
+class AlarmItem extends ListItemData {
+  int id;
+  String unitName;
+  String buildingName;
+  String floorNumber;
   String? roomNumber;
-  String? deviceName;
-  int? eventLevel;
-  String? eventTypeContent;
-  int? eventCount;
-  String? startTime;
+  String deviceName;
+  int eventLevel;
+  String eventTypeContent;
+  int eventCount;
+  String startTime;
   String? confirmTime;
-  dynamic resetTime;
+  String? resetTime;
   int? confirmResult;
-  int? status;
+  int status;
 
-  AlarmResult(
-      {int? id,
-      String? unitName,
-      String? buildingName,
-      String? floorNumber,
-      String? roomNumber,
-      String? deviceName,
-      int? eventLevel,
-      String? eventTypeContent,
-      int? eventCount,
-      String? startTime,
-      String? confirmTime,
-      dynamic resetTime,
-      int? confirmResult,
-      int? status});
-
-  AlarmResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    unitName = json['unitName'];
-    buildingName = json['buildingName'];
-    floorNumber = json['floorNumber'];
-    roomNumber = json['roomNumber'];
-    deviceName = json['deviceName'];
-    eventLevel = json['eventLevel'];
-    eventTypeContent = json['eventTypeContent'];
-    eventCount = json['eventCount'];
-    startTime = json['startTime'];
-    confirmTime = json['confirmTime'];
-    resetTime = json['resetTime'];
-    confirmResult = json['confirmResult'];
-    status = json['status'];
-  }
+  AlarmItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        unitName = json['unitName'],
+        buildingName = json['buildingName'],
+        floorNumber = json['floorNumber'],
+        roomNumber = json['roomNumber'],
+        deviceName = json['deviceName'],
+        eventLevel = json['eventLevel'],
+        eventTypeContent = json['eventTypeContent'],
+        eventCount = json['eventCount'],
+        startTime = json['startTime'],
+        confirmTime = json['confirmTime'],
+        resetTime = json['resetTime'],
+        confirmResult = json['confirmResult'],
+        status = json['status'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -281,252 +149,45 @@ class AlarmResult {
     data['confirmResult'] = confirmResult;
     data['status'] = status;
     return data;
-  }
-}
-
-class FaultCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<FaultResult>? result;
-  int? fromRow;
-
-  FaultCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<FaultResult>? result,
-      int? fromRow});
-
-  FaultCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <FaultResult>[];
-      json['result'].forEach((v) {
-        result!.add(FaultResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
-}
-
-class FaultResult {
-  int? id;
-  String? unitName;
-  String? buildingName;
-  String? floorNumber;
-  String? roomNumber;
-  String? deviceName;
-  int? eventLevel;
-  String? eventTypeContent;
-  int? eventCount;
-  String? startTime;
-  dynamic confirmTime;
-  dynamic resetTime;
-  int? confirmResult;
-  int? status;
-
-  FaultResult(
-      {int? id,
-      String? unitName,
-      String? buildingName,
-      String? floorNumber,
-      String? roomNumber,
-      String? deviceName,
-      int? eventLevel,
-      String? eventTypeContent,
-      int? eventCount,
-      String? startTime,
-      dynamic confirmTime,
-      dynamic resetTime,
-      int? confirmResult,
-      int? status});
-
-  FaultResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    unitName = json['unitName'];
-    buildingName = json['buildingName'];
-    floorNumber = json['floorNumber'];
-    roomNumber = json['roomNumber'];
-    deviceName = json['deviceName'];
-    eventLevel = json['eventLevel'];
-    eventTypeContent = json['eventTypeContent'];
-    eventCount = json['eventCount'];
-    startTime = json['startTime'];
-    confirmTime = json['confirmTime'];
-    resetTime = json['resetTime'];
-    confirmResult = json['confirmResult'];
-    status = json['status'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['unitName'] = unitName;
-    data['buildingName'] = buildingName;
-    data['floorNumber'] = floorNumber;
-    data['roomNumber'] = roomNumber;
-    data['deviceName'] = deviceName;
-    data['eventLevel'] = eventLevel;
-    data['eventTypeContent'] = eventTypeContent;
-    data['eventCount'] = eventCount;
-    data['startTime'] = startTime;
-    data['confirmTime'] = confirmTime;
-    data['resetTime'] = resetTime;
-    data['confirmResult'] = confirmResult;
-    data['status'] = status;
-    return data;
-  }
-}
-
-class FaultParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
-  dynamic beginTime;
-  dynamic endTime;
-  dynamic keyword;
-  int eventLevel = 0;
-  dynamic deviceTypeId;
-  int status = 0;
-
-  Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
-        'beginTime': beginTime,
-        'endTime': endTime,
-        'keyword': keyword,
-        'eventLevel': eventLevel,
-        'deviceTypeId': deviceTypeId,
-        'status': status,
-      };
-  void change() {
-    notifyListeners();
   }
 }
 
 // 隐患
-class TroubleCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<TroubleResult>? result;
-  int? fromRow;
+class TroubleResponse extends ListResponse<TroubleItem> {
+  TroubleResponse.fromJson(super.json) : super.fromJson();
 
-  TroubleCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<TroubleResult>? result,
-      int? fromRow});
-
-  TroubleCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <TroubleResult>[];
-      json['result'].forEach((v) {
-        result!.add(TroubleResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  TroubleItem generateRecord(Map<String, dynamic> data) =>
+      TroubleItem.fromJson(data);
 }
 
-class TroubleResult {
-  int? id;
-  String? unitName;
-  String? buildingName;
-  String? floorNumber;
-  String? roomNumber;
-  int? levels;
-  int? type;
+class TroubleItem extends ListItemData {
+  int id;
+  String unitName;
+  String buildingName;
+  String floorNumber;
+  String roomNumber;
+  int levels;
+  int type;
   String? nickName;
   String? phone;
-  String? createTime;
+  String createTime;
   dynamic reviewTime;
   int? status;
 
-  TroubleResult(
-      {int? id,
-      String? unitName,
-      String? buildingName,
-      String? floorNumber,
-      String? roomNumber,
-      int? levels,
-      int? type,
-      String? nickName,
-      String? phone,
-      String? createTime,
-      dynamic reviewTime,
-      int? status});
-
-  TroubleResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    unitName = json['unitName'];
-    buildingName = json['buildingName'];
-    floorNumber = json['floorNumber'];
-    roomNumber = json['roomNumber'];
-    levels = json['levels'];
-    type = json['type'];
-    nickName = json['nickName'];
-    phone = json['phone'];
-    createTime = json['createTime'];
-    reviewTime = json['reviewTime'];
-    status = json['status'];
-  }
+  TroubleItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        unitName = json['unitName'],
+        buildingName = json['buildingName'],
+        floorNumber = json['floorNumber'],
+        roomNumber = json['roomNumber'],
+        levels = json['levels'],
+        type = json['type'],
+        nickName = json['nickName'],
+        phone = json['phone'],
+        createTime = json['createTime'],
+        reviewTime = json['reviewTime'],
+        status = json['status'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -546,129 +207,62 @@ class TroubleResult {
   }
 }
 
-class TroubleParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
+class TroubleParams extends Param {
   dynamic beginTime;
   dynamic endTime;
   dynamic type;
   dynamic levels;
   int status = 0;
 
+  @override
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
+        ...super.toJson(),
         'beginTime': beginTime,
         'endTime': endTime,
         'type': type,
         'levels': levels,
         'status': status,
       };
-  void change() {
-    notifyListeners();
-  }
 }
 
 // 危险品
-class DangerCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<DangerResult>? result;
-  int? fromRow;
+class DangerResponse extends ListResponse<DangerItem> {
+  DangerResponse.fromJson(super.json) : super.fromJson();
 
-  DangerCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<DangerResult>? result,
-      int? fromRow});
-
-  DangerCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <DangerResult>[];
-      json['result'].forEach((v) {
-        result!.add(DangerResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  DangerItem generateRecord(Map<String, dynamic> data) =>
+      DangerItem.fromJson(data);
 }
 
-class DangerResult {
-  int? id;
-  String? unitName;
-  String? buildingName;
-  String? floorNumber;
-  String? roomNumber;
-  String? dangerTypeName;
+class DangerItem extends ListItemData {
+  int id;
+  String unitName;
+  String buildingName;
+  String floorNumber;
+  String roomNumber;
+  String dangerTypeName;
   String? nickName;
   String? phone;
-  String? cont;
-  String? treatment;
-  String? createTime;
+  String cont;
+  String treatment;
+  String createTime;
   dynamic reviewTime;
-  int? status;
+  int status;
 
-  DangerResult(
-      {int? id,
-      String? unitName,
-      String? buildingName,
-      String? floorNumber,
-      String? roomNumber,
-      String? dangerTypeName,
-      String? nickName,
-      String? phone,
-      String? cont,
-      String? treatment,
-      String? createTime,
-      dynamic reviewTime,
-      int? status});
-
-  DangerResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    unitName = json['unitName'];
-    buildingName = json['buildingName'];
-    floorNumber = json['floorNumber'];
-    roomNumber = json['roomNumber'];
-    dangerTypeName = json['dangerTypeName'];
-    nickName = json['nickName'];
-    phone = json['phone'];
-    cont = json['cont'];
-    treatment = json['treatment'];
-    createTime = json['createTime'];
-    reviewTime = json['reviewTime'];
-    status = json['status'];
-  }
+  DangerItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        unitName = json['unitName'],
+        buildingName = json['buildingName'],
+        floorNumber = json['floorNumber'],
+        roomNumber = json['roomNumber'],
+        dangerTypeName = json['dangerTypeName'],
+        nickName = json['nickName'],
+        phone = json['phone'],
+        cont = json['cont'],
+        treatment = json['treatment'],
+        createTime = json['createTime'],
+        reviewTime = json['reviewTime'],
+        status = json['status'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -689,121 +283,56 @@ class DangerResult {
   }
 }
 
-class DangerParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
+class DangerParams extends Param {
   dynamic beginTime;
   dynamic endTime;
   dynamic type;
   int status = 0;
 
+  @override
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
+        ...super.toJson(),
         'beginTime': beginTime,
         'endTime': endTime,
         'type': type,
         'status': status,
       };
-  void change() {
-    notifyListeners();
-  }
 }
 
 // 风险
-class RiskCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<RiskResult>? result;
-  int? fromRow;
+class RiskResponse extends ListResponse<RiskItem> {
+  RiskResponse.fromJson(super.json) : super.fromJson();
 
-  RiskCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<RiskResult>? result,
-      int? fromRow});
-
-  RiskCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <RiskResult>[];
-      json['result'].forEach((v) {
-        result!.add(RiskResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  RiskItem generateRecord(Map<String, dynamic> data) =>
+      RiskItem.fromJson(data);
 }
 
-class RiskResult {
+class RiskItem extends ListItemData {
   int? id;
-  String? unitName;
+  String unitName;
   String? warnSource;
-  int? warnType;
+  int warnType;
   String? warnContent;
   double? warnValue;
   dynamic standardValue;
   dynamic relieveWarnValue;
-  String? startTime;
+  String startTime;
   dynamic endTime;
   int? warnStatus;
 
-  RiskResult(
-      {int? id,
-      String? unitName,
-      String? warnSource,
-      int? warnType,
-      String? warnContent,
-      double? warnValue,
-      dynamic standardValue,
-      dynamic relieveWarnValue,
-      String? startTime,
-      dynamic endTime,
-      int? warnStatus});
-
-  RiskResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    unitName = json['unitName'];
-    warnSource = json['warnSource'];
-    warnType = json['warnType'];
-    warnContent = json['warnContent'];
-    warnValue = json['warnValue'];
-    standardValue = json['standardValue'];
-    relieveWarnValue = json['relieveWarnValue'];
-    startTime = json['startTime'];
-    endTime = json['endTime'];
-    warnStatus = json['warnStatus'];
-  }
+  RiskItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        unitName = json['unitName'],
+        warnSource = json['warnSource'],
+        warnType = json['warnType'],
+        warnContent = json['warnContent'],
+        warnValue = json['warnValue'],
+        standardValue = json['standardValue'],
+        relieveWarnValue = json['relieveWarnValue'],
+        startTime = json['startTime'],
+        endTime = json['endTime'],
+        warnStatus = json['warnStatus'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -822,103 +351,43 @@ class RiskResult {
   }
 }
 
-class RiskParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
+class RiskParams extends Param {
   dynamic beginTime;
   dynamic endTime;
   dynamic warnType;
   int warnStatus = 1;
 
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
+        ...super.toJson(),
         'beginTime': beginTime,
         'endTime': endTime,
         'warnType': warnType,
         'warnStatus': warnStatus,
       };
-  void change() {
-    notifyListeners();
-  }
 }
 
 // 提醒
-class ReminfCase {
-  int? currentPage;
-  int? totalPage;
-  int? totalRow;
-  int? pageSize;
-  String? orderByClause;
-  bool? needCount;
-  List<ReminfResult>? result;
-  int? fromRow;
+class RemindResponse extends ListResponse<RemindItem> {
+  RemindResponse.fromJson(super.json) : super.fromJson();
 
-  ReminfCase(
-      {int? currentPage,
-      int? totalPage,
-      int? totalRow,
-      int? pageSize,
-      String? orderByClause,
-      bool? needCount,
-      List<ReminfResult>? result,
-      int? fromRow});
-
-  ReminfCase.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <ReminfResult>[];
-      json['result'].forEach((v) {
-        result!.add(ReminfResult.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  RemindItem generateRecord(Map<String, dynamic> data) =>
+      RemindItem.fromJson(data);
 }
 
-class ReminfResult {
-  String? unitName;
-  int? type;
-  String? source;
-  String? content;
-  int? happenTime;
+class RemindItem extends ListItemData {
+  String unitName;
+  int type;
+  String source;
+  String content;
+  int happenTime;
 
-  ReminfResult(
-      {String? unitName,
-      int? type,
-      String? source,
-      String? content,
-      int? happenTime});
-
-  ReminfResult.fromJson(Map<String, dynamic> json) {
-    unitName = json['unitName'];
-    type = json['type'];
-    source = json['source'];
-    content = json['content'];
-    happenTime = json['happenTime'];
-  }
+  RemindItem.fromJson(Map<String, dynamic> json)
+      : unitName = json['unitName'],
+        type = json['type'],
+        source = json['source'],
+        content = json['content'],
+        happenTime = json['happenTime'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -931,23 +400,369 @@ class ReminfResult {
   }
 }
 
-class ReminfParams extends ChangeNotifier {
-  dynamic unitId;
-  int currentPage = 1;
-  int pageSize = 10;
+class RemindParams extends Param {
   dynamic beginTime;
   dynamic endTime;
   dynamic type;
 
+  @override
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
+        ...super.toJson(),
         'beginTime': beginTime,
         'endTime': endTime,
         'type': type
       };
-  void change() {
-    notifyListeners();
-  }
+}
+
+class FireDetail {
+  List<Attachment>? attachments;
+  String buildingName;
+  String cancelNickName;
+  String? cancelPhone;
+  String cancelRemark;
+  String confirmNickName;
+  String? confirmPhone;
+  String confirmReason;
+  String confirmTime;
+  int? cycle;
+  int deviceId;
+  String deviceMac;
+  String deviceName;
+  String deviceTypeName;
+  String? endTime;
+  String? eventTypeContent;
+  int fireType;
+  String floorNumber;
+  int id;
+  List<LbsInfo>? lbsList;
+  String nickName;
+  String? phone;
+  double pointX;
+  double pointY;
+  String remark;
+  String roomNumber;
+  String startTime;
+  int status;
+  int unitId;
+  String unitName;
+  List<CameraInfo>? videos;
+  double xRate;
+  double yRate;
+
+  FireDetail.fromJson(Map<String, dynamic> json)
+      : attachments = json['attachments']
+            ?.map((v) => Attachment.fromJson(v))
+            .toList()
+            .cast<Attachment>(),
+        buildingName = json['buildingName'],
+        cancelNickName = json['cancelNickName'],
+        cancelPhone = json['cancelPhone'],
+        cancelRemark = json['cancelRemark'],
+        confirmNickName = json['confirmNickName'],
+        confirmPhone = json['confirmPhone'],
+        confirmReason = json['confirmReason'],
+        confirmTime = json['confirmTime'],
+        cycle = json['cycle'],
+        deviceId = json['deviceId'],
+        deviceMac = json['deviceMac'],
+        deviceName = json['deviceName'],
+        deviceTypeName = json['deviceTypeName'],
+        endTime = json['endTime'],
+        eventTypeContent = json['eventTypeContent'],
+        fireType = json['fireType'],
+        floorNumber = json['floorNumber'],
+        id = json['id'],
+        lbsList = json['lbsList']
+            ?.map((v) => LbsInfo.fromJson(v))
+            .toList()
+            .cast<LbsInfo>(),
+        nickName = json['nickName'],
+        phone = json['phone'],
+        pointX = json['pointX'],
+        pointY = json['pointY'],
+        remark = json['remark'],
+        roomNumber = json['roomNumber'],
+        startTime = json['startTime'],
+        status = json['status'],
+        unitId = json['unitId'],
+        unitName = json['unitName'],
+        videos = json['videos']
+            ?.map((v) => CameraInfo.fromJson(v))
+            .toList()
+            .cast<CameraInfo>(),
+        xRate = json['xRate'],
+        yRate = json['yRate'];
+}
+
+class Attachment {
+  int? attachmentType;
+  String attachmentUrl;
+  int targetAction;
+
+  Attachment.fromJson(Map<String, dynamic> json)
+      : attachmentType = json['attachmentType'],
+        attachmentUrl = json['attachmentUrl'],
+        targetAction = json['targetAction'];
+}
+
+class CameraInfo {
+  String buildingName;
+  String? channelNo;
+  String? code;
+  String? deviceSerial;
+  String deviceUrl;
+  String? floorNumber;
+  int id;
+  int? manufactorId;
+  String name;
+  String? network;
+  String? roomNumber;
+  int? sd;
+  String unitName;
+
+  CameraInfo.fromJson(Map<String, dynamic> json)
+      : buildingName = json['buildingName'],
+        channelNo = json['channelNo'],
+        code = json['code'],
+        deviceSerial = json['deviceSerial'],
+        deviceUrl = json['deviceUrl'],
+        floorNumber = json['floorNumber'],
+        id = json['id'],
+        manufactorId = json['manufactorId'],
+        name = json['name'],
+        network = json['network'],
+        roomNumber = json['roomNumber'],
+        sd = json['sd'],
+        unitName = json['unitName'];
+}
+
+class LbsInfo {
+  String? address;
+  int? buildingId;
+  String crTime;
+  int departmentId;
+  LbsExtension extensions;
+  int? groupCount;
+  String id;
+  LbsLoc loc;
+  int objId;
+  String title;
+  int type;
+  String? upTime;
+
+  LbsInfo.fromJson(Map<String, dynamic> json)
+      : address = json['address'],
+        buildingId = json['buildingId'],
+        crTime = json['crTime'],
+        departmentId = json['departmentId'],
+        extensions = LbsExtension.fromJson(json['extensions']),
+        groupCount = json['groupCount'],
+        id = json['id'],
+        loc = LbsLoc.fromJson(json['loc']),
+        objId = json['objId'],
+        title = json['title'],
+        type = json['type'],
+        upTime = json['upTime'];
+}
+
+class LbsExtension {
+  int? deviceType;
+  String? deviceTypeName;
+
+  String? humanRole;
+  String? phone;
+  String? userAvatar;
+
+  LbsExtension.fromJson(Map<dynamic, dynamic> json)
+      : deviceType = json['DEVICE_TYPE'],
+        deviceTypeName = json['DEVICE_TYPE_NAME'],
+        humanRole = json['HUMAN_ROLE'],
+        phone = json['PHONE'],
+        userAvatar = json['USER_AVATAR'];
+}
+
+class LbsLoc {
+  String type;
+  List<double> coordinates;
+
+  LbsLoc.fromJson(Map<String, dynamic> json)
+      : type = json['type'],
+        coordinates = json['coordinates'].cast<double>();
+}
+
+class AlarmDetail {
+  List<Attachment>? attachments;
+  String buildingName;
+  String confirmNickName;
+  String? confirmPhone;
+  String confirmReason;
+  int confirmResult;
+  String? confirmTime;
+  int deviceId;
+  String deviceMac;
+  String deviceName;
+  String deviceTypeName;
+  List<dynamic>? devices;
+  int eventCount;
+  int eventLevel;
+  String eventTypeContent;
+  String floorNumber;
+  int id;
+  double pointX;
+  double pointY;
+  String? resetTime;
+  String roomNumber;
+  String startTime;
+  int status;
+  String? svgUrl;
+  int unitId;
+  String unitName;
+  List<CameraInfo>? videos;
+  double xRate;
+  double yRate;
+
+  AlarmDetail.fromJson(Map<String, dynamic> json)
+      : attachments = json['attachments']
+            ?.map((v) => Attachment.fromJson(v))
+            .toList()
+            .cast<Attachment>(),
+        buildingName = json['buildingName'],
+        confirmNickName = json['confirmNickName'],
+        confirmPhone = json['confirmPhone'],
+        confirmReason = json['confirmReason'],
+        confirmResult = json['confirmResult'],
+        confirmTime = json['confirmTime'],
+        deviceId = json['deviceId'],
+        deviceMac = json['deviceMac'],
+        deviceName = json['deviceName'],
+        deviceTypeName = json['deviceTypeName'],
+        devices = json['devices'],
+        eventCount = json['eventCount'],
+        eventLevel = json['eventLevel'],
+        eventTypeContent = json['eventTypeContent'],
+        floorNumber = json['floorNumber'],
+        id = json['id'],
+        pointX = json['pointX'],
+        pointY = json['pointY'],
+        resetTime = json['resetTime'],
+        roomNumber = json['roomNumber'],
+        startTime = json['startTime'],
+        status = json['status'],
+        svgUrl = json['svgUrl'],
+        unitId = json['unitId'],
+        unitName = json['unitName'],
+        videos = json['videos']
+            ?.map((v) => CameraInfo.fromJson(v))
+            .toList()
+            .cast<CameraInfo>(),
+        xRate = json['xRate'],
+        yRate = json['yRate'];
+}
+
+class TroubleDetail {
+  List<Attachment>? attachments;
+  String buildingName;
+  String cont;
+  String createTime;
+  String floorNumber;
+  int id;
+  int levels;
+  String nickName;
+  String? phone;
+  double pointX;
+  double pointY;
+  String? reviewTime;
+  String reviewerName;
+  String? reviewerPhone;
+  String roomNumber;
+  int status;
+  String? svgUrl;
+  String treatment;
+  int type;
+  int unitId;
+  String unitName;
+  double xRate;
+  double yRate;
+
+  TroubleDetail.fromJson(Map<String, dynamic> json)
+      : attachments = json['attachments']
+            ?.map((v) => Attachment.fromJson(v))
+            .toList()
+            .cast<Attachment>(),
+        buildingName = json['buildingName'],
+        cont = json['cont'],
+        createTime = json['createTime'],
+        floorNumber = json['floorNumber'],
+        id = json['id'],
+        levels = json['levels'],
+        nickName = json['nickName'],
+        phone = json['phone'],
+        pointX = json['pointX'],
+        pointY = json['pointY'],
+        reviewTime = json['reviewTime'],
+        reviewerName = json['reviewerName'],
+        reviewerPhone = json['reviewerPhone'],
+        roomNumber = json['roomNumber'],
+        status = json['status'],
+        svgUrl = json['svgUrl'],
+        treatment = json['treatment'],
+        type = json['type'],
+        unitId = json['unitId'],
+        unitName = json['unitName'],
+        xRate = json['xRate'],
+        yRate = json['yRate'];
+}
+
+class DangerDetail {
+  List<Attachment>? attachments;
+  String buildingName;
+  String cont;
+  String createTime;
+  String dangerName;
+  String dangerTypeName;
+  String floorNumber;
+  int id;
+  String nickName;
+  String? phone;
+  double pointX;
+  double pointY;
+  String? reviewTime;
+  String reviewerName;
+  String? reviewerPhone;
+  String roomNumber;
+  int status;
+  String? svgUrl;
+  String treatment;
+  int unitId;
+  String unitName;
+  double xRate;
+  double yRate;
+
+  DangerDetail.fromJson(Map<String, dynamic> json)
+      : attachments = json['attachments']
+            ?.map((v) => Attachment.fromJson(v))
+            .toList()
+            .cast<Attachment>(),
+        buildingName = json['buildingName'],
+        cont = json['cont'],
+        createTime = json['createTime'],
+        dangerName = json['dangerName'],
+        dangerTypeName = json['dangerTypeName'],
+        floorNumber = json['floorNumber'],
+        id = json['id'],
+        nickName = json['nickName'],
+        phone = json['phone'],
+        pointX = json['pointX'],
+        pointY = json['pointY'],
+        reviewTime = json['reviewTime'],
+        reviewerName = json['reviewerName'],
+        reviewerPhone = json['reviewerPhone'],
+        roomNumber = json['roomNumber'],
+        status = json['status'],
+        svgUrl = json['svgUrl'],
+        treatment = json['treatment'],
+        unitId = json['unitId'],
+        unitName = json['unitName'],
+        xRate = json['xRate'],
+        yRate = json['yRate'];
 }

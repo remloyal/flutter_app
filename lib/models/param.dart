@@ -1,7 +1,9 @@
-class Param {
+import 'package:flutter/material.dart';
+
+class Param with ChangeNotifier {
   int currentPage;
   int pageSize;
-  dynamic unitId;
+  int? unitId;
 
   Param({this.currentPage = 1, this.pageSize = 10, this.unitId});
 
@@ -10,4 +12,8 @@ class Param {
         'pageSize': pageSize,
         'unitId': unitId,
       };
+
+  void change() {
+    notifyListeners();
+  }
 }

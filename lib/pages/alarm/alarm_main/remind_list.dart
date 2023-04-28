@@ -6,26 +6,24 @@ import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/utils/alarm_tool.dart';
 
-class ReminfList extends StatefulWidget {
-  const ReminfList({Key? key}) : super(key: key);
+class RemindList extends StatefulWidget {
+  const RemindList({Key? key}) : super(key: key);
 
   @override
-  State<ReminfList> createState() => _ReminfListState();
+  State<RemindList> createState() => _RemindListState();
 }
 
-class _ReminfListState extends State<ReminfList> {
-  final ReminfParams _alarmParam = ReminfParams();
+class _RemindListState extends State<RemindList> with ListBuilder<RemindItem> {
+  final RemindParams _alarmParam = RemindParams();
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: AlarmApi.useRemindList,
-        param: _alarmParam,
-        precedent: ReminfCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<RemindApi, RemindParams>(
+        api: RemindApi(), param: _alarmParam, listBuilder: this);
   }
 
-  _header(fire) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Padding(
@@ -34,7 +32,7 @@ class _ReminfListState extends State<ReminfList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '共 ${fire.totalRow ?? 0} 条',
+                '共 $total 条',
                 style: const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
               ),
               InkWell(
@@ -57,7 +55,8 @@ class _ReminfListState extends State<ReminfList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, RemindItem item) {
     return InkWell(
       onTap: () {
         print('${item}');

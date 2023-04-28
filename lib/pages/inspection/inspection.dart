@@ -1,4 +1,4 @@
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/pages/inspection/route_list.dart';
 import 'package:fire_control_app/widgets/keep_alive.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +29,7 @@ class _InspectionState extends State<Inspection>
       children: [
         Container(
           padding: const EdgeInsets.only(left: 8, right: 8),
-          color: FireControlColor.cardColor,
+          color: FcColor.cardColor,
           child: TabBar(
             tabs: tabs.map((e) => Tab(text: e)).toList(),
             controller: _tabController,

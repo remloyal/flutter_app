@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 import '../../states/unit_model.dart';
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
       }
     ];
     return Container(
-        color: FireControlColor.cardColor,
+        color: FcColor.cardColor,
         padding: const EdgeInsets.all(10),
         child: Flex(
             direction: Axis.horizontal,
@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePage> {
           Container(
               width: 3,
               height: 20,
-              color: FireControlColor.baseColor,
+              color: FcColor.baseColor,
               margin: const EdgeInsets.fromLTRB(0, 0, 10, 0)),
           const Expanded(
             flex: 1,
@@ -408,7 +408,7 @@ class _HomePageState extends State<HomePage> {
           Container(
               width: 3,
               height: 20,
-              color: FireControlColor.baseColor,
+              color: FcColor.baseColor,
               margin: const EdgeInsets.fromLTRB(0, 0, 10, 0)),
           const Expanded(
             flex: 1,
@@ -546,7 +546,7 @@ class _HomePageState extends State<HomePage> {
           Container(
               width: 3,
               height: 20,
-              color: FireControlColor.baseColor,
+              color: FcColor.baseColor,
               margin: const EdgeInsets.fromLTRB(0, 0, 10, 0)),
           const Expanded(
             flex: 1,

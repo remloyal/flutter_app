@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -14,21 +15,18 @@ class AlarmList extends StatefulWidget {
   State<AlarmList> createState() => _AlarmListState();
 }
 
-class _AlarmListState extends State<AlarmList> {
+class _AlarmListState extends State<AlarmList> with ListBuilder<AlarmItem> {
   final AlarmParams _alarmParam = AlarmParams();
   final GlobalKey alarmKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        key: alarmKey,
-        api: AlarmApi.useAlarmList,
-        param: _alarmParam,
-        precedent: FireCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<AlarmApi, AlarmParams>(
+        api: AlarmApi(), param: _alarmParam, listBuilder: this);
   }
 
-  _header(fire) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -40,7 +38,6 @@ class _AlarmListState extends State<AlarmList> {
                 names: const ['告警中', '已关闭'],
                 height: 30,
                 onTap: (index) {
-                  print(index);
                   if (index == 0) {
                     setState(() {
                       _alarmParam.status = 0;
@@ -60,7 +57,7 @@ class _AlarmListState extends State<AlarmList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${fire.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -89,11 +86,12 @@ class _AlarmListState extends State<AlarmList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, AlarmItem item) {
     return InkWell(
       onTap: () {
-        print('${item}');
-        // _refresh();
+        Navigator.pushNamed(context, AlarmDetailPage.routeName,
+            arguments: item.id);
       },
       child: CardParent(
         header: Row(
@@ -225,7 +223,7 @@ class _AlarmListState extends State<AlarmList> {
                     size: 16,
                   ),
                   Text(
-                    item.resetTime,
+                    item.resetTime ?? '-',
                     style:
                         const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
@@ -240,7 +238,7 @@ class _AlarmListState extends State<AlarmList> {
                     size: 16,
                   ),
                   Text(
-                    item.confirmTime,
+                    item.confirmTime ?? '-',
                     style:
                         const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),

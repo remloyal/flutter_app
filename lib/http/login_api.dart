@@ -152,7 +152,7 @@ class LoginService {
 
   // 退出登录
   static clearInfo() {
-    navigatorKey.currentState?.pushReplacementNamed('login');
+    Global.navigatorKey.currentState?.pushReplacementNamed('login');
     Global.profile.apiInfo.ticket = '';
     Global.profile.apiInfo.token = '';
     Global.profile.apiInfo.user = {};

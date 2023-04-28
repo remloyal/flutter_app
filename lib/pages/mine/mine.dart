@@ -1,4 +1,4 @@
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/http/login_api.dart';
 import 'package:fire_control_app/http/mine_api.dart';
@@ -57,7 +57,7 @@ class _MineState extends State<Mine> {
                         height: 150,
                         // width: 200,
                         width: MediaQuery.of(context).size.width,
-                        color: FireControlColor.barMineColor,
+                        color: FcColor.barMineColor,
                         child: Column(
                           children: [
                             Container(
@@ -81,7 +81,7 @@ class _MineState extends State<Mine> {
                       height: 200,
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.only(top: 28),
-                      color: FireControlColor.cardColor,
+                      color: FcColor.cardColor,
                       child: operate(),
                     )),
                 Positioned(
@@ -94,7 +94,7 @@ class _MineState extends State<Mine> {
                         margin: const EdgeInsets.all(10),
                         // color: FireControlColor.cardColor,
                         decoration: const BoxDecoration(
-                            color: FireControlColor.cardColor,
+                            color: FcColor.cardColor,
                             borderRadius: BorderRadius.all(Radius.circular(40)),
                             boxShadow: [
                               BoxShadow(
@@ -150,7 +150,7 @@ class _MineState extends State<Mine> {
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.only(top: 10),
             padding: const EdgeInsets.all(10),
-            color: FireControlColor.cardColor,
+            color: FcColor.cardColor,
             child: news(),
           ),
           SingleChildScrollView(
@@ -158,7 +158,7 @@ class _MineState extends State<Mine> {
               width: MediaQuery.of(context).size.width,
               // margin: EdgeInsets.only(top: 10),
               padding: const EdgeInsets.only(left: 10, right: 10),
-              color: FireControlColor.cardColor,
+              color: FcColor.cardColor,
               child: mineItem(),
             ),
           ),
@@ -207,7 +207,7 @@ class _MineState extends State<Mine> {
       }
     ];
     return Container(
-        color: FireControlColor.cardColor,
+        color: FcColor.cardColor,
         padding: const EdgeInsets.all(10),
         child: Flex(
             direction: Axis.horizontal,

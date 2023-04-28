@@ -6,6 +6,8 @@ import 'package:fire_control_app/common/constants.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/models/api_info.dart';
 import 'package:fire_control_app/http/login_api.dart';
+import 'package:fire_control_app/models/param.dart';
+import 'package:fire_control_app/models/response.dart';
 import 'package:fire_control_app/utils/toast.dart';
 
 enum DioMethod {
@@ -81,6 +83,11 @@ class Http {
       return;
     }
 
+    // if (data['errorCode'] != null) {
+    //   Message.error(data["message"]);
+    //   return;
+    // }
+
     handler.next(response);
   }
 
@@ -124,4 +131,8 @@ class Http {
       rethrow;
     }
   }
+}
+
+abstract class ListApi<T extends ListResponse, P extends Param> {
+  Future<T> loadList(P params);
 }

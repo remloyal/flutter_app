@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/details/fire_detail_page.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -14,20 +15,17 @@ class FireList extends StatefulWidget {
   State<FireList> createState() => _FireListState();
 }
 
-class _FireListState extends State<FireList> {
+class _FireListState extends State<FireList> with ListBuilder<FireItem> {
   final FireParams _fireParam = FireParams();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: AlarmApi.useFireList,
-        param: _fireParam,
-        precedent: FireCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<FireApi, FireParams>(
+        api: FireApi(), param: _fireParam, listBuilder: this);
   }
 
-  _header(fire) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -39,7 +37,6 @@ class _FireListState extends State<FireList> {
                 names: const ['告警中', '已关闭'],
                 height: 30,
                 onTap: (index) {
-                  print(index);
                   if (index == 0) {
                     setState(() {
                       _fireParam.status = 0;
@@ -59,7 +56,7 @@ class _FireListState extends State<FireList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${fire.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -88,11 +85,12 @@ class _FireListState extends State<FireList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, FireItem item) {
     return InkWell(
       onTap: () {
-        print('${item}');
-        // _refresh();
+        Navigator.pushNamed(context, FireDetailPage.routeName,
+            arguments: item.id);
       },
       child: CardParent(
         header: Row(
@@ -166,38 +164,18 @@ class _FireListState extends State<FireList> {
               ),
             if (item.status == 0)
               XfItem(
-                label: item.fireType == 1 ? '上报人员' : '确认人员',
-                contentWidget: Row(children: [
-                  Text(
-                    item.fireType == 3 ? '智能监控设备' : item.nickName,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  if (item.phone != null)
-                    InkWell(
-                      child: Text(
-                        item.phone,
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    )
-                ]),
-              ),
+                  label: item.fireType == 1 ? '上报人员' : '确认人员',
+                  contentWidget: UserContent(
+                    name: item.fireType == 3 ? '智能监控设备' : item.nickName ?? '-',
+                    phone: item.phone,
+                  )),
             if (item.status == 1)
               XfItem(
-                label: '关闭人员',
-                contentWidget: Row(children: [
-                  Text(
-                    item.nickName,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  if (item.phone != null)
-                    InkWell(
-                      child: Text(
-                        item.phone,
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    )
-                ]),
-              )
+                  label: '关闭人员',
+                  contentWidget: UserContent(
+                    name: item.nickName,
+                    phone: item.phone,
+                  ))
           ],
         ),
         fotter: Row(

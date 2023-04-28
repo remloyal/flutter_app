@@ -1,4 +1,4 @@
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/inspection_api.dart';
 import 'package:fire_control_app/models/inspection.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
@@ -14,20 +14,18 @@ class RouteList extends StatefulWidget {
   State<StatefulWidget> createState() => _RouteListState();
 }
 
-class _RouteListState extends State<RouteList> {
+class _RouteListState extends State<RouteList>
+    with ListBuilder<InspectionRoute> {
   final RouteParam _routeParam = RouteParam();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: InspectionApi.getInspectionList,
-        param: _routeParam,
-        precedent: RouteResponse(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<RouteApi, RouteParam>(
+        api: RouteApi(), param: _routeParam, listBuilder: this);
   }
 
-  _header(data) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -39,7 +37,6 @@ class _RouteListState extends State<RouteList> {
                 names: const ['可领取', '已领取'],
                 height: 30,
                 onTap: (index) {
-                  print(index);
                   if (index == 1) {
                     _routeParam.status = 2;
                   } else {
@@ -54,7 +51,7 @@ class _RouteListState extends State<RouteList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${data.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -91,7 +88,8 @@ class _RouteListState extends State<RouteList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, InspectionRoute item) {
     return _RouteItem(route: item);
   }
 }
@@ -108,7 +106,7 @@ class _RouteItem extends StatelessWidget {
         Container(
             width: 3,
             height: 16,
-            color: FireControlColor.baseColor,
+            color: FcColor.baseColor,
             margin: const EdgeInsets.fromLTRB(0, 0, 10, 0)),
         Expanded(
           flex: 1,

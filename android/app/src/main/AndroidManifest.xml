@@ -2,7 +2,7 @@
     package="ltd.zhxf.jsca.xf">
    <application
         android:label="智慧消防"
-        android:name=".MainApplication"
+        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

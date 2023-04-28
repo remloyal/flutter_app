@@ -1,105 +1,45 @@
-import 'package:flutter/material.dart';
+import 'package:fire_control_app/models/param.dart';
+import 'package:fire_control_app/models/response.dart';
 
-class DeviceList {
-  late int currentPage;
-  late int totalPage;
-  late int totalRow;
-  late int pageSize;
-  late String orderByClause;
-  late bool needCount;
-  late List<DeviceItem>? result;
-  late int fromRow;
+class DeviceResponse extends ListResponse<DeviceItem> {
+  DeviceResponse.fromJson(super.json) : super.fromJson();
 
-  DeviceList(
-      {this.currentPage = 1,
-      this.totalPage = 0,
-      this.totalRow = 0,
-      this.pageSize = 0,
-      this.orderByClause = '',
-      this.needCount = false,
-      this.result,
-      this.fromRow = 0});
-
-  DeviceList.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    totalPage = json['totalPage'];
-    totalRow = json['totalRow'];
-    pageSize = json['pageSize'];
-    orderByClause = json['orderByClause'];
-    needCount = json['needCount'];
-    if (json['result'] != null) {
-      result = <DeviceItem>[];
-      json['result'].forEach((v) {
-        result!.add(DeviceItem.fromJson(v));
-      });
-    }
-    fromRow = json['fromRow'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['currentPage'] = currentPage;
-    data['totalPage'] = totalPage;
-    data['totalRow'] = totalRow;
-    data['pageSize'] = pageSize;
-    data['orderByClause'] = orderByClause;
-    data['needCount'] = needCount;
-    if (result != null) {
-      data['result'] = result!.map((v) => v.toJson()).toList();
-    }
-    data['fromRow'] = fromRow;
-    return data;
-  }
+  @override
+  DeviceItem generateRecord(Map<String, dynamic> data) =>
+      DeviceItem.fromJson(data);
 }
 
-class DeviceItem {
-  late int id;
-  late String name;
-  late String unitName;
-  late String buildingName;
-  late dynamic floorNumber;
-  late dynamic roomNumber;
-  late int deviceTypeId;
-  late String deviceTypeName;
-  late String mac;
-  late int alarm;
-  late int fault;
-  late int online;
-  late int stop;
-  late dynamic expire;
+class DeviceItem extends ListItemData {
+  int id;
+  String name;
+  String unitName;
+  String buildingName;
+  dynamic floorNumber;
+  dynamic roomNumber;
+  int deviceTypeId;
+  String deviceTypeName;
+  String mac;
+  int alarm;
+  int fault;
+  int online;
+  int stop;
+  dynamic expire;
 
-  DeviceItem(
-      {required int id,
-      required String name,
-      required String unitName,
-      required String buildingName,
-      required String floorNumber,
-      required dynamic roomNumber,
-      required int deviceTypeId,
-      required String deviceTypeName,
-      required String mac,
-      required int alarm,
-      required int fault,
-      required int online,
-      required int stop,
-      required dynamic expire});
-
-  DeviceItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'] ?? '';
-    unitName = json['unitName'] ?? '';
-    buildingName = json['buildingName'] ?? '';
-    floorNumber = json['floorNumber'] ?? '';
-    roomNumber = json['roomNumber'] ?? '';
-    deviceTypeId = json['deviceTypeId'];
-    deviceTypeName = json['deviceTypeName'] ?? '';
-    mac = json['mac'] ?? '';
-    alarm = json['alarm'] ?? 0;
-    fault = json['fault'] ?? 0;
-    online = json['online'] ?? 0;
-    stop = json['stop'] ?? 0;
+  DeviceItem.fromJson(Map<String, dynamic> json):
+    id = json['id'],
+    name = json['name'] ?? '',
+    unitName = json['unitName'] ?? '',
+    buildingName = json['buildingName'] ?? '',
+    floorNumber = json['floorNumber'] ?? '',
+    roomNumber = json['roomNumber'] ?? '',
+    deviceTypeId = json['deviceTypeId'],
+    deviceTypeName = json['deviceTypeName'] ?? '',
+    mac = json['mac'] ?? '',
+    alarm = json['alarm'] ?? 0,
+    fault = json['fault'] ?? 0,
+    online = json['online'] ?? 0,
+    stop = json['stop'] ?? 0,
     expire = json['expire'] ?? 0;
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -121,11 +61,8 @@ class DeviceItem {
   }
 }
 
-class DeviceParams extends ChangeNotifier {
-  dynamic unitId;
+class DeviceParams extends Param {
   String? keyword = '';
-  int currentPage = 1;
-  int pageSize = 10;
   int? buildId;
   int? floorId;
   int? roomId;
@@ -135,11 +72,10 @@ class DeviceParams extends ChangeNotifier {
   int? stop;
   int? expire;
 
+  @override
   Map<String, dynamic> toJson() => {
-        'unitId': unitId,
+        ...super.toJson(),
         'keyword': keyword,
-        'currentPage': currentPage,
-        'pageSize': pageSize,
         'buildId': buildId,
         'floorId': floorId,
         'roomId': roomId,
@@ -149,10 +85,6 @@ class DeviceParams extends ChangeNotifier {
         'stop': stop,
         'expire': expire,
       };
-
-  void change() {
-    notifyListeners();
-  }
 
   // 重置
   void initial() {

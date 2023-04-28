@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -14,19 +15,17 @@ class DangerList extends StatefulWidget {
   State<DangerList> createState() => _DangerListState();
 }
 
-class _DangerListState extends State<DangerList> {
+class _DangerListState extends State<DangerList> with ListBuilder<DangerItem> {
   final DangerParams _alarmParam = DangerParams();
+
   @override
   Widget build(BuildContext context) {
-    return LoadList(
-        api: AlarmApi.useDangerList,
-        param: _alarmParam,
-        precedent: DangerCase(),
-        setTtem: _setTtem,
-        header: _header);
+    return LoadList<DangerApi, DangerParams>(
+        api: DangerApi(), param: _alarmParam, listBuilder: this);
   }
 
-  _header(fire) {
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -38,7 +37,6 @@ class _DangerListState extends State<DangerList> {
                 names: const ['待处理', '已处理'],
                 height: 30,
                 onTap: (index) {
-                  print(index);
                   if (index == 0) {
                     setState(() {
                       _alarmParam.status = 0;
@@ -58,7 +56,7 @@ class _DangerListState extends State<DangerList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${fire.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -87,11 +85,12 @@ class _DangerListState extends State<DangerList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, DangerItem item) {
     return InkWell(
       onTap: () {
-        print('${item}');
-        // _refresh();
+        Navigator.pushNamed(context, DangerDetailPage.routeName,
+            arguments: item.id);
       },
       child: CardParent(
         header: Row(
@@ -174,7 +173,7 @@ class _DangerListState extends State<DangerList> {
               label: item.status == 0 ? '上报人员' : '处理人员',
               contentWidget: Row(children: [
                 Text(
-                  item.nickName,
+                  item.nickName ?? '-',
                   style: const TextStyle(fontSize: 12),
                 ),
                 if (item.phone != null)

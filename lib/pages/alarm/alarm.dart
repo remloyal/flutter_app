@@ -7,7 +7,7 @@ import 'package:fire_control_app/pages/alarm/alarm_main/fire_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/remind_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/risk_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/trouble_list.dart';
-import 'package:fire_control_app/common/colors.dart';
+import 'package:fire_control_app/common/fc_color.dart';
 
 class Alarm extends StatefulWidget {
   const Alarm({super.key});
@@ -36,7 +36,7 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
                 flex: 1,
                 child: Container(
                   padding: const EdgeInsets.only(left: 8, right: 8),
-                  color: FireControlColor.cardColor,
+                  color: FcColor.cardColor,
                   child: TabBar(
                     tabs: tabs.map((e) => Tab(text: e)).toList(),
                     controller: _tabController,
@@ -48,7 +48,7 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
                   ),
                 )),
             Container(
-                color: FireControlColor.cardColor,
+                color: FcColor.cardColor,
                 height: 48,
                 padding: const EdgeInsets.only(right: 6),
                 child: InkWell(
@@ -82,7 +82,7 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
                 TroubleList(),
                 DangerList(),
                 RiskList(),
-                ReminfList()
+                RemindList()
               ]),
         )
       ],

@@ -1,53 +1,85 @@
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
 
-class AlarmApi {
-  // 火情列表
-  static useFireList(FireParams params) async {
+class FireApi extends ListApi<FireResponse, FireParams> {
+  @override
+  Future<FireResponse> loadList(FireParams params) async {
     var response = await Http.dio
         .get('/mobile/fire/list', queryParameters: params.toJson());
-    return FireCase.fromJson(response.data);
+    return FireResponse.fromJson(response.data);
   }
 
-  // 设备告警列表
-  static useAlarmList(AlarmParams params) async {
+  // 火情详情
+  static Future<FireDetail> getFireDetail(int id) async {
+    var response =
+    await Http.dio.get('/mobile/fire/details', queryParameters: {'id': id});
+    return FireDetail.fromJson(response.data['data']);
+  }
+}
+
+class AlarmApi extends ListApi<AlarmResponse, AlarmParams> {
+  @override
+  Future<AlarmResponse> loadList(AlarmParams params) async {
     var response = await Http.dio
         .get('/mobile/alarm/list', queryParameters: params.toJson());
-    return AlarmCase.fromJson(response.data);
+    return AlarmResponse.fromJson(response.data);
   }
 
-  // 设备故障列表
-  static useFaultList(FaultParams params) async {
+  // 告警故障详情
+  static Future<AlarmDetail> getAlarmFaultDetail(int id) async {
     var response = await Http.dio
-        .get('/mobile/alarm/list', queryParameters: params.toJson());
-    return FaultCase.fromJson(response.data);
+        .get('/mobile/alarm/details', queryParameters: {'id': id});
+    return AlarmDetail.fromJson(response.data['data']);
   }
+}
 
-  // 隐患列表
-  static useTroubleList(TroubleParams params) async {
+class TroubleApi extends ListApi<TroubleResponse, TroubleParams> {
+  @override
+  Future<TroubleResponse> loadList(TroubleParams params) async {
     var response = await Http.dio
         .get('/mobile/trouble/list', queryParameters: params.toJson());
-    return TroubleCase.fromJson(response.data);
+    return TroubleResponse.fromJson(response.data);
   }
 
-  // 危险品列表
-  static useDangerList(DangerParams params) async {
+  // 隐患详情
+  static Future<TroubleDetail> getTroubleDetail(int id) async {
+    var response = await Http.dio
+        .get('/mobile/trouble/details', queryParameters: {'id': id});
+    return TroubleDetail.fromJson(response.data['data']);
+  }
+}
+
+class DangerApi extends ListApi<DangerResponse, DangerParams> {
+  @override
+  Future<DangerResponse> loadList(DangerParams params) async {
     var response = await Http.dio
         .get('/mobile/danger/list', queryParameters: params.toJson());
-    return DangerCase.fromJson(response.data);
+    return DangerResponse.fromJson(response.data);
   }
 
-  // 风险列表
-  static useRiskList(RiskParams params) async {
+  // 危险品详情
+  static Future<DangerDetail> getDangerDetail(int id) async {
+    var response = await Http.dio
+        .get('/mobile/danger/details', queryParameters: {'id': id});
+    return DangerDetail.fromJson(response.data['data']);
+  }
+}
+
+class RiskApi extends ListApi<RiskResponse, RiskParams> {
+  @override
+  Future<RiskResponse> loadList(RiskParams params) async {
     var response = await Http.dio
         .get('/mobile/warn/list', queryParameters: params.toJson());
-    return RiskCase.fromJson(response.data);
+    return RiskResponse.fromJson(response.data);
   }
+}
 
-  // 提醒列表
-  static useRemindList(ReminfParams params) async {
+class RemindApi extends ListApi<RemindResponse, RemindParams> {
+  @override
+  Future<RemindResponse> loadList(RemindParams params) async {
     var response = await Http.dio
         .get('/mobile/remind/list', queryParameters: params.toJson());
-    return ReminfCase.fromJson(response.data);
+    return RemindResponse.fromJson(response.data);
   }
+
 }

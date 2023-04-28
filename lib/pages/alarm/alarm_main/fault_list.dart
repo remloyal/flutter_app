@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/details/fault_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -14,19 +15,23 @@ class FaultList extends StatefulWidget {
   State<FaultList> createState() => _FaultListState();
 }
 
-class _FaultListState extends State<FaultList> {
-  final FaultParams _alarmParam = FaultParams();
+class _FaultListState extends State<FaultList> with ListBuilder<AlarmItem> {
+  final AlarmParams _alarmParam = AlarmParams();
+
   @override
-  Widget build(BuildContext context) {
-    return LoadList(
-        api: AlarmApi.useFaultList,
-        param: _alarmParam,
-        precedent: FaultCase(),
-        setTtem: _setTtem,
-        header: _header);
+  void initState() {
+    _alarmParam.eventLevel = 0;
+    super.initState();
   }
 
-  _header(fire) {
+  @override
+  Widget build(BuildContext context) {
+    return LoadList<AlarmApi, AlarmParams>(
+        api: AlarmApi(), param: _alarmParam, listBuilder: this);
+  }
+
+  @override
+  Widget? buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -58,7 +63,7 @@ class _FaultListState extends State<FaultList> {
               child: Row(
                 children: [
                   Text(
-                    '共 ${fire.totalRow ?? 0} 条',
+                    '共 $total 条',
                     style:
                         const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
@@ -87,11 +92,12 @@ class _FaultListState extends State<FaultList> {
         ));
   }
 
-  _setTtem(item) {
+  @override
+  Widget buildItem(BuildContext context, AlarmItem item) {
     return InkWell(
       onTap: () {
-        print('${item}');
-        // _refresh();
+        Navigator.pushNamed(context, FaultDetailPage.routeName,
+            arguments: item.id);
       },
       child: CardParent(
         header: Row(
@@ -221,7 +227,7 @@ class _FaultListState extends State<FaultList> {
                     size: 16,
                   ),
                   Text(
-                    item.resetTime,
+                    item.resetTime ?? '-',
                     style:
                         const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),
@@ -236,7 +242,7 @@ class _FaultListState extends State<FaultList> {
                     size: 16,
                   ),
                   Text(
-                    item.confirmTime,
+                    item.confirmTime ?? '-',
                     style:
                         const TextStyle(fontSize: 12, color: Color(0xff999999)),
                   ),

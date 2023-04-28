@@ -24,6 +24,8 @@ dependencies:
   stomp_dart_client: ^0.4.4
   logger: ^1.2.2
   package_info_plus: ^3.0.3
+  overlay_support: ^2.1.0
+  just_audio: ^0.9.32
 
 dev_dependencies:
   flutter_test:
