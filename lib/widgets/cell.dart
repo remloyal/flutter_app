@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Cell extends StatelessWidget {
-  const Cell({super.key, required this.text, required this.onTap, this.width});
+  const Cell({super.key, required this.text, required this.onTap});
   final String text;
   final Function onTap;
-  final double? width;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -12,7 +11,6 @@ class Cell extends StatelessWidget {
           onTap();
         },
         child: Container(
-          width: width ?? 230,
           padding:
               const EdgeInsets.only(left: 10, right: 10, top: 6, bottom: 6),
           decoration:
@@ -20,11 +18,11 @@ class Cell extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                // padding: const EdgeInsets.all(8.0),
-                width: width != null ? (width! - 40).toDouble() : 190,
+              Expanded(
                 child: Text(
                   text,
+                  maxLines: null, // 允许自动换行
+                  softWrap: true,
                   style: const TextStyle(
                       fontSize: 12, color: Color.fromARGB(255, 161, 161, 161)),
                 ),

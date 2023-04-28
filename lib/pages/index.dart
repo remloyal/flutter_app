@@ -92,6 +92,7 @@ class _IndexPageState extends State<IndexPage> {
         // selectedItemColor: Theme.of(context).primaryColor,
         // backgroundColor: Colors.white,
       ),
+      resizeToAvoidBottomInset: false,
     );
   }
 

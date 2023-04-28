@@ -99,6 +99,7 @@ class _DeviceFilterState extends State<DeviceFilter> {
                           _deviceParam.initial();
                           stateKey = GlobalKey();
                           _position.clear();
+                          selectedValue = null;
                           _reloadTextSetter(() {});
                         },
                         child: const Text(
@@ -340,7 +341,9 @@ class _DeviceFilterState extends State<DeviceFilter> {
               )),
           const CardTitle(text: '搜索'),
           TextField(
-            controller: _search,
+            controller: _search
+              ..selection = TextSelection.fromPosition(
+                  TextPosition(offset: _deviceParam.keyword!.length)),
             style: const TextStyle(fontSize: 12),
             scrollPadding: const EdgeInsets.symmetric(vertical: 4.0),
             decoration: const InputDecoration(

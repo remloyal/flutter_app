@@ -12,6 +12,7 @@ class _UnitSelectState extends State<UnitSelect> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("选择单位"),
       ),

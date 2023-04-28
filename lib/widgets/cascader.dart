@@ -122,6 +122,7 @@ class _CascaderState extends State<Cascader> with TickerProviderStateMixin {
               child: Column(children: [
                 Expanded(
                   child: Scaffold(
+                    resizeToAvoidBottomInset: false,
                     appBar: TabBar(
                       tabs: _myTabs,
                       controller: _tabController,
