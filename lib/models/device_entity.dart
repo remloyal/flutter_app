@@ -123,7 +123,7 @@ class DeviceItem {
 
 class DeviceParams extends ChangeNotifier {
   dynamic unitId;
-  String? keyword;
+  String? keyword = '';
   int currentPage = 1;
   int pageSize = 10;
   int? buildId;
@@ -152,5 +152,21 @@ class DeviceParams extends ChangeNotifier {
 
   void change() {
     notifyListeners();
+  }
+
+  // 重置
+  void initial() {
+    unitId = null;
+    keyword = '';
+    currentPage = 1;
+    pageSize = 10;
+    buildId = null;
+    floorId = null;
+    roomId = null;
+    deviceTypeId = null;
+    alarm = null;
+    online = null;
+    stop = null;
+    expire = null;
   }
 }

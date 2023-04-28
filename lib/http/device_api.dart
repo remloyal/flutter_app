@@ -7,4 +7,10 @@ class DeviceApi {
         .get('/mobile/device/list', queryParameters: params.toJson());
     return DeviceList.fromJson(response.data);
   }
+
+  // 获取设备类型
+  static useDeviceTypes() async {
+    var response = await Http.dio.get('/mobile/deviceType/list');
+    return response.data['data'] ?? [];
+  }
 }

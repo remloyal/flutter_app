@@ -59,19 +59,18 @@ class ButtonBarState extends StatefulWidget {
   const ButtonBarState(
       {super.key, required this.names, required this.onTap, this.index});
   final List<Map<dynamic, dynamic>> names;
-  final ValueChanged<String> onTap;
-  final String? index;
+  final ValueChanged<dynamic> onTap;
+  final dynamic index;
   @override
   State<ButtonBarState> createState() => _ButtonBarStateState();
 }
 
 class _ButtonBarStateState extends State<ButtonBarState> {
-  late String _selectedIndex = '0';
+  late dynamic _selectedIndex;
   @override
   void initState() {
-    if (widget.index != null) {
-      _selectedIndex = widget.index as String;
-    }
+    _selectedIndex = widget.index;
+
     super.initState();
   }
 

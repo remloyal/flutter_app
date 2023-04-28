@@ -79,6 +79,15 @@ class _CascaderState extends State<Cascader> with TickerProviderStateMixin {
     _positions.add(0);
     _scrollList.add(_initScrollList(0));
     _tabController = TabController(length: _myTabs.length, vsync: this);
+    _tabController!.addListener(() {
+      // print(_tabController!.index);
+      setState(() {
+        _setIndex(_tabController!.index);
+      });
+    });
+    // _tabController.addListener(() {
+    //   print(_tabController.index);
+    // });
   }
 
   void _setIndex(int index) {
@@ -190,12 +199,12 @@ class _CascaderState extends State<Cascader> with TickerProviderStateMixin {
             // print(_positions);
             _positions[tabIndex] = (itemIndex * _itemHeight).toInt();
             setIndex(tabIndex, itemIndex);
-            _indexIncrement();
             if (datas.isEmpty) {
               _onClose();
               return;
             }
             _setListAndChangeTab(datas, tabIndex);
+            _indexIncrement();
             setState(() {});
             _myTabs[tabIndex] = Tab(text: data[widget.customField]);
             _tabController?.animateTo(_index);
@@ -211,24 +220,32 @@ class _CascaderState extends State<Cascader> with TickerProviderStateMixin {
   /// 选项点击后设置下一级数据并改变tabBar
   void _setListAndChangeTab(datas, tabIndex) {
     // print(tabIndex);
-    if ((tabIndex + 1) < _myTabs.length) {
-      _mList[tabIndex + 1] = datas;
-      _itemIndex[tabIndex + 1] = 0;
-      _positions[tabIndex + 1] = 0;
-      _myTabs[tabIndex + 1] = const Tab(text: '请选择');
 
-      var deleteIndex = tabIndex;
-      if (tabIndex == 0) {
-        deleteIndex += 3;
-      } else {
-        deleteIndex += 2;
-      }
+    if ((_index + 1) < _myTabs.length) {
+      _mList[_index + 1] = datas;
+      _itemIndex[_index + 1] = 0;
+      _positions[_index + 1] = 0;
+      _myTabs[_index + 1] = const Tab(text: '请选择');
+      // print('tabIndex $tabIndex  _myTabs ${_myTabs.length}');
+      if ((_index + 2) == _myTabs.length) return;
+      var deleteIndex = _index + 2;
+      // if (_index == 0) {
+      //   deleteIndex += 3;
+      // } else {
+      //   deleteIndex += 2;
+      // }
       _itemIndex.removeRange(deleteIndex, _itemIndex.length);
       _positions.removeRange(deleteIndex, _positions.length);
-      _myTabs.removeRange(tabIndex + 2, _myTabs.length);
+      _positions.removeRange(deleteIndex, _positions.length);
+      _mList.removeRange(deleteIndex, _mList.length);
       _scrollList.removeRange(deleteIndex, _scrollList.length);
       _tabController = TabController(
           length: _myTabs.length, vsync: this, initialIndex: _index);
+      _tabController!.addListener(() {
+        setState(() {
+          _setIndex(_tabController!.index);
+        });
+      });
     } else {
       _mList.add(datas);
       _myTabs.add(const Tab(text: '请选择'));
@@ -237,6 +254,11 @@ class _CascaderState extends State<Cascader> with TickerProviderStateMixin {
       _scrollList.add(_initScrollList(_positions.length - 1));
       _tabController = TabController(
           length: _myTabs.length, vsync: this, initialIndex: _index);
+      _tabController!.addListener(() {
+        setState(() {
+          _setIndex(_tabController!.index);
+        });
+      });
     }
   }
 
