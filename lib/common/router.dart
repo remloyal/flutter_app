@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/fault_detail_page.dart';
@@ -6,11 +7,12 @@ import 'package:fire_control_app/pages/alarm/details/trouble_detail_page.dart';
 import 'package:fire_control_app/pages/home/unit_select.dart';
 import 'package:fire_control_app/pages/index.dart';
 import 'package:fire_control_app/pages/login/login.dart';
-import 'package:flutter/material.dart';
+
+// 设备
+import 'package:fire_control_app/pages/device/device_details_main.dart';
 
 /// 路由配置类
 class RouterUtil {
-
   // 登录页面
   static const String login = "login";
   // 主页
@@ -24,11 +26,19 @@ class RouterUtil {
     login: (context) => const Login(),
     index: (context) => const IndexPage(),
     unitSelect: (context) => UnitSelect(),
-    FireDetailPage.routeName: (context, { arguments }) => FireDetailPage(fireId: arguments,),
-    AlarmDetailPage.routeName: (context, { arguments }) => AlarmDetailPage(alarmId: arguments),
-    FaultDetailPage.routeName: (context, { arguments }) => FaultDetailPage(alarmId: arguments),
-    TroubleDetailPage.routeName: (context, { arguments }) => TroubleDetailPage(troubleId: arguments),
-    DangerDetailPage.routeName: (context, { arguments }) => DangerDetailPage(dangerId: arguments),
+    FireDetailPage.routeName: (context, {arguments}) => FireDetailPage(
+          fireId: arguments,
+        ),
+    AlarmDetailPage.routeName: (context, {arguments}) =>
+        AlarmDetailPage(alarmId: arguments),
+    FaultDetailPage.routeName: (context, {arguments}) =>
+        FaultDetailPage(alarmId: arguments),
+    TroubleDetailPage.routeName: (context, {arguments}) =>
+        TroubleDetailPage(troubleId: arguments),
+    DangerDetailPage.routeName: (context, {arguments}) =>
+        DangerDetailPage(dangerId: arguments),
+    '/deviceDetails': (context, {arguments}) =>
+        DeviceDetailsMain(deviceId: arguments),
   };
 
   //定义通用的onGenerateRoute
@@ -45,14 +55,15 @@ class RouterUtil {
     String? routeName = settings.name;
     Function? pageContentBuilder = routes[routeName];
     Object? args = settings.arguments;
-    if(pageContentBuilder != null){
-      if(args != null){
-        final Route route = MaterialPageRoute(builder: (context){
-          return pageContentBuilder(context, arguments:args);
+    if (pageContentBuilder != null) {
+      if (args != null) {
+        final Route route = MaterialPageRoute(builder: (context) {
+          return pageContentBuilder(context, arguments: args);
         });
         return route;
-      }else{
-        return MaterialPageRoute(builder: (context) => pageContentBuilder(context));
+      } else {
+        return MaterialPageRoute(
+            builder: (context) => pageContentBuilder(context));
       }
     }
   };

@@ -12,6 +12,7 @@ class FcColor {
 
   // 背景色
   static const Color bodyColor = Color(0xfff5f5f5);
+  static const Color bodyTitleColor = Color(0xffFFFFFF);
 
   // 基础字体颜色
   static const Color base3 = Color(0xff030303);
@@ -28,5 +29,4 @@ class FcColor {
   // 状态颜色
   static const Color err = Color(0xffE53935);
   static const Color ok = Color(0xff4CAF50);
-
 }

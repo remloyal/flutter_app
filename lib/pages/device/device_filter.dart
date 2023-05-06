@@ -242,8 +242,8 @@ class _DeviceFilterState extends State<DeviceFilter> {
             names: const [
               {'text': '全部', 'value': null},
               {'text': '正常', 'value': 1},
-              {'text': '报警', 'value': 2},
-              {'text': '故障', 'value': 3}
+              {'text': '报警', 'value': 3},
+              {'text': '故障', 'value': 2}
             ],
             onTap: (index) {
               _deviceParam.alarm = index;

@@ -87,29 +87,31 @@ class CardHeader extends StatelessWidget {
   final String title;
   final Widget? tail;
   final bool divider;
+  final bool standStart;
 
   const CardHeader(
       {super.key,
       required this.title,
       this.leadingColor = FcColor.baseColor,
       this.tail,
-      this.divider = true});
+      this.divider = true,
+      this.standStart = true});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Row(children: [
-          Container(
-              width: 4,
-              height: 13,
-              margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              decoration: BoxDecoration(
-                color: leadingColor,
-                border: Border.all(width: 1, color: leadingColor),
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-              )
-          ),
+          if (standStart)
+            Container(
+                width: 4,
+                height: 13,
+                margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                decoration: BoxDecoration(
+                  color: leadingColor,
+                  border: Border.all(width: 1, color: leadingColor),
+                  borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                )),
           Expanded(
               flex: 1,
               child: Text(

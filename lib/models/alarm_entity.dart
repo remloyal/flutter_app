@@ -6,8 +6,7 @@ class FireResponse extends ListResponse<FireItem> {
   FireResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  FireItem generateRecord(Map<String, dynamic> data) =>
-      FireItem.fromJson(data);
+  FireItem generateRecord(Map<String, dynamic> data) => FireItem.fromJson(data);
 }
 
 class FireItem extends ListItemData {
@@ -304,8 +303,7 @@ class RiskResponse extends ListResponse<RiskItem> {
   RiskResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  RiskItem generateRecord(Map<String, dynamic> data) =>
-      RiskItem.fromJson(data);
+  RiskItem generateRecord(Map<String, dynamic> data) => RiskItem.fromJson(data);
 }
 
 class RiskItem extends ListItemData {
@@ -611,9 +609,9 @@ class AlarmDetail {
   double pointX;
   double pointY;
   String? resetTime;
-  String roomNumber;
+  String? roomNumber;
   String startTime;
-  int status;
+  int? status;
   String? svgUrl;
   int unitId;
   String unitName;

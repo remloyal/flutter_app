@@ -26,6 +26,7 @@ dependencies:
   package_info_plus: ^3.0.3
   overlay_support: ^2.1.0
   just_audio: ^0.9.32
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

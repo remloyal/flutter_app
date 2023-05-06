@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/device/device_details_main.dart';
 import 'package:fire_control_app/widgets/filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -79,8 +80,6 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
                   Builder(builder: (ctx) {
                     return InkWell(
                       onTap: () {
-                        print('object');
-                        // Scaffold.of(ctx).openEndDrawer();
                         showDialog(
                             context: context,
                             builder: (ctx) => FilterDialog(
@@ -126,7 +125,7 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
     return InkWell(
       highlightColor: Colors.amberAccent,
       onTap: () {
-        print('${item.mac}');
+        Navigator.pushNamed(context, '/deviceDetails', arguments: item.id);
       },
       child: CardParent(
           header: Row(

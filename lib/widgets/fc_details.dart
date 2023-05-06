@@ -8,26 +8,45 @@ class FcDetailPage extends StatelessWidget {
   final String title;
   final List<Widget> body;
   final List<Widget>? footer;
+  final List<Widget>? actions;
+  final bool? loadingState;
+  final bool? roll;
 
   const FcDetailPage(
       {super.key,
       required this.title,
       this.body = const <Widget>[],
+      this.actions = const <Widget>[],
+      this.loadingState = true,
+      this.roll = true,
       this.footer});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(title),
-          backgroundColor: FcColor.bodyColor,
+          titleSpacing: 0,
+          elevation: 0.5,
+          title: Text(
+            title,
+            style: const TextStyle(fontSize: 18),
+          ),
+          backgroundColor: FcColor.bodyTitleColor,
+          actions: actions,
         ),
         backgroundColor: FcColor.bodyColor,
-        body: SingleChildScrollView(
-          child: Column(
-            children: body,
-          ),
-        ),
+        body: loadingState == false
+            ? const Loading()
+            : roll == true
+                ? SingleChildScrollView(
+                    child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: body,
+                  ))
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: body,
+                  ),
         bottomNavigationBar: _buildFooter());
   }
 
@@ -36,7 +55,7 @@ class FcDetailPage extends StatelessWidget {
       return SafeArea(
         child: Container(
           padding: const EdgeInsets.all(10.0),
-          height: 76.0,
+          height: 66.0,
           child: Row(
             children: footer!,
           ),
@@ -44,6 +63,38 @@ class FcDetailPage extends StatelessWidget {
       );
     }
     return null;
+  }
+}
+
+// 加载中
+class Loading extends StatelessWidget {
+  const Loading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const <Widget>[
+              CircularProgressIndicator(
+                color: Color(0xFF1976D2),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 14),
+                child: Text(
+                  '数据加载中',
+                  style: TextStyle(fontSize: 14.0, color: Color(0xFF1976D2)),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -105,8 +156,10 @@ class AssociateVideos extends StatelessWidget {
 /// 地图位置button
 class LocationButton extends StatelessWidget {
   final VoidCallback? onPressed;
+  final String? text;
 
-  const LocationButton({super.key, required this.onPressed});
+  const LocationButton(
+      {super.key, required this.onPressed, this.text = '地图位置'});
 
   @override
   Widget build(BuildContext context) {
@@ -116,14 +169,12 @@ class LocationButton extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all(FcColor.barMineColor),
           side: MaterialStateProperty.all(
               const BorderSide(color: Colors.red, width: 1)),
+          minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
-      child: const Padding(
-        padding: EdgeInsets.only(top: 15, bottom: 15),
-        child: Text(
-          "地图位置",
-          style: TextStyle(color: Colors.red),
-        ),
+      child: Text(
+        text ?? '地图位置',
+        style: const TextStyle(color: Colors.red),
       ),
     );
   }
@@ -145,30 +196,30 @@ class HandleButton extends StatelessWidget {
           backgroundColor: MaterialStateProperty.all(Colors.red),
           side: MaterialStateProperty.all(
               const BorderSide(color: Colors.red, width: 1)),
+          minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 15, bottom: 15),
-        child: Text(title, style: const TextStyle(color: Colors.white)),
-      ),
+      child: Text(title, style: const TextStyle(color: Colors.white)),
     );
   }
 }
 
 /// 信息状态
 class InfoStatus extends StatelessWidget {
-
   final String? processingText;
   final String? endedText;
 
-  const InfoStatus({super.key, this.processingText, this.endedText,});
+  const InfoStatus({
+    super.key,
+    this.processingText,
+    this.endedText,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       processingText ?? endedText ?? '',
-      style: TextStyle(
-          color: endedText != null ? FcColor.ok : FcColor.err),
+      style: TextStyle(color: endedText != null ? FcColor.ok : FcColor.err),
     );
   }
 }
