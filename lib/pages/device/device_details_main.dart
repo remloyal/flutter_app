@@ -262,18 +262,24 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
       Container(
         margin: const EdgeInsets.only(top: 10),
         color: FcColor.cardColor,
+        width: MediaQuery.of(context).size.width,
         child: TabBar(
             controller: _tabController,
-            isScrollable: true,
+            isScrollable: false,
             labelColor: Colors.red,
             dividerColor: const Color.fromARGB(255, 245, 0, 0),
             indicatorColor: Colors.red,
             unselectedLabelColor: const Color.fromARGB(255, 0, 0, 0),
-            tabs: const [
-              Tab(text: '告警提醒'),
-              Tab(text: '实时数据'),
-              Tab(text: '设备信息'),
-              Tab(text: '操作记录'),
+            indicatorWeight: 2,
+            tabs: [
+              ...['告警提醒', '实时数据', '设备信息', '操作记录'].map((item) {
+                return Tab(
+                  child: Text(
+                    item,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                );
+              }).toList(),
             ]),
       ),
       Expanded(

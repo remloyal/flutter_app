@@ -11,11 +11,11 @@ class FireResponse extends ListResponse<FireItem> {
 
 class FireItem extends ListItemData {
   int id;
-  String deviceName;
+  String? deviceName;
   String unitName;
   String buildingName;
-  String floorNumber;
-  String roomNumber;
+  String? floorNumber;
+  String? roomNumber;
   String nickName;
   String? phone;
   String startTime;
@@ -102,8 +102,8 @@ class AlarmResponse extends ListResponse<AlarmItem> {
 class AlarmItem extends ListItemData {
   int id;
   String unitName;
-  String buildingName;
-  String floorNumber;
+  String? buildingName;
+  String? floorNumber;
   String? roomNumber;
   String deviceName;
   int eventLevel;
@@ -163,9 +163,9 @@ class TroubleResponse extends ListResponse<TroubleItem> {
 class TroubleItem extends ListItemData {
   int id;
   String unitName;
-  String buildingName;
-  String floorNumber;
-  String roomNumber;
+  String? buildingName;
+  String? floorNumber;
+  String? roomNumber;
   int levels;
   int type;
   String? nickName;
@@ -236,9 +236,9 @@ class DangerResponse extends ListResponse<DangerItem> {
 class DangerItem extends ListItemData {
   int id;
   String unitName;
-  String buildingName;
-  String floorNumber;
-  String roomNumber;
+  String? buildingName;
+  String? floorNumber;
+  String? roomNumber;
   String dangerTypeName;
   String? nickName;
   String? phone;

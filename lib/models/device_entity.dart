@@ -123,7 +123,7 @@ class DeviceDetails {
   int alarm;
   int fault;
   int online;
-  int stop;
+  int? stop;
   double pointX;
   double pointY;
   double? xRate;
@@ -159,7 +159,7 @@ class DeviceDetails {
         alarm = json["alarm"],
         fault = json["fault"],
         online = json["online"],
-        stop = json["stop"],
+        stop = json["stop"] ?? 0,
         pointX = json["pointX"]?.toDouble(),
         pointY = json["pointY"]?.toDouble(),
         xRate = json["xRate"],

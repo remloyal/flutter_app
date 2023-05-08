@@ -1,4 +1,3 @@
-import 'package:fire_control_app/pages/device/device_details_main.dart';
 import 'package:fire_control_app/widgets/filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -8,6 +7,7 @@ import 'package:fire_control_app/utils/value.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
 import 'package:fire_control_app/common/global.dart';
 import './device_filter.dart';
+import 'package:fire_control_app/widgets/popup/popup.dart';
 
 class Device extends StatefulWidget {
   const Device({super.key});
@@ -39,6 +39,8 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
       data.add(todo);
     }
   }
+
+  final GlobalKey<FilterDialogState> modelkey = GlobalKey();
 
   @override
   Widget? buildToolbar(BuildContext context, int total) {
@@ -80,20 +82,21 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
                   Builder(builder: (ctx) {
                     return InkWell(
                       onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (ctx) => FilterDialog(
-                                  body: DeviceFilter(
-                                      param: _deviceParam,
-                                      onChange: (DeviceParams data) {
-                                        setState(() {
-                                          _deviceParam = data;
-                                          _deviceParam.change();
-                                        });
-
-                                        Navigator.pop(ctx);
-                                      }),
-                                ));
+                        Navigator.push(
+                            context,
+                            Popup(
+                                child: FilterDialog(
+                              key: modelkey,
+                              body: DeviceFilter(
+                                  param: _deviceParam,
+                                  onChange: (DeviceParams data) {
+                                    setState(() {
+                                      _deviceParam = data;
+                                      _deviceParam.change();
+                                    });
+                                    modelkey.currentState!.closeModel();
+                                  }),
+                            )));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

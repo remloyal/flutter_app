@@ -19,10 +19,10 @@ class FilterDialog extends StatefulWidget {
   const FilterDialog({super.key, this.body, this.ratio = 0.7});
 
   @override
-  State<StatefulWidget> createState() => _FilterDialogState();
+  State<StatefulWidget> createState() => FilterDialogState();
 }
 
-class _FilterDialogState extends State<FilterDialog>
+class FilterDialogState extends State<FilterDialog>
     with SingleTickerProviderStateMixin {
   late double _width;
   late AnimationController _controller;
@@ -43,6 +43,12 @@ class _FilterDialogState extends State<FilterDialog>
     _controller.forward();
   }
 
+  ///关闭页面动画
+  closeModel() async {
+    await _controller.reverse();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("build filter");
@@ -57,7 +63,7 @@ class _FilterDialogState extends State<FilterDialog>
               width: getScreenWidth(),
               height: getScreenHeight(),
             ),
-            onTap: () => Navigator.pop(context),
+            onTap: () => closeModel(),
           ),
           Positioned(
             left: left,

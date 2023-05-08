@@ -88,8 +88,6 @@ class _DetailsEventState extends State<DetailsEvent>
     return InkWell(
       highlightColor: Colors.amberAccent,
       onTap: () {
-        print(item);
-        // Navigator.pushNamed(context, '/deviceDetails', arguments: item.id);
         if (_deviceEventParam.type == 1) {
           Navigator.pushNamed(context, '/alarmDetail', arguments: item.id);
         }
