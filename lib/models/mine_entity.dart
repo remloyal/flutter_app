@@ -43,3 +43,49 @@ class Info {
         'message': message,
       };
 }
+
+class MineMailItem {
+  int id;
+  String unitName;
+  String nickName;
+  String cellPhone;
+  String roleName;
+  String headImgUrl;
+  String group;
+  bool online;
+  int onlineType;
+
+  MineMailItem(
+      {required this.id,
+      required this.unitName,
+      required this.nickName,
+      required this.cellPhone,
+      required this.roleName,
+      required this.headImgUrl,
+      required this.group,
+      required this.online,
+      required this.onlineType});
+
+  MineMailItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        unitName = json['unitName'],
+        nickName = json['nickName'],
+        cellPhone = json['cellPhone'],
+        roleName = json['roleName'],
+        headImgUrl = json['headImgUrl'],
+        group = json['group'],
+        online = json['online'],
+        onlineType = json['onlineType'];
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'unitName': unitName,
+        'nickName': nickName,
+        'cellPhone': cellPhone,
+        'roleName': roleName,
+        'headImgUrl': headImgUrl,
+        'group': group,
+        'online': online,
+        'onlineType': onlineType,
+      };
+}

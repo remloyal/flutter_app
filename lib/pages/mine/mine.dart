@@ -177,14 +177,24 @@ class _MineState extends State<Mine> {
         'text': '工作日志',
         "color": const Color(0xffA2AEB5),
         "bgColor": const Color(0xffECEFF1),
-        'onTap': onTop,
+        'onTap': () {
+          // Navigator.pushNamed(
+          //   context,
+          //   '/mineMail',
+          // );
+        },
         "iconData": const IconData(0xe606, fontFamily: 'fcm'),
       },
       {
         'text': '通讯录',
         "color": const Color(0xffA2AEB5),
         "bgColor": const Color(0xffECEFF1),
-        'onTap': onTop,
+        'onTap': () {
+          Navigator.pushNamed(
+            context,
+            '/mineMail',
+          );
+        },
         "iconData": const IconData(0xe7de, fontFamily: 'fcm'),
       },
       {

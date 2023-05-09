@@ -11,6 +11,9 @@ import 'package:fire_control_app/pages/login/login.dart';
 // 设备
 import 'package:fire_control_app/pages/device/device_details_main.dart';
 
+// 我的
+import 'package:fire_control_app/pages/mine/mine_mail_list.dart';
+
 /// 路由配置类
 class RouterUtil {
   // 登录页面
@@ -39,6 +42,7 @@ class RouterUtil {
         DangerDetailPage(dangerId: arguments),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
+    '/mineMail': (context) => const MineMail(),
   };
 
   //定义通用的onGenerateRoute

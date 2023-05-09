@@ -155,7 +155,12 @@ class _HomePageState extends State<HomePage> {
         'text': '通讯录',
         "color": const Color(0xffFF5722),
         "bgColor": const Color(0xffFFCCBC),
-        'onTap': onTop,
+        'onTap': () {
+          Navigator.pushNamed(
+            context,
+            '/mineMail',
+          );
+        },
         "iconData": const IconData(0xe7de, fontFamily: 'fcm'),
       }
     ];
