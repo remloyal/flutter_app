@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/mine_api.dart';
@@ -411,7 +410,8 @@ class _MineMailState extends State<MineMail> {
                 ),
                 InkWell(
                   onTap: () {
-                    print('object2');
+                    Navigator.pushNamed(context, '/mainWorkMain',
+                        arguments: {"name": data.nickName, "id": data.id});
                   },
                   child: Container(
                     width: 30,

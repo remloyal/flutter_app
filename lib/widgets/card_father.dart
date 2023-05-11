@@ -285,3 +285,94 @@ class TroubleLevelContent extends StatelessWidget {
     );
   }
 }
+
+class ButtonTotal extends StatefulWidget {
+  const ButtonTotal(
+      {super.key,
+      required this.index,
+      required this.list,
+      required this.onChang,
+      required this.total});
+
+  final int total;
+  final int index;
+  final List<Map> list;
+  final Function(dynamic) onChang;
+
+  @override
+  State<ButtonTotal> createState() => _ButtonTotalState();
+}
+
+class _ButtonTotalState extends State<ButtonTotal> {
+  late int extent = 3;
+  late int repertory = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    extent = widget.list.length + 1;
+    repertory = widget.list[0]['index'];
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: FcColor.cardColor,
+      child: Row(children: [
+        Container(
+          width: MediaQuery.of(context).size.width / extent,
+          padding: const EdgeInsets.only(top: 12, bottom: 12),
+          decoration: const BoxDecoration(
+              color: FcColor.cardColor,
+              border: Border(
+                  right: BorderSide(width: 1, color: Color(0xFFDFDFDF)))),
+          child: Column(
+            children: [
+              Text(widget.total.toString(),
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 18)),
+              const Text(
+                '总数',
+                style: TextStyle(color: Color(0xff999999), fontSize: 12),
+              )
+            ],
+          ),
+        ),
+        ...widget.list.map(
+          (item) {
+            return InkWell(
+              onTap: () {
+                repertory = item['index'];
+                widget.onChang(item);
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width / extent,
+                padding: const EdgeInsets.only(top: 12, bottom: 12),
+                decoration: BoxDecoration(
+                  color: item['index'] == repertory
+                      ? const Color(0xffFFEBEE)
+                      : FcColor.cardColor,
+                ),
+                child: Column(
+                  children: [
+                    Text(item['value'] ?? '0',
+                        style: TextStyle(
+                            color: item['color'] ??
+                                const Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 18)),
+                    Text(
+                      item['name'] ?? '未知',
+                      style: const TextStyle(
+                          color: Color(0xff999999), fontSize: 12),
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        ).toList()
+      ]),
+    );
+  }
+}

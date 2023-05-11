@@ -178,10 +178,8 @@ class _MineState extends State<Mine> {
         "color": const Color(0xffA2AEB5),
         "bgColor": const Color(0xffECEFF1),
         'onTap': () {
-          // Navigator.pushNamed(
-          //   context,
-          //   '/mineMail',
-          // );
+          Navigator.pushNamed(context, '/mainWorkMain',
+              arguments: {"name": null, "id": null});
         },
         "iconData": const IconData(0xe606, fontFamily: 'fcm'),
       },

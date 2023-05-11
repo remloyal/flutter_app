@@ -71,3 +71,18 @@ formatTime(time) {
   var date = DateTime.fromMillisecondsSinceEpoch(time);
   return date;
 }
+
+// picker 配置获取
+
+List<List> getPickerConfig() {
+  final List<List> timeData = [
+    ['2018'],
+    ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+  ];
+  int nowGap = (DateTime.now().year - 2018) + 2;
+  for (var i = 1; i < nowGap; i++) {
+    timeData[0].add('${2018 + i}');
+  }
+
+  return timeData;
+}

@@ -13,6 +13,7 @@ import 'package:fire_control_app/pages/device/device_details_main.dart';
 
 // 我的
 import 'package:fire_control_app/pages/mine/mine_mail_list.dart';
+import 'package:fire_control_app/pages/mine/mine_work/mine_work_main.dart';
 
 /// 路由配置类
 class RouterUtil {
@@ -43,6 +44,10 @@ class RouterUtil {
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),
+    '/mainWorkMain': (context, {arguments}) => MainWorkMain(
+          id: arguments?['id'],
+          name: arguments?['name'],
+        ),
   };
 
   //定义通用的onGenerateRoute
