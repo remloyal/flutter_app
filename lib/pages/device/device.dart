@@ -7,7 +7,7 @@ import 'package:fire_control_app/utils/value.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
 import 'package:fire_control_app/common/global.dart';
 import './device_filter.dart';
-import 'package:fire_control_app/widgets/popup/popup.dart';
+import 'package:fire_control_app/widgets/popup/popup_main.dart';
 
 class Device extends StatefulWidget {
   const Device({super.key});

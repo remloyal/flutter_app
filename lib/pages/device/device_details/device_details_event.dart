@@ -116,7 +116,7 @@ class _DetailsEventState extends State<DetailsEvent>
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: Icon(
-                      IconData(iconName(), fontFamily: 'fcm'),
+                      iconName(),
                       color: iconClass(item.status),
                       size: 18,
                     ),
@@ -175,14 +175,15 @@ class _DetailsEventState extends State<DetailsEvent>
     return const Color(0xFF666666);
   }
 
-  iconName() {
+  IconData iconName() {
     if (_deviceEventParam.type == 1) {
-      return 0xe6d3;
+      return const IconData(0xe6d3, fontFamily: 'fcm');
     } else if (_deviceEventParam.type == 0) {
-      return 0xe612;
+      return const IconData(0xe612, fontFamily: 'fcm');
     } else if (_deviceEventParam.type == 5) {
-      return 0xe6d1;
+      return const IconData(0xe6d1, fontFamily: 'fcm');
     }
+    return const IconData(0xe6d3, fontFamily: 'fcm');
   }
 
   setHappenTime(happenTime) {

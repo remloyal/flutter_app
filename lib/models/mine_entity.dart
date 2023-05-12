@@ -660,3 +660,46 @@ class MineDangerCountParams {
         'userId': userId
       };
 }
+
+//  新闻 -- 帮助
+
+class MineExternalList {
+  int totalPages;
+  int page;
+  List<MineExternalItem> articles;
+
+  MineExternalList.fromJson(Map<String, dynamic> json)
+      : totalPages = json["totalPages"],
+        page = json["page"],
+        articles = List<MineExternalItem>.from(
+            json["articles"].map((x) => MineExternalItem.fromJson(x)));
+
+  Map<String, dynamic> toJson() => {
+        "totalPages": totalPages,
+        "page": page,
+        "articles": List<dynamic>.from(articles.map((x) => x.toJson())),
+      };
+}
+
+class MineExternalItem {
+  String title;
+  String url;
+  String imgUrl;
+  String publishDate;
+  String des;
+
+  MineExternalItem.fromJson(Map<String, dynamic> json)
+      : title = json["title"],
+        url = json["url"],
+        imgUrl = json["imgUrl"],
+        publishDate = json["publishDate"],
+        des = json["des"];
+
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "url": url,
+        "imgUrl": imgUrl,
+        "publishDate": publishDate,
+        "des": des,
+      };
+}

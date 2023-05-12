@@ -27,6 +27,7 @@ dependencies:
   overlay_support: ^2.1.0
   just_audio: ^0.9.32
   intl: ^0.17.0
+  webview_flutter: ^4.2.0
 
 dev_dependencies:
   flutter_test:

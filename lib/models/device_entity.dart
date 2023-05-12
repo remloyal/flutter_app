@@ -136,7 +136,7 @@ class DeviceDetails {
   int? sd;
   String? network;
   int? manufactorId;
-  String? runDay;
+  int? runDay;
   String? startDate;
 
   DeviceDetails.fromJson(Map<String, dynamic> json)

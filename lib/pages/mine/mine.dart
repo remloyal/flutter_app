@@ -258,55 +258,69 @@ class _MineState extends State<Mine> {
       direction: Axis.horizontal,
       children: <Widget>[
         Expanded(
-          flex: 1,
-          child: Container(
-            padding: const EdgeInsets.only(right: 10),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              // padding: const EdgeInsets.only(left: 10, right: 10),
-              color: const Color(0xffECEFF1),
-              child: Row(children: const [
-                Icon(
-                  IconData(0xe8AE, fontFamily: 'fcm'),
-                  color: Color(0xffA2AEB5),
-                  size: 30,
+            flex: 1,
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/mineNews',
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.only(right: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  // padding: const EdgeInsets.only(left: 10, right: 10),
+                  color: const Color(0xffECEFF1),
+                  child: Row(children: const [
+                    Icon(
+                      IconData(0xe8AE, fontFamily: 'fcm'),
+                      color: Color(0xffA2AEB5),
+                      size: 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        '新闻资讯',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  ]),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Text(
-                    '新闻资讯',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                )
-              ]),
-            ),
-          ),
-        ),
+              ),
+            )),
         Expanded(
-          flex: 1,
-          child: Container(
-            padding: const EdgeInsets.only(right: 10),
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              // padding: const EdgeInsets.only(left: 10, right: 10),
-              color: const Color(0xffECEFF1),
-              child: Row(children: const [
-                Icon(
-                  IconData(0xe65f, fontFamily: 'fcm'),
-                  color: Color(0xffA2AEB5),
-                  size: 30,
+            flex: 1,
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  '/mineHelp',
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.only(right: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  // padding: const EdgeInsets.only(left: 10, right: 10),
+                  color: const Color(0xffECEFF1),
+                  child: Row(children: const [
+                    Icon(
+                      IconData(0xe65f, fontFamily: 'fcm'),
+                      color: Color(0xffA2AEB5),
+                      size: 30,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text(
+                        '帮助中心',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  ]),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Text(
-                    '帮助中心',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                )
-              ]),
-            ),
-          ),
-        ),
+              ),
+            )),
       ],
     );
   }
@@ -372,6 +386,10 @@ class _MineState extends State<Mine> {
         InkWell(
           onTap: () {
             print('object');
+            Navigator.pushNamed(
+              context,
+              '/minePrivacy',
+            );
           },
           child: Container(
             padding: const EdgeInsets.only(top: 10, bottom: 16),
@@ -397,7 +415,10 @@ class _MineState extends State<Mine> {
         ),
         InkWell(
           onTap: () {
-            print('object');
+            Navigator.pushNamed(
+              context,
+              '/mineAbout',
+            );
           },
           child: Container(
             padding: const EdgeInsets.only(top: 10, bottom: 16),

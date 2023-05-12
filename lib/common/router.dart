@@ -14,6 +14,11 @@ import 'package:fire_control_app/pages/device/device_details_main.dart';
 // 我的
 import 'package:fire_control_app/pages/mine/mine_mail_list.dart';
 import 'package:fire_control_app/pages/mine/mine_work/mine_work_main.dart';
+import 'package:fire_control_app/pages/mine/mine_about.dart';
+import 'package:fire_control_app/pages/mine/mine_privacy.dart';
+import 'package:fire_control_app/pages/mine/mine_external/mine_news.dart';
+import 'package:fire_control_app/pages/mine/mine_external/mine_help.dart';
+import 'package:fire_control_app/pages/mine/mine_external/mine_external_details.dart';
 
 /// 路由配置类
 class RouterUtil {
@@ -47,6 +52,14 @@ class RouterUtil {
     '/mainWorkMain': (context, {arguments}) => MainWorkMain(
           id: arguments?['id'],
           name: arguments?['name'],
+        ),
+    '/mineAbout': (context) => const MineAbout(),
+    '/minePrivacy': (context) => const MinePrivacy(),
+    '/mineNews': (context) => const MineNews(),
+    '/mineHelp': (context) => const MineHelp(),
+    '/mineexternalDetails': (context, {arguments}) => MineExternalDetails(
+          url: arguments?['url'],
+          type: arguments?['type'],
         ),
   };
 

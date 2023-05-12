@@ -24,7 +24,7 @@ class _CardParentState extends State<CardParent> {
         color: FcColor.cardColor,
         borderRadius: BorderRadius.all(Radius.circular(5)),
       ),
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         widget.header,
         const Divider(
           indent: 0.0,

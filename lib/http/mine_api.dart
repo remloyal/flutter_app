@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/mine_entity.dart';
 
@@ -15,6 +16,11 @@ class MineApi {
       originalList.add(MineMailItem.fromJson(data[i]));
     }
     return originalList;
+  }
+
+  static Future<MineExternalList> useMailExternalList(String url) async {
+    var response = await Http.request(url);
+    return MineExternalList.fromJson(jsonDecode(response));
   }
 }
 
