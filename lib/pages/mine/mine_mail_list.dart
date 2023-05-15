@@ -186,7 +186,6 @@ class _MineMailState extends State<MineMail> {
             '通讯录',
             style: TextStyle(fontSize: 18),
           ),
-          backgroundColor: FcColor.bodyTitleColor,
           actions: [
             Center(
               child: Padding(

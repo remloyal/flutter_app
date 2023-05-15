@@ -21,6 +21,7 @@ class ApiInfo {
   bool voice = true;
   bool pronunciation = true;
   bool shock = true;
+  bool message = false;
 
   // 用户信息
   Map user = {};
@@ -35,18 +36,24 @@ class ApiInfo {
         imgUrl = json['imgUrl'],
         userId = json['userId'],
         userUnit = json['userUnit'],
-        voice = json['voice'] ?? false,
-        pronunciation = json['pronunciation'] ?? false,
-        shock = json['shock'] ?? false,
-        user = json['shock'] ?? {};
+        voice = json['voice'] ?? true,
+        pronunciation = json['pronunciation'] ?? true,
+        shock = json['shock'] ?? true,
+        message = json['message'] ?? false,
+        user = json['user'] ?? {};
 
-  Map<String, String> toJson() => {
+  Map<String, dynamic> toJson() => {
         'token': token,
         'ticket': ticket,
         'appKey': appKey,
         'baseUrl': baseUrl,
         'imgUrl': imgUrl,
         'userId': userId,
-        'userUnit': userUnit
+        'userUnit': userUnit,
+        'voice': voice,
+        'pronunciation': pronunciation,
+        'shock': shock,
+        'user': user,
+        'message': message
       };
 }

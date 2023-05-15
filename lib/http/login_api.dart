@@ -143,6 +143,7 @@ class LoginService {
     Global.profile.apiInfo.voice = true;
     Global.profile.apiInfo.pronunciation = true;
     Global.profile.apiInfo.shock = true;
+    Global.profile.apiInfo.message = false;
     Global.profile.isLogin = true;
     Http.dio.options.baseUrl = Global.profile.apiInfo.baseUrl;
     Global.setBaseUrl();

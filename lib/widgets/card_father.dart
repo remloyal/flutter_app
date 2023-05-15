@@ -59,10 +59,13 @@ class CardContainer extends StatelessWidget {
   // 内容
   final List<Widget> children;
 
+  final CrossAxisAlignment crossAxisAlignment;
+
   const CardContainer(
       {super.key,
       this.bottomMargin = true,
       this.backgroundColor,
+      this.crossAxisAlignment = CrossAxisAlignment.center,
       required this.children});
 
   @override
@@ -80,6 +83,7 @@ class CardContainer extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
         child: Column(
+          crossAxisAlignment: crossAxisAlignment,
           children: children,
         ));
   }

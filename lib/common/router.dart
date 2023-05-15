@@ -21,10 +21,10 @@ import 'package:fire_control_app/pages/mine/mine_privacy.dart';
 import 'package:fire_control_app/pages/mine/mine_external/mine_news.dart';
 import 'package:fire_control_app/pages/mine/mine_external/mine_help.dart';
 import 'package:fire_control_app/pages/mine/mine_external/mine_external_details.dart';
+import 'package:fire_control_app/pages/mine/mine_system_setting.dart';
 
 /// 路由配置类
 class RouterUtil {
-
   // 登录页面
   static const String login = "login";
   // 主页
@@ -38,13 +38,21 @@ class RouterUtil {
     login: (context) => const Login(),
     index: (context) => const IndexPage(),
     unitSelect: (context) => UnitSelect(),
-    FireDetailPage.routeName: (context, { arguments }) => FireDetailPage(fireId: arguments,),
-    AlarmDetailPage.routeName: (context, { arguments }) => AlarmDetailPage(alarmId: arguments),
-    FaultDetailPage.routeName: (context, { arguments }) => FaultDetailPage(alarmId: arguments),
-    TroubleDetailPage.routeName: (context, { arguments }) => TroubleDetailPage(troubleId: arguments),
-    DangerDetailPage.routeName: (context, { arguments }) => DangerDetailPage(dangerId: arguments),
-    TaskDetailPage.routeName: (context, { arguments }) => TaskDetailPage(taskId: arguments),
-    RouteDetailPage.routeName: (context, { arguments }) => RouteDetailPage(routeId: arguments),
+    FireDetailPage.routeName: (context, {arguments}) => FireDetailPage(
+          fireId: arguments,
+        ),
+    AlarmDetailPage.routeName: (context, {arguments}) =>
+        AlarmDetailPage(alarmId: arguments),
+    FaultDetailPage.routeName: (context, {arguments}) =>
+        FaultDetailPage(alarmId: arguments),
+    TroubleDetailPage.routeName: (context, {arguments}) =>
+        TroubleDetailPage(troubleId: arguments),
+    DangerDetailPage.routeName: (context, {arguments}) =>
+        DangerDetailPage(dangerId: arguments),
+    TaskDetailPage.routeName: (context, {arguments}) =>
+        TaskDetailPage(taskId: arguments),
+    RouteDetailPage.routeName: (context, {arguments}) =>
+        RouteDetailPage(routeId: arguments),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),
@@ -54,6 +62,7 @@ class RouterUtil {
         ),
     '/mineAbout': (context) => const MineAbout(),
     '/minePrivacy': (context) => const MinePrivacy(),
+    '/mineSystemSetting': (context) => const MineSystemSetting(),
     '/mineNews': (context) => const MineNews(),
     '/mineHelp': (context) => const MineHelp(),
     '/mineexternalDetails': (context, {arguments}) => MineExternalDetails(

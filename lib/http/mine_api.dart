@@ -22,6 +22,25 @@ class MineApi {
     var response = await Http.request(url);
     return MineExternalList.fromJson(jsonDecode(response));
   }
+
+  // 短信通知
+  static Future changeMessage(int type) async {
+    var response = await Http.dio
+        .post('/mobile/my/changeMessage', queryParameters: {'message': type});
+    return response.data;
+  }
+
+  // 注销
+  static Future getUnregisterCode() async {
+    var response = await Http.dio.get('/mobile/my/cancellation/code');
+    return response.data;
+  }
+
+  static Future unregister(String code) async {
+    var response = await Http.dio
+        .post('/mobile/my/cancellation', queryParameters: {'code': code});
+    return response.data;
+  }
 }
 
 // 我的 火情

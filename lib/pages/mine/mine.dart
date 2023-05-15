@@ -200,7 +200,10 @@ class _MineState extends State<Mine> {
         "color": const Color(0xffA2AEB5),
         "bgColor": const Color(0xffECEFF1),
         'onTap': () {
-          print('object222');
+          Navigator.pushNamed(
+            context,
+            '/mineSystemSetting',
+          );
         },
         "iconData": const IconData(0xe62a, fontFamily: 'fcm'),
       },
