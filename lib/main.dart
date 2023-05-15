@@ -1,3 +1,4 @@
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/common/router.dart';
 import 'package:fire_control_app/states/notify_message_model.dart';
@@ -29,7 +30,8 @@ class FireControlApp extends StatelessWidget {
           child: MaterialApp(
             title: '智慧消防',
             theme: ThemeData(
-              primarySwatch: Colors.grey,
+              // primarySwatch: Colors.grey,
+              primarySwatch: createMaterialColor(FcColor.baseColor),
               platform: TargetPlatform.iOS, //滑动切换页面
             ),
             locale: const Locale('zh', 'CN'),

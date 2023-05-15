@@ -38,7 +38,6 @@ class _DetailsOperationLogState extends State<DetailsOperationLog>
   @override
   Widget buildItem(BuildContext context, OperationLogItem item) {
     return CardContainer(
-        child: Column(
       children: [
         CardHeader(
             title: setHappenTime(item.createTime),
@@ -48,7 +47,7 @@ class _DetailsOperationLogState extends State<DetailsOperationLog>
         _setText('人员', '${item.userNickname}'),
         _setText('备注', item.operationContent ?? ''),
       ],
-    ));
+    );
   }
 
   Widget _setText(String text, String tail) {

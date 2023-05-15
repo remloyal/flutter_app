@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/alarm_filter.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -16,71 +17,36 @@ class AlarmList extends StatefulWidget {
 }
 
 class _AlarmListState extends State<AlarmList> with ListBuilder<AlarmItem> {
-  final AlarmParams _alarmParam = AlarmParams();
-  final GlobalKey alarmKey = GlobalKey();
+  final AlarmParam _alarmParam = AlarmParam();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<AlarmApi, AlarmParams>(
+    return LoadList<AlarmApi, AlarmParam>(
         api: AlarmApi(), param: _alarmParam, listBuilder: this);
   }
 
   @override
   Widget? buildToolbar(BuildContext context, int total) {
-    return SizedBox(
-        height: 50,
+    return Padding(
+        padding: const EdgeInsets.all(10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
+            Expanded(
               child: ButtonGroup(
                 names: const ['告警中', '已关闭'],
                 height: 30,
                 onTap: (index) {
-                  if (index == 0) {
-                    setState(() {
-                      _alarmParam.status = 0;
-                    });
-                  }
-                  if (index == 1) {
-                    setState(() {
-                      _alarmParam.status = 1;
-                    });
-                  }
+                  _alarmParam.status = index;
                   _alarmParam.change();
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    '共 $total 条',
-                    style:
-                        const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
-                  ),
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            IconData(0xe628, fontFamily: 'fcm'),
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            size: 18,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            child: const Text('筛选'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+            Text(
+              '共 $total 条',
+              style: const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
+            ),
+            AlarmFaultFilter(
+              param: _alarmParam,
             )
           ],
         ));

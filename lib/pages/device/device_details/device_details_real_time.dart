@@ -79,14 +79,12 @@ class _DetailsRealTimeState extends State<DetailsRealTime> {
           ),
           if (attributes.isNotEmpty)
             CardContainer(
-              child: Column(
                 children: [
                   ...attributes.map((item) {
                     return _setText(item.analogName,
                         '${item.analogValue} ${item.dataUnit}');
                   }).toList(),
                 ],
-              ),
             ),
         ],
       ),

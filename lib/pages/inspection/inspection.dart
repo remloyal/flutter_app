@@ -1,9 +1,6 @@
 import 'package:fire_control_app/common/fc_color.dart';
-import 'package:fire_control_app/pages/inspection/route_list.dart';
-import 'package:fire_control_app/widgets/keep_alive.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fire_control_app/pages/inspection/plan_list.dart';
+import 'package:fire_control_app/pages/inspection/inspection_list.dart';
 
 class Inspection extends StatefulWidget {
   const Inspection({super.key});
@@ -43,7 +40,7 @@ class _InspectionState extends State<Inspection>
           child: TabBarView(
               //构建
               controller: _tabController,
-              children: const [
+              children: [
                 PlanList(),
                 RouteList(),
               ]),

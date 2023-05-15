@@ -60,7 +60,6 @@ class DetailsInfo extends StatelessWidget {
     return KeepAliveWrapper(
       child: ListView(children: [
         CardContainer(
-          child: Column(
             children: [
               const CardHeader(
                 title: "基础信息",
@@ -70,13 +69,11 @@ class DetailsInfo extends StatelessWidget {
                     item['left'].toString(), item['right'].toString());
               }).toList(),
             ],
-          ),
         ),
         if (device.deviceTypeId == 7 ||
             device.deviceTypeId == 242 ||
             device.deviceTypeId == 243)
           CardContainer(
-            child: Column(
               children: [
                 const CardHeader(
                   title: "摄像头信息",
@@ -86,10 +83,8 @@ class DetailsInfo extends StatelessWidget {
                       item['left'].toString(), item['right'].toString());
                 }).toList(),
               ],
-            ),
           ),
         CardContainer(
-          child: Column(
             children: [
               const CardHeader(
                 title: "维保信息",
@@ -99,7 +94,6 @@ class DetailsInfo extends StatelessWidget {
                     item['left'].toString(), item['right'].toString());
               }).toList(),
             ],
-          ),
         )
       ]),
     );

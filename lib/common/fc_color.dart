@@ -15,7 +15,11 @@ class FcColor {
   static const Color bodyTitleColor = Color(0xffFFFFFF);
 
   // 基础字体颜色
-  static const Color base3 = Color(0xff030303);
+  static const Color base3 = Color(0xff333333);
+  static const Color base6 = Color(0xff666666);
+  static const Color base9 = Color(0xff999999);
+  static const Color baseE = Color(0xffEEEEEE);
+  static const Color baseF5 = Color(0xffF5F5F5);
 
   // 报警横幅的颜色
   static const Color bannerLevel1 = Color(0xffE53935);
@@ -29,4 +33,30 @@ class FcColor {
   // 状态颜色
   static const Color err = Color(0xffE53935);
   static const Color ok = Color(0xff4CAF50);
+  static const Color info = Color(0xff1976D2);
+  static const Color warn = Color(0xffFF9800);
+
+  // 筛选
+  static const Color filterSelected = Color(0xff323233);
+  static const Color filterHint = Color(0xffcccccc);
+}
+
+MaterialColor createMaterialColor(Color color) {
+  List<double> strengths = [.05];
+  Map<int, Color> swatch = {};
+  final int r = color.red, g = color.green, b = color.blue;
+
+  for (int i = 1; i < 10; i++) {
+    strengths.add(0.1 * i);
+  }
+  for (var strength in strengths) {
+    final double ds = 0.5 - strength;
+    swatch[(strength * 1000).round()] = Color.fromRGBO(
+      r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+      g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+      b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+      1,
+    );
+  }
+  return MaterialColor(color.value, swatch);
 }

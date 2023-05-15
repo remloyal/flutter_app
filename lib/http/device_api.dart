@@ -15,6 +15,15 @@ class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
     return response.data['data'] ?? [];
   }
 
+  //设备类型
+  static Future<List<DeviceType>> getDeviceTypes() async {
+    var response = await Http.dio.get('/mobile/deviceType/list');
+    return (response.data['data'] ?? [])
+        .map((e) => DeviceType.fromJson(e))
+        .toList(growable: false)
+        .cast<DeviceType>();
+  }
+
   // 危险品详情
   static Future<DeviceDetails> useDeviceDetails(int id) async {
     var response = await Http.dio

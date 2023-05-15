@@ -52,60 +52,58 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
 
   Widget _buildAlarmInfo() {
     return CardContainer(
-      child: Column(
-        children: [
-          CardHeader(
-              title: '隐患信息',
-              tail: InfoStatus(
-                processingText: _detail?.status == 0 ? '进行中' : null,
-                endedText: _detail?.status == 1 ? '已结束' : null,
-              )),
-          XfItem(
-            label: "单位名称",
-            content: _detail?.unitName,
+      children: [
+        CardHeader(
+            title: '隐患信息',
+            tail: InfoStatus(
+              processingText: _detail?.status == 0 ? '进行中' : null,
+              endedText: _detail?.status == 1 ? '已结束' : null,
+            )),
+        XfItem(
+          label: "单位名称",
+          content: _detail?.unitName,
+        ),
+        XfItem(
+          label: "发生位置",
+          content:
+              '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+        ),
+        XfItem(
+          label: "上报时间",
+          content: _detail?.createTime,
+        ),
+        XfItem(
+          label: "隐患类型",
+          contentWidget: ErrorContent(
+            message: getTroubleTypeDesc(_detail?.type),
           ),
-          XfItem(
-            label: "发生位置",
-            content:
-                '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+        ),
+        XfItem(
+          label: "紧急程度",
+          contentWidget: Row(
+            children: [
+              TroubleLevelContent(
+                level: _detail?.levels ?? 1,
+              )
+            ],
           ),
-          XfItem(
-            label: "上报时间",
-            content: _detail?.createTime,
+        ),
+        XfItem(
+          label: "事件描述",
+          content: _detail?.cont,
+        ),
+        XfItem(
+          label: "上传附件",
+          content: 'aaaaaaaaa',
+        ),
+        XfItem(
+          label: "上报人员",
+          contentWidget: UserContent(
+            name: _detail?.nickName,
+            phone: _detail?.phone,
           ),
-          XfItem(
-            label: "隐患类型",
-            contentWidget: ErrorContent(
-              message: getTroubleTypeDesc(_detail?.type),
-            ),
-          ),
-          XfItem(
-            label: "紧急程度",
-            contentWidget: Row(
-              children: [
-                TroubleLevelContent(
-                  level: _detail?.levels ?? 1,
-                )
-              ],
-            ),
-          ),
-          XfItem(
-            label: "事件描述",
-            content: _detail?.cont,
-          ),
-          XfItem(
-            label: "上传附件",
-            content: 'aaaaaaaaa',
-          ),
-          XfItem(
-            label: "上报人员",
-            contentWidget: UserContent(
-              name: _detail?.nickName,
-              phone: _detail?.phone,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -114,28 +112,26 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
       return [
         Text(formatDuration(_detail!.createTime, _detail!.reviewTime)),
         CardContainer(
-          child: Column(
-            children: [
-              CardHeader(
-                title: "处理信息",
-                tail: Text(_detail?.reviewTime ?? ''),
-              ),
-              XfItem(
-                  label: "处理人员",
-                  contentWidget: UserContent(
-                    name: _detail?.reviewerName,
-                    phone: _detail?.reviewerPhone,
-                  )),
-              XfItem(
-                label: "处理描述",
-                content: _detail?.treatment,
-              ),
-              XfItem(
-                label: "上传附件",
-                content: "aaaaaa",
-              ),
-            ],
-          ),
+          children: [
+            CardHeader(
+              title: "处理信息",
+              tail: Text(_detail?.reviewTime ?? ''),
+            ),
+            XfItem(
+                label: "处理人员",
+                contentWidget: UserContent(
+                  name: _detail?.reviewerName,
+                  phone: _detail?.reviewerPhone,
+                )),
+            XfItem(
+              label: "处理描述",
+              content: _detail?.treatment,
+            ),
+            XfItem(
+              label: "上传附件",
+              content: "aaaaaa",
+            ),
+          ],
         )
       ];
     }

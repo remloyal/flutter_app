@@ -51,35 +51,33 @@ class _FireDetailPageState extends State<FireDetailPage> {
 
   Widget _buildFireInfo() {
     return CardContainer(
-      child: Column(
-        children: [
-          CardHeader(
-            title: "火情信息",
-            tail: InfoStatus(
-              processingText: _detail?.status == 0 ? '进行中' : null,
-              endedText: _detail?.status == 1 ? '已结束' : null,
-            ),
+      children: [
+        CardHeader(
+          title: "火情信息",
+          tail: InfoStatus(
+            processingText: _detail?.status == 0 ? '进行中' : null,
+            endedText: _detail?.status == 1 ? '已结束' : null,
           ),
-          XfItem(
-            label: "单位名称",
-            content: _detail?.unitName,
-          ),
-          XfItem(
-            label: "发生位置",
-            content:
-                '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
-          ),
-          XfItem(
-            label: "告警时间",
-            content: _detail?.startTime,
-          ),
-          ..._buildFireTypeItems(),
-          if (_detail?.videos != null && _detail!.videos!.isNotEmpty)
-            AssociateVideos(
-              videos: _detail!.videos!,
-            )
-        ],
-      ),
+        ),
+        XfItem(
+          label: "单位名称",
+          content: _detail?.unitName,
+        ),
+        XfItem(
+          label: "发生位置",
+          content:
+              '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+        ),
+        XfItem(
+          label: "告警时间",
+          content: _detail?.startTime,
+        ),
+        ..._buildFireTypeItems(),
+        if (_detail?.videos != null && _detail!.videos!.isNotEmpty)
+          AssociateVideos(
+            videos: _detail!.videos!,
+          )
+      ],
     );
   }
 
@@ -131,34 +129,32 @@ class _FireDetailPageState extends State<FireDetailPage> {
       return [
         Text(formatDuration(_detail!.startTime, _detail!.confirmTime)),
         CardContainer(
-          child: Column(
-            children: [
-              CardHeader(
-                title: "确认信息",
-                tail: Text(_detail?.confirmTime ?? ''),
-              ),
-              const XfItem(
-                  label: "确认火情",
-                  contentWidget: Text(
-                    '是',
-                    style: TextStyle(color: Colors.red),
-                  )),
-              XfItem(
-                  label: "确认人员",
-                  contentWidget: UserContent(
-                    name: _detail?.confirmNickName,
-                    phone: _detail?.confirmPhone,
-                  )),
-              XfItem(
-                label: "确认描述",
-                content: _detail?.confirmReason,
-              ),
-              XfItem(
-                label: "上传附件",
-                content: "aaaaaa",
-              ),
-            ],
-          ),
+          children: [
+            CardHeader(
+              title: "确认信息",
+              tail: Text(_detail?.confirmTime ?? ''),
+            ),
+            const XfItem(
+                label: "确认火情",
+                contentWidget: Text(
+                  '是',
+                  style: TextStyle(color: Colors.red),
+                )),
+            XfItem(
+                label: "确认人员",
+                contentWidget: UserContent(
+                  name: _detail?.confirmNickName,
+                  phone: _detail?.confirmPhone,
+                )),
+            XfItem(
+              label: "确认描述",
+              content: _detail?.confirmReason,
+            ),
+            XfItem(
+              label: "上传附件",
+              content: "aaaaaa",
+            ),
+          ],
         )
       ];
     }
@@ -170,28 +166,26 @@ class _FireDetailPageState extends State<FireDetailPage> {
       return [
         Text(formatDuration(_detail!.startTime, _detail!.endTime)),
         CardContainer(
-          child: Column(
-            children: [
-              CardHeader(
-                title: "关闭信息",
-                tail: Text(_detail?.endTime ?? ''),
-              ),
-              XfItem(
-                  label: "关闭人员",
-                  contentWidget: UserContent(
-                    name: _detail?.cancelNickName,
-                    phone: _detail?.cancelPhone,
-                  )),
-              XfItem(
-                label: "关闭描述",
-                content: _detail?.cancelRemark,
-              ),
-              XfItem(
-                label: "上传附件",
-                content: "aaaaaa",
-              ),
-            ],
-          ),
+          children: [
+            CardHeader(
+              title: "关闭信息",
+              tail: Text(_detail?.endTime ?? ''),
+            ),
+            XfItem(
+                label: "关闭人员",
+                contentWidget: UserContent(
+                  name: _detail?.cancelNickName,
+                  phone: _detail?.cancelPhone,
+                )),
+            XfItem(
+              label: "关闭描述",
+              content: _detail?.cancelRemark,
+            ),
+            XfItem(
+              label: "上传附件",
+              content: "aaaaaa",
+            ),
+          ],
         )
       ];
     }

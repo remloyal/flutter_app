@@ -1,3 +1,4 @@
+import 'package:fire_control_app/common/fc_color.dart';
 import 'package:flutter/material.dart';
 
 class ButtonGroup extends StatefulWidget {
@@ -111,6 +112,58 @@ class _ButtonBarStateState extends State<ButtonBarState> {
             child: Text(e['text']),
           );
         }).toList(),
+      ),
+    );
+  }
+}
+
+class SpaceRadioButtons extends StatelessWidget {
+  final List<String> names;
+
+  final ValueChanged<int>? onTap;
+
+  final int? selected;
+
+  const SpaceRadioButtons(
+      {super.key, this.names = const <String>[], this.onTap, this.selected});
+
+  @override
+  Widget build(BuildContext context) {
+    final buttons = List<Widget>.generate(names.length, (int index) {
+      TextButton button = TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(selected == index
+              ? FcColor.baseColor
+              : const Color.fromARGB(255, 0, 0, 0)),
+          backgroundColor: MaterialStateProperty.all(selected == index
+              ? const Color.fromARGB(255, 255, 227, 225)
+              : const Color.fromARGB(255, 250, 250, 250)),
+          side: MaterialStateProperty.all(BorderSide(
+              color: selected == index
+                  ? FcColor.baseColor
+                  : const Color.fromARGB(255, 201, 201, 201),
+              width: 1)),
+          textStyle: MaterialStateProperty.all(
+              const TextStyle(fontSize: 12, color: FcColor.baseColor)),
+          minimumSize: MaterialStateProperty.all(const Size(50, 15)),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
+        ),
+        onPressed: () {
+          if (onTap != null) {
+            onTap!(index);
+          }
+        },
+        child: Text(names[index]),
+      );
+      return button;
+    });
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Wrap(
+        spacing: 8,
+        children: buttons,
       ),
     );
   }

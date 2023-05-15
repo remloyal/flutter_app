@@ -10,10 +10,19 @@ class Param with ChangeNotifier {
   Map<String, dynamic> toJson() => {
         'currentPage': currentPage,
         'pageSize': pageSize,
-        'unitId': unitId,
+        'unitId': unitId ?? '',
       };
 
   void change() {
     notifyListeners();
   }
+}
+
+abstract class TimeParam {
+  String? beginTime;
+  String? endTime;
+}
+
+abstract class KeywordParam {
+  String? keyword;
 }

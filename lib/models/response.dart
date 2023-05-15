@@ -1,3 +1,15 @@
+class FcResponse {
+  int code;
+  String? message;
+  dynamic data;
+
+  FcResponse.fromJson(Map<String, dynamic> json)
+      : code = json['code'],
+        message = json['message'],
+        data = json['data'];
+}
+
+
 abstract class ListResponse<T extends ListItemData> {
   int currentPage;
   int totalRow;

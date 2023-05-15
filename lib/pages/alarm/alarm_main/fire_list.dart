@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/alarm_filter.dart';
 import 'package:fire_control_app/pages/alarm/details/fire_detail_page.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:flutter/material.dart';
@@ -16,70 +17,36 @@ class FireList extends StatefulWidget {
 }
 
 class _FireListState extends State<FireList> with ListBuilder<FireItem> {
-  final FireParams _fireParam = FireParams();
+  final FireParam _fireParam = FireParam();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<FireApi, FireParams>(
+    return LoadList<FireApi, FireParam>(
         api: FireApi(), param: _fireParam, listBuilder: this);
   }
 
   @override
   Widget? buildToolbar(BuildContext context, int total) {
-    return SizedBox(
-        height: 50,
+    return Padding(
+        padding: const EdgeInsets.all(10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: const EdgeInsets.all(8.0),
+            Expanded(
               child: ButtonGroup(
                 names: const ['告警中', '已关闭'],
                 height: 30,
                 onTap: (index) {
-                  if (index == 0) {
-                    setState(() {
-                      _fireParam.status = 0;
-                    });
-                  }
-                  if (index == 1) {
-                    setState(() {
-                      _fireParam.status = 1;
-                    });
-                  }
+                  _fireParam.status = index;
                   _fireParam.change();
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text(
-                    '共 $total 条',
-                    style:
-                        const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
-                  ),
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            IconData(0xe628, fontFamily: 'fcm'),
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            size: 18,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            child: const Text('筛选'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+            Text(
+              '共 $total 条',
+              style: const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
+            ),
+            FireFilter(
+              param: _fireParam,
             )
           ],
         ));

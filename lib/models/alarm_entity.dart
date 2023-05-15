@@ -1,6 +1,5 @@
 import 'package:fire_control_app/models/param.dart';
 import 'package:fire_control_app/models/response.dart';
-import 'package:flutter/material.dart';
 
 class FireResponse extends ListResponse<FireItem> {
   FireResponse.fromJson(super.json) : super.fromJson();
@@ -55,9 +54,7 @@ class FireItem extends ListItemData {
   }
 }
 
-class FireParams extends Param {
-  dynamic beginTime;
-  dynamic endTime;
+class FireParam extends Param with TimeParam {
   int sourceType = 0;
   int status = 0;
 
@@ -71,12 +68,32 @@ class FireParams extends Param {
       };
 }
 
-class AlarmParams extends Param {
-  dynamic beginTime;
-  dynamic endTime;
-  dynamic keyword;
+enum FireAlarmType {
+  all,
+  person,
+  device
+}
+
+extension FireAlarmTypeExtension on FireAlarmType {
+  int get value {
+    return index;
+  }
+
+  String get desc {
+    switch (this) {
+      case FireAlarmType.all:
+        return "全部";
+      case FireAlarmType.person:
+        return "人员";
+      case FireAlarmType.device:
+        return "设备";
+    }
+  }
+}
+
+class AlarmParam extends Param with KeywordParam, TimeParam {
   int eventLevel = 1;
-  dynamic deviceTypeId;
+  int? deviceTypeId;
   int status = 0;
 
   @override
@@ -206,11 +223,9 @@ class TroubleItem extends ListItemData {
   }
 }
 
-class TroubleParams extends Param {
-  dynamic beginTime;
-  dynamic endTime;
-  dynamic type;
-  dynamic levels;
+class TroubleParam extends Param with TimeParam {
+  int? type;
+  int? levels;
   int status = 0;
 
   @override
@@ -222,6 +237,70 @@ class TroubleParams extends Param {
         'levels': levels,
         'status': status,
       };
+}
+
+enum TroubleType {
+  //全部
+  all,
+  //损坏
+  damage,
+  //人为风险
+  humanRisk,
+  //非人为风险
+  nonHumanRisk,
+  //缺失
+  lack
+}
+
+extension TroubleTypeExtension on TroubleType {
+  int get value {
+    return index;
+  }
+
+  String get desc {
+    switch (this) {
+      case TroubleType.all:
+        return "全部";
+      case TroubleType.damage:
+        return "损坏";
+      case TroubleType.humanRisk:
+        return "人为风险";
+      case TroubleType.nonHumanRisk:
+        return "非人为风险";
+      case TroubleType.lack:
+        return "缺失";
+    }
+  }
+}
+
+enum TroubleLevel {
+  //全部
+  all,
+  //低
+  low,
+  //中
+  medium,
+  //高
+  high
+}
+
+extension TroubleLevelExtension on TroubleLevel {
+  int get value {
+    return index;
+  }
+
+  String get desc {
+    switch (this) {
+      case TroubleLevel.all:
+        return "全部";
+      case TroubleLevel.low:
+        return "低";
+      case TroubleLevel.medium:
+        return "中";
+      case TroubleLevel.high:
+        return "高";
+    }
+  }
 }
 
 // 危险品
@@ -282,10 +361,8 @@ class DangerItem extends ListItemData {
   }
 }
 
-class DangerParams extends Param {
-  dynamic beginTime;
-  dynamic endTime;
-  dynamic type;
+class DangerParam extends Param with TimeParam {
+  int? type;
   int status = 0;
 
   @override
@@ -296,6 +373,20 @@ class DangerParams extends Param {
         'type': type,
         'status': status,
       };
+}
+
+class DangerType {
+  int id;
+  String name;
+
+  DangerType.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        name = json["name"];
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+  };
 }
 
 // 风险
@@ -349,12 +440,11 @@ class RiskItem extends ListItemData {
   }
 }
 
-class RiskParams extends Param {
-  dynamic beginTime;
-  dynamic endTime;
-  dynamic warnType;
+class RiskParam extends Param with TimeParam {
+  int? warnType;
   int warnStatus = 1;
 
+  @override
   Map<String, dynamic> toJson() => {
         ...super.toJson(),
         'beginTime': beginTime,
@@ -362,6 +452,36 @@ class RiskParams extends Param {
         'warnType': warnType,
         'warnStatus': warnStatus,
       };
+}
+
+enum RiskType {
+  //全部类型
+  all,
+  //设备故障风险
+  device,
+  //单位风险
+  unit,
+  //建筑风险
+  building
+}
+
+extension RiskTypeExtension on RiskType {
+  int get value {
+    return index;
+  }
+
+  String get desc {
+    switch (this) {
+      case RiskType.all:
+        return "全部类型";
+      case RiskType.device:
+        return "设备故障风险";
+      case RiskType.unit:
+        return "单位风险";
+      case RiskType.building:
+        return "建筑风险";
+    }
+  }
 }
 
 // 提醒
@@ -398,10 +518,8 @@ class RemindItem extends ListItemData {
   }
 }
 
-class RemindParams extends Param {
-  dynamic beginTime;
-  dynamic endTime;
-  dynamic type;
+class RemindParam extends Param with TimeParam {
+  int? type;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -410,6 +528,48 @@ class RemindParams extends Param {
         'endTime': endTime,
         'type': type
       };
+}
+
+enum RemindType {
+  //全部类型
+  all,
+  //设备自检
+  check,
+  //设备布控
+  control,
+  //设备其他
+  other,
+  //设备消音
+  mute,
+  //设备操作
+  operate,
+  //设备离线
+  offline
+}
+
+extension RemindTypeExtension on RemindType {
+  int get value {
+    return index;
+  }
+
+  String get desc {
+    switch (this) {
+      case RemindType.all:
+        return "全部类型";
+      case RemindType.check:
+        return "设备自检";
+      case RemindType.control:
+        return "设备布控";
+      case RemindType.other:
+        return "设备其他";
+      case RemindType.mute:
+        return "设备消音";
+      case RemindType.operate:
+        return "设备操作";
+      case RemindType.offline:
+        return "设备离线";
+    }
+  }
 }
 
 class FireDetail {

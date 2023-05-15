@@ -50,53 +50,51 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
 
   Widget _buildAlarmInfo() {
     return CardContainer(
-      child: Column(
-        children: [
-          CardHeader(
-            title: '告警信息',
-            tail: InfoStatus(
-              processingText: _detail?.status == 0 ? '进行中' : null,
-              endedText: _detail?.status == 1 ? '已复位' : null,
-            ),
+      children: [
+        CardHeader(
+          title: '告警信息',
+          tail: InfoStatus(
+            processingText: _detail?.status == 0 ? '进行中' : null,
+            endedText: _detail?.status == 1 ? '已复位' : null,
           ),
-          XfItem(
-            label: "单位名称",
-            content: _detail?.unitName,
-          ),
-          XfItem(
-            label: "发生位置",
-            content:
-                '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
-          ),
-          XfItem(
-            label: "告警时间",
-            content: _detail?.startTime,
-          ),
-          XfItem(
-            label: "告警设备",
-            content: _detail?.deviceName,
-          ),
-          XfItem(
-            label: "设备类型",
-            content: _detail?.deviceTypeName,
-          ),
-          XfItem(
-            label: "设备MAC",
-            content: _detail?.deviceMac,
-          ),
-          XfItem(
-            label: "告警事件",
-            contentWidget: ErrorContent(message: _detail?.eventTypeContent),
-          ),
-          if (_detail?.eventCount != null && _detail!.eventCount! > 0)
-            _buildAlarmCount(_detail!.eventCount!),
-          const SizedBox(
-            height: 10,
-          ),
-          if (_detail?.videos != null && _detail!.videos!.isNotEmpty)
-            AssociateVideos(videos: _detail!.videos!)
-        ],
-      ),
+        ),
+        XfItem(
+          label: "单位名称",
+          content: _detail?.unitName,
+        ),
+        XfItem(
+          label: "发生位置",
+          content:
+              '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+        ),
+        XfItem(
+          label: "告警时间",
+          content: _detail?.startTime,
+        ),
+        XfItem(
+          label: "告警设备",
+          content: _detail?.deviceName,
+        ),
+        XfItem(
+          label: "设备类型",
+          content: _detail?.deviceTypeName,
+        ),
+        XfItem(
+          label: "设备MAC",
+          content: _detail?.deviceMac,
+        ),
+        XfItem(
+          label: "告警事件",
+          contentWidget: ErrorContent(message: _detail?.eventTypeContent),
+        ),
+        if (_detail?.eventCount != null && _detail!.eventCount! > 0)
+          _buildAlarmCount(_detail!.eventCount!),
+        const SizedBox(
+          height: 10,
+        ),
+        if (_detail?.videos != null && _detail!.videos!.isNotEmpty)
+          AssociateVideos(videos: _detail!.videos!)
+      ],
     );
   }
 
@@ -145,32 +143,30 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
       return [
         Text(formatDuration(_detail!.startTime, _detail!.confirmTime)),
         CardContainer(
-          child: Column(
-            children: [
-              CardHeader(
-                title: "确认信息",
-                tail: Text(_detail?.confirmTime ?? ''),
-              ),
-              XfItem(
-                  label: "是否火情",
-                  contentWidget: ErrorContent(
-                      message: _detail?.confirmResult == 1 ? '是' : '误报')),
-              XfItem(
-                  label: "确认人员",
-                  contentWidget: UserContent(
-                    name: _detail?.confirmNickName,
-                    phone: _detail?.confirmPhone,
-                  )),
-              XfItem(
-                label: "确认描述",
-                content: _detail?.confirmReason,
-              ),
-              XfItem(
-                label: "上传附件",
-                content: "aaaaaa",
-              ),
-            ],
-          ),
+          children: [
+            CardHeader(
+              title: "确认信息",
+              tail: Text(_detail?.confirmTime ?? ''),
+            ),
+            XfItem(
+                label: "是否火情",
+                contentWidget: ErrorContent(
+                    message: _detail?.confirmResult == 1 ? '是' : '误报')),
+            XfItem(
+                label: "确认人员",
+                contentWidget: UserContent(
+                  name: _detail?.confirmNickName,
+                  phone: _detail?.confirmPhone,
+                )),
+            XfItem(
+              label: "确认描述",
+              content: _detail?.confirmReason,
+            ),
+            XfItem(
+              label: "上传附件",
+              content: "aaaaaa",
+            ),
+          ],
         )
       ];
     }
@@ -181,9 +177,8 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
     if (_detail?.resetTime != null) {
       return [
         Text(formatDuration(_detail!.startTime, _detail!.resetTime)),
-        CardContainer(
-          backgroundColor: Color(0xffA5D6A7),
-          child: CardHeader(
+        CardContainer(backgroundColor: Color(0xffA5D6A7), children: [
+          CardHeader(
             title: '复位时间',
             leadingColor: Color(0xff4CAF50),
             divider: false,
@@ -192,7 +187,7 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
               style: TextStyle(color: Color(0xff4CAF50)),
             ),
           ),
-        )
+        ])
       ];
     }
     return [];

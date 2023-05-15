@@ -298,3 +298,17 @@ class OperationLogParams extends Param {
         'deviceId': deviceId,
       };
 }
+
+class DeviceType {
+  int type;
+  String name;
+
+  DeviceType.fromJson(Map<String, dynamic> json)
+      : type = json["type"],
+        name = json["name"];
+
+  Map<String, dynamic> toJson() => {
+    "type": type,
+    "name": name,
+  };
+}

@@ -31,6 +31,10 @@ class FcmIcon {
 
   // 关闭
   static const close = IconData(0xe690, fontFamily: 'fcm');
+
+  // 筛选
+  static const filter = IconData(0xe628, fontFamily: 'fcm');
+
 }
 
 /// 报警相关的图标

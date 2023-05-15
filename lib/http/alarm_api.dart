@@ -1,9 +1,9 @@
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
 
-class FireApi extends ListApi<FireResponse, FireParams> {
+class FireApi extends ListApi<FireResponse, FireParam> {
   @override
-  Future<FireResponse> loadList(FireParams params) async {
+  Future<FireResponse> loadList(FireParam params) async {
     var response = await Http.dio
         .get('/mobile/fire/list', queryParameters: params.toJson());
     return FireResponse.fromJson(response.data);
@@ -17,9 +17,9 @@ class FireApi extends ListApi<FireResponse, FireParams> {
   }
 }
 
-class AlarmApi extends ListApi<AlarmResponse, AlarmParams> {
+class AlarmApi extends ListApi<AlarmResponse, AlarmParam> {
   @override
-  Future<AlarmResponse> loadList(AlarmParams params) async {
+  Future<AlarmResponse> loadList(AlarmParam params) async {
     var response = await Http.dio
         .get('/mobile/alarm/list', queryParameters: params.toJson());
     return AlarmResponse.fromJson(response.data);
@@ -33,9 +33,9 @@ class AlarmApi extends ListApi<AlarmResponse, AlarmParams> {
   }
 }
 
-class TroubleApi extends ListApi<TroubleResponse, TroubleParams> {
+class TroubleApi extends ListApi<TroubleResponse, TroubleParam> {
   @override
-  Future<TroubleResponse> loadList(TroubleParams params) async {
+  Future<TroubleResponse> loadList(TroubleParam params) async {
     var response = await Http.dio
         .get('/mobile/trouble/list', queryParameters: params.toJson());
     return TroubleResponse.fromJson(response.data);
@@ -49,9 +49,9 @@ class TroubleApi extends ListApi<TroubleResponse, TroubleParams> {
   }
 }
 
-class DangerApi extends ListApi<DangerResponse, DangerParams> {
+class DangerApi extends ListApi<DangerResponse, DangerParam> {
   @override
-  Future<DangerResponse> loadList(DangerParams params) async {
+  Future<DangerResponse> loadList(DangerParam params) async {
     var response = await Http.dio
         .get('/mobile/danger/list', queryParameters: params.toJson());
     return DangerResponse.fromJson(response.data);
@@ -63,20 +63,29 @@ class DangerApi extends ListApi<DangerResponse, DangerParams> {
         .get('/mobile/danger/details', queryParameters: {'id': id});
     return DangerDetail.fromJson(response.data['data']);
   }
+
+  //危险品类型
+  static Future<List<DangerType>> getDangerTypes() async {
+    var response = await Http.dio.get('/mobile/danger/types');
+    return (response.data['data'] ?? [])
+        .map((e) => DangerType.fromJson(e))
+        .toList(growable: false)
+        .cast<DangerType>();
+  }
 }
 
-class RiskApi extends ListApi<RiskResponse, RiskParams> {
+class RiskApi extends ListApi<RiskResponse, RiskParam> {
   @override
-  Future<RiskResponse> loadList(RiskParams params) async {
+  Future<RiskResponse> loadList(RiskParam params) async {
     var response = await Http.dio
         .get('/mobile/warn/list', queryParameters: params.toJson());
     return RiskResponse.fromJson(response.data);
   }
 }
 
-class RemindApi extends ListApi<RemindResponse, RemindParams> {
+class RemindApi extends ListApi<RemindResponse, RemindParam> {
   @override
-  Future<RemindResponse> loadList(RemindParams params) async {
+  Future<RemindResponse> loadList(RemindParam params) async {
     var response = await Http.dio
         .get('/mobile/remind/list', queryParameters: params.toJson());
     return RemindResponse.fromJson(response.data);

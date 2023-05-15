@@ -31,7 +31,7 @@ class FcDetailPage extends StatelessWidget {
             title,
             style: const TextStyle(fontSize: 18),
           ),
-          backgroundColor: FcColor.bodyTitleColor,
+          // backgroundColor: FcColor.bodyTitleColor,
           actions: actions,
         ),
         backgroundColor: FcColor.bodyColor,
@@ -51,11 +51,11 @@ class FcDetailPage extends StatelessWidget {
   }
 
   Widget? _buildFooter() {
-    if (footer != null) {
+    if (footer != null && footer!.isNotEmpty) {
       return SafeArea(
         child: Container(
           padding: const EdgeInsets.all(10.0),
-          height: 66.0,
+          // height: 66.0,
           child: Row(
             children: footer!,
           ),
@@ -158,8 +158,7 @@ class LocationButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? text;
 
-  const LocationButton(
-      {super.key, required this.onPressed, this.text = '地图位置'});
+  const LocationButton({super.key, required this.onPressed, this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -167,15 +166,15 @@ class LocationButton extends StatelessWidget {
       onPressed: onPressed,
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(FcColor.barMineColor),
+          foregroundColor: MaterialStateProperty.all(FcColor.err),
           side: MaterialStateProperty.all(
-              const BorderSide(color: Colors.red, width: 1)),
+              const BorderSide(color: FcColor.err, width: 1)),
+          padding: MaterialStateProperty.all(
+              const EdgeInsets.symmetric(vertical: 12)),
           minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
-      child: Text(
-        text ?? '地图位置',
-        style: const TextStyle(color: Colors.red),
-      ),
+      child: Text(text ?? '地图位置'),
     );
   }
 }
@@ -193,13 +192,16 @@ class HandleButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.red),
+          backgroundColor: MaterialStateProperty.all(FcColor.err),
+          foregroundColor: MaterialStateProperty.all(Colors.white),
           side: MaterialStateProperty.all(
-              const BorderSide(color: Colors.red, width: 1)),
+              const BorderSide(color: FcColor.err, width: 1)),
+          padding: MaterialStateProperty.all(
+              const EdgeInsets.symmetric(vertical: 12)),
           minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
           shape: MaterialStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
-      child: Text(title, style: const TextStyle(color: Colors.white)),
+      child: Text(title),
     );
   }
 }

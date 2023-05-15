@@ -50,19 +50,20 @@ class _CardParentState extends State<CardParent> {
 }
 
 class CardContainer extends StatelessWidget {
-  final Widget child;
-
   // 背景色
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   // 底部是否设置margin，默认设置
   final bool bottomMargin;
 
+  // 内容
+  final List<Widget> children;
+
   const CardContainer(
       {super.key,
-      required this.child,
       this.bottomMargin = true,
-      this.backgroundColor = FcColor.cardColor});
+      this.backgroundColor,
+      required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +76,24 @@ class CardContainer extends StatelessWidget {
         margin: margin,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: backgroundColor ?? FcColor.cardColor,
           borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
-        child: child);
+        child: Column(
+          children: children,
+        ));
+  }
+}
+
+class CardDivider extends StatelessWidget {
+  const CardDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(
+      indent: 0.0,
+      color: Color.fromARGB(255, 190, 190, 190),
+    );
   }
 }
 
@@ -120,11 +135,29 @@ class CardHeader extends StatelessWidget {
               )),
           tail ?? Container()
         ]),
-        if (divider)
-          const Divider(
-            indent: 0.0,
-            color: Color.fromARGB(255, 190, 190, 190),
-          ),
+        if (divider) const CardDivider(),
+      ],
+    );
+  }
+}
+
+class CardFooter extends StatelessWidget {
+  final Widget? left;
+  final Widget? right;
+
+  const CardFooter({super.key, this.left, this.right});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const CardDivider(),
+        Row(
+          children: [
+            if (left != null) Expanded(child: left!),
+            if (right != null) Expanded(child: right!),
+          ],
+        )
       ],
     );
   }
@@ -237,7 +270,19 @@ class ErrorContent extends StatelessWidget {
   }
 }
 
-class TroubleLevelContent extends StatelessWidget {
+class TaskCodeContent extends StatelessWidget {
+  final String? taskCode;
+
+  const TaskCodeContent({super.key, this.taskCode});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(taskCode ?? '-',
+        style: const TextStyle(color: FcColor.info, fontSize: 12));
+  }
+}
+
+class TroubleLevelContent extends OutlinedContent {
   final bool handled;
   final int level;
 
@@ -245,44 +290,105 @@ class TroubleLevelContent extends StatelessWidget {
       {super.key, required this.level, this.handled = false});
 
   @override
+  Color getBackgroundColor() {
+    if (handled) return const Color(0xffF5F5F5);
+    if (level == 1) return const Color(0xffFFF8E1);
+    if (level == 2) return const Color(0xffFFF3E0);
+    return const Color(0xffffebee);
+  }
+
+  @override
+  String getText() {
+    return level == 1
+        ? '低'
+        : level == 2
+            ? '中'
+            : '高abd';
+  }
+
+  @override
+  Color getTextColor() {
+    if (handled) return const Color(0xffAAAAAA);
+    if (level == 1) return const Color(0xffFFB300);
+    if (level == 2) return const Color(0xffFF9800);
+    return const Color(0xffE53935);
+  }
+}
+
+abstract class OutlinedContent extends StatelessWidget {
+  const OutlinedContent({super.key});
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 12, right: 12, top: 1, bottom: 1),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
       decoration: BoxDecoration(
-          color: handled
-              ? const Color(0xffF5F5F5)
-              : level == 1
-                  ? const Color(0xffFFF8E1)
-                  : level == 2
-                      ? const Color(0xffFFF3E0)
-                      : const Color(0xffffebee),
+          color: getBackgroundColor(),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          border: Border.all(
-              width: 0.5,
-              color: handled
-                  ? const Color(0xffAAAAAA)
-                  : level == 1
-                      ? const Color(0xffFFB300)
-                      : level == 2
-                          ? const Color(0xffFF9800)
-                          : const Color(0xffE53935))),
+          border: Border.all(width: 1, color: getTextColor())),
       child: Text(
-        level == 1
-            ? '低'
-            : level == 2
-                ? '中'
-                : '高',
-        style: TextStyle(
-            fontSize: 12,
-            color: handled
-                ? const Color(0xffAAAAAA)
-                : level == 1
-                    ? const Color(0xffFFB300)
-                    : level == 2
-                        ? const Color(0xffFF9800)
-                        : const Color(0xffE53935)),
+        getText(),
+        style: TextStyle(fontSize: 13, color: getTextColor()),
       ),
     );
+  }
+
+  Color getBackgroundColor();
+
+  Color getTextColor();
+
+  String getText();
+}
+
+class TaskStatusContent extends OutlinedContent {
+  final int status;
+
+  const TaskStatusContent({super.key, required this.status});
+
+  @override
+  Color getBackgroundColor() {
+    if (status == 1) return const Color(0xffE3F2FD);
+    if (status == 2) return const Color(0xffE8F5E9);
+    return const Color(0xffFFEBEE);
+  }
+
+  @override
+  String getText() {
+    return status == 1
+        ? "执行中"
+        : status == 2
+            ? '已完成'
+            : '未完成';
+  }
+
+  @override
+  Color getTextColor() {
+    if (status == 1) return const Color(0xff1976D2);
+    if (status == 2) return const Color(0xff4CAF50);
+    return const Color(0xffE53935);
+  }
+}
+
+class RouteStatusContent extends OutlinedContent {
+  final int status;
+
+  const RouteStatusContent({super.key, required this.status});
+
+  @override
+  Color getBackgroundColor() {
+    if (status == 1) return const Color(0xffFFF3E0);
+    return const Color(0xffF5F5F5);
+  }
+
+  @override
+  String getText() {
+    return status == 1 ? "可领取" : '已领取';
+  }
+
+  @override
+  Color getTextColor() {
+    if (status == 1) return const Color(0xffFF9800);
+    return const Color(0xffAAAAAA);
   }
 }
 
