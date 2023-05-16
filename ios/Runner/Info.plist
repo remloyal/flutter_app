@@ -47,5 +47,21 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+  <key>io.flutter.embedded_views_preview</key>
+  <string>YES</string>
+  <key>NSCameraUsageDescription</key>
+  <string>用于拍摄图片上传头像</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>用于音频插件</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>用于相册选择插件</string>
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>remote-notification</string>
+  </array>
 </dict>
 </plist>

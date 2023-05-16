@@ -46,6 +46,16 @@ class Info {
         'headImgUrl': headImgUrl,
         'message': message,
       };
+  Map<String, dynamic> toJsonPersonal() => {
+        '头像': headImgUrl,
+        '姓名': nickName,
+        '所属单位': unitName,
+        '联系电话': cellPhone,
+        '系统角色': roleName,
+        '注册时间': createTime,
+        '审核人': reviewer,
+        '审核时间': reviewTime,
+      };
 }
 
 class MineMailItem {

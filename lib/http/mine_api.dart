@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/mine_entity.dart';
 
@@ -39,6 +40,11 @@ class MineApi {
   static Future unregister(String code) async {
     var response = await Http.dio
         .post('/mobile/my/cancellation', queryParameters: {'code': code});
+    return response.data;
+  }
+
+  static Future uploadMyImg(FormData formData) async {
+    var response = await Http.dio.post('/mobile/my/changeImg', data: formData);
     return response.data;
   }
 }

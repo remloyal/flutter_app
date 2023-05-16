@@ -333,7 +333,10 @@ class _MineState extends State<Mine> {
       children: [
         InkWell(
           onTap: () {
-            print('object');
+            Navigator.pushNamed(
+              context,
+              '/minePersonal',
+            );
           },
           child: Container(
             padding: const EdgeInsets.only(top: 10, bottom: 16),
@@ -374,9 +377,9 @@ class _MineState extends State<Mine> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('检查更新'),
-                Row(children: const [
-                  Text('1.0.0'),
-                  Icon(
+                Row(children: [
+                  Text(Global.packageInfo.version),
+                  const Icon(
                     IconData(0xe633, fontFamily: 'fcm'),
                     color: Color(0xffA2AEB5),
                     size: 18,
@@ -388,7 +391,6 @@ class _MineState extends State<Mine> {
         ),
         InkWell(
           onTap: () {
-            print('object');
             Navigator.pushNamed(
               context,
               '/minePrivacy',
