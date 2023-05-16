@@ -22,6 +22,7 @@ import 'package:fire_control_app/pages/mine/mine_external/mine_news.dart';
 import 'package:fire_control_app/pages/mine/mine_external/mine_help.dart';
 import 'package:fire_control_app/pages/mine/mine_external/mine_external_details.dart';
 import 'package:fire_control_app/pages/mine/mine_system_setting.dart';
+import 'package:fire_control_app/pages/mine/mine_personal.dart';
 
 /// 路由配置类
 class RouterUtil {
@@ -62,6 +63,7 @@ class RouterUtil {
         ),
     '/mineAbout': (context) => const MineAbout(),
     '/minePrivacy': (context) => const MinePrivacy(),
+    '/minePersonal': (context) => const MinePersonal(),
     '/mineSystemSetting': (context) => const MineSystemSetting(),
     '/mineNews': (context) => const MineNews(),
     '/mineHelp': (context) => const MineHelp(),
