@@ -3,6 +3,7 @@ import 'package:fire_control_app/common/fc_icon.dart';
 import 'package:fire_control_app/http/inspection_api.dart';
 import 'package:fire_control_app/models/inspection.dart';
 import 'package:fire_control_app/pages/inspection/inspection_card.dart';
+import 'package:fire_control_app/pages/inspection/punch.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class TaskDetailPage extends StatefulWidget {
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
   TaskDetail? _detail;
+  late StateSetter _nodeSetter;
 
   @override
   void initState() {
@@ -53,9 +55,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     onPressed: () {},
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(FcColor.warn),
+                        MaterialStateProperty.all(FcColor.warn),
                         foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
+                        MaterialStateProperty.all(Colors.white),
                         iconSize: MaterialStateProperty.all(18),
                         textStyle: MaterialStateProperty.all(
                             const TextStyle(fontSize: 15))),
@@ -70,7 +72,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           ),
         ),
         Expanded(
-          child: _buildNodeList(_detail?.nodes ?? [], _detail?.status ?? 0),
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter stateSetter) {
+              _nodeSetter = stateSetter;
+              return _buildNodeList(_detail?.nodes ?? [], _detail?.status ?? 0);
+            },
+          ),
         )
       ],
     );
@@ -127,11 +134,29 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         ),
                         if (node.status == 1 && status == 1)
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              if (_detail?.planType == InspectionWay.qrcode) {
+
+                              } else
+                              if (_detail?.planType == InspectionWay.nfc) {
+                                PunchParam param = PunchParam(
+                                    taskId: _detail!.taskId,
+                                    nodeId: node.nodeId);
+                                Navigator.pushNamed(context, NfcPage.routeName,
+                                    arguments: param).then((value) {
+                                      if (value != null) {
+                                        PunchResult result = value as PunchResult;
+                                        node.punchTime = result.time;
+                                        node.status = 2;
+                                        _nodeSetter(() {});
+                                      }
+                                });
+                              }
+                            },
                             child: Container(
                               decoration: const BoxDecoration(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(5)),
+                                BorderRadius.all(Radius.circular(5)),
                                 color: Color(0xffE3F2FD),
                               ),
                               padding: const EdgeInsets.symmetric(
@@ -167,9 +192,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               )
                             ],
                           ),
-                        if (node.status != 1 &&
-                            status == 2 &&
-                            node.remark.isEmpty)
+                        if (node.status != 1 && node.remark.isEmpty)
                           const Text(
                             '已完成',
                             style: TextStyle(color: FcColor.ok),

@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- // 相机权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- // NFC权限 -->
+    <uses-permission android:name="android.permission.NFC" />
    <application
         android:label="智慧消防"
         android:name="${applicationName}"

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/inspection.dart';
 import 'package:fire_control_app/models/response.dart';
@@ -33,9 +34,17 @@ class TaskApi extends ListApi<PlanResponse, TaskParam> {
     return TaskDetail.fromJson(response.data['data']);
   }
 
+  // 领取任务
   static Future<FcResponse> receive(int id) async {
     var response = await Http.dio.get('/mobile/inspection/receive',
         queryParameters: {'taskId': id});
+    return FcResponse.fromJson(response.data);
+  }
+
+  // nfc打卡
+  static Future<FcResponse> punch(PunchParam param) async {
+    var response = await Http.dio.post('/mobile/inspection/punch',
+        queryParameters: param.toJson());
     return FcResponse.fromJson(response.data);
   }
 }

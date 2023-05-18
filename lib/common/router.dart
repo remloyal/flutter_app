@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/inspection/punch.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
@@ -54,6 +55,7 @@ class RouterUtil {
         TaskDetailPage(taskId: arguments),
     RouteDetailPage.routeName: (context, {arguments}) =>
         RouteDetailPage(routeId: arguments),
+    NfcPage.routeName: (context, {arguments}) => NfcPage(param: arguments),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),

@@ -21,6 +21,7 @@ class TaskCard extends StatelessWidget {
       backgroundColor: (executing && _userId != item?.userId)
           ? const Color.fromRGBO(255, 255, 255, .5)
           : null,
+      bottomMargin: false,
       children: [
         CardHeader(
           title: item?.name ?? '-',
@@ -122,6 +123,7 @@ class RouteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
+      bottomMargin: false,
       children: [
         CardHeader(
           title: item?.name ?? '-',
