@@ -55,9 +55,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     onPressed: () {},
                     style: ButtonStyle(
                         backgroundColor:
-                        MaterialStateProperty.all(FcColor.warn),
+                            MaterialStateProperty.all(FcColor.warn),
                         foregroundColor:
-                        MaterialStateProperty.all(Colors.white),
+                            MaterialStateProperty.all(Colors.white),
                         iconSize: MaterialStateProperty.all(18),
                         textStyle: MaterialStateProperty.all(
                             const TextStyle(fontSize: 15))),
@@ -135,28 +135,29 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         if (node.status == 1 && status == 1)
                           GestureDetector(
                             onTap: () {
+                              PunchParam param = PunchParam(taskId: _detail!.taskId, nodeId: node.nodeId);
+                              String? routeName;
                               if (_detail?.planType == InspectionWay.qrcode) {
-
-                              } else
-                              if (_detail?.planType == InspectionWay.nfc) {
-                                PunchParam param = PunchParam(
-                                    taskId: _detail!.taskId,
-                                    nodeId: node.nodeId);
-                                Navigator.pushNamed(context, NfcPage.routeName,
-                                    arguments: param).then((value) {
-                                      if (value != null) {
-                                        PunchResult result = value as PunchResult;
-                                        node.punchTime = result.time;
-                                        node.status = 2;
-                                        _nodeSetter(() {});
-                                      }
+                                routeName = ScanPunchPage.routeName;
+                              } else if (_detail?.planType == InspectionWay.nfc) {
+                                routeName = NfcPage.routeName;
+                              }
+                              if (routeName != null) {
+                                Navigator.pushNamed(context, routeName, arguments: param).then((value) {
+                                  if (value != null) {
+                                    PunchResult result = value as PunchResult;
+                                    node.punchTime = result.time;
+                                    node.remark = result.remark ?? '';
+                                    node.status = 2;
+                                    _nodeSetter(() {});
+                                  }
                                 });
                               }
                             },
                             child: Container(
                               decoration: const BoxDecoration(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(5)),
+                                    BorderRadius.all(Radius.circular(5)),
                                 color: Color(0xffE3F2FD),
                               ),
                               padding: const EdgeInsets.symmetric(

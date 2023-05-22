@@ -39,6 +39,9 @@ class FcColor {
   // 筛选
   static const Color filterSelected = Color(0xff323233);
   static const Color filterHint = Color(0xffcccccc);
+
+  // 巡检打卡
+  static const Color punch = Color(0xff4acf50);
 }
 
 MaterialColor createMaterialColor(Color color) {

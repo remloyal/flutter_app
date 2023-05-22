@@ -183,19 +183,25 @@ class LocationButton extends StatelessWidget {
 class HandleButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
+  final Color? backgroundColor;
+
   final String title;
 
-  const HandleButton({super.key, required this.onPressed, required this.title});
+  const HandleButton(
+      {super.key,
+      required this.onPressed,
+      required this.title,
+      this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
+    return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(FcColor.err),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-          side: MaterialStateProperty.all(
-              const BorderSide(color: FcColor.err, width: 1)),
+          backgroundColor: MaterialStateProperty.all(backgroundColor),
+          // foregroundColor: MaterialStateProperty.all(Colors.white),
+          // side: MaterialStateProperty.all(
+          //     const BorderSide(color: FcColor.err, width: 1)),
           padding: MaterialStateProperty.all(
               const EdgeInsets.symmetric(vertical: 12)),
           minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
