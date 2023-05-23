@@ -10,14 +10,19 @@ import './device_filter.dart';
 import 'package:fire_control_app/widgets/popup/popup_main.dart';
 
 class Device extends StatefulWidget {
-  const Device({super.key});
+
+  final bool showFilter;
+
+  final DeviceParams? params;
+
+  const Device({super.key, this.showFilter = true, this.params});
 
   @override
   State<Device> createState() => _DeviceState();
 }
 
 class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
-  late DeviceParams _deviceParam = DeviceParams();
+  late DeviceParams _deviceParam;
   List data = [];
 
   @override
@@ -38,12 +43,14 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
       };
       data.add(todo);
     }
+    _deviceParam = widget.params ?? DeviceParams();
   }
 
   final GlobalKey<FilterDialogState> modelkey = GlobalKey();
 
   @override
   Widget? buildToolbar(BuildContext context, int total) {
+    if (!widget.showFilter) return null;
     return SizedBox(
         height: 50,
         child: Row(
