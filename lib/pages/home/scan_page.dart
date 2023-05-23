@@ -1,5 +1,7 @@
 
+import 'package:fire_control_app/http/inspection_api.dart';
 import 'package:fire_control_app/pages/login/login.dart';
+import 'package:fire_control_app/utils/toast.dart';
 import 'package:fire_control_app/widgets/scan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +27,13 @@ class ScanPage extends StatelessWidget {
           String url = barcode.rawValue!;
           if (url.contains('k=3')) {
             //扫码登陆
-            if (state.isLogin) return;
-            state.isLogin = true;
             _processLogin(context, url, state, controller);
+          } else if (url.contains('k=2')) {
+            //控制室打卡
+            _processControlPunch(url, state);
+          } else if (url.contains('k=4')) {
+            //上下班打卡
+            _processWorkPunch(url, state);
           }
         }
       },
@@ -35,7 +41,9 @@ class ScanPage extends StatelessWidget {
   }
 
   void _processLogin(BuildContext context, String url, _ScanState state, ScanController controller) {
+    if (state.isLogin) return;
     controller.stop();
+    state.isLogin = true;
     Navigator.pushNamed(context, LoginScanPage.routeName, arguments: url).then((value) {
       if (value != null && value as bool) {
         Navigator.pop(context);
@@ -46,6 +54,32 @@ class ScanPage extends StatelessWidget {
     }, onError: (e) {
       state.isLogin = false;
       controller.start();
+    });
+  }
+
+  void _processControlPunch(String url, _ScanState state) {
+    if (state.isControl) return;
+    state.isControl = true;
+    TaskApi.controlPunch(url).then((value) {
+      state.isControl = false;
+      if (value.code == 200) {
+        Message.show('打卡成功');
+      }
+    }, onError: (e) {
+      state.isControl = false;
+    });
+  }
+
+  void _processWorkPunch(String url, _ScanState state) {
+    if (state.isWork) return;
+    state.isWork = true;
+    TaskApi.workPunch(url).then((value) {
+      state.isWork = false;
+      if (value.code == 200) {
+        Message.show('打卡成功');
+      }
+    }, onError: (e) {
+      state.isWork = false;
     });
   }
 }

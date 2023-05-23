@@ -76,7 +76,7 @@ class _PunchNfcPageState extends State<PunchNfcPage> {
         debugPrint('nfc payload: $payload');
         String content = payload.substring(payload.indexOf('en') + 2);
         widget.param.code = content;
-        TaskApi.punch(widget.param).then((value) {
+        TaskApi.inspectionPunch(widget.param).then((value) {
           if (value.code == 200) {
             // 打卡成功
             NfcManager.instance.stopSession();
@@ -170,7 +170,7 @@ class PunchScanPage extends StatelessWidget {
           debugPrint('Barcode found! ${barcode.rawValue}');
           param.code = barcode.rawValue;
           isPunching = true;
-          TaskApi.punch(param).then((value) {
+          TaskApi.inspectionPunch(param).then((value) {
             isPunching = false;
             if (value.code == 200) {
               // 打卡成功
@@ -341,7 +341,7 @@ class _PunchErrorPageState extends State<PunchErrorPage> {
                 return;
               }
               widget.param.remark = _remark;
-              TaskApi.punch(widget.param).then((value) {
+              TaskApi.inspectionPunch(widget.param).then((value) {
                 isPunching = false;
                 if (value.code == 200) {
                   // 打卡成功

@@ -41,10 +41,24 @@ class TaskApi extends ListApi<PlanResponse, TaskParam> {
     return FcResponse.fromJson(response.data);
   }
 
-  // nfc打卡
-  static Future<FcResponse> punch(PunchParam param) async {
+  //巡检打卡
+  static Future<FcResponse> inspectionPunch(PunchParam param) async {
     var response = await Http.dio.post('/mobile/inspection/punch',
         queryParameters: param.toJson());
+    return FcResponse.fromJson(response.data);
+  }
+
+  //控制室打卡
+  static Future<FcResponse> controlPunch(String url) async {
+    var response = await Http.dio.post('/mobile/workPunch/punch',
+        queryParameters: { 'code': url });
+    return FcResponse.fromJson(response.data);
+  }
+
+  //上下班打卡
+  static Future<FcResponse> workPunch(String url) async {
+    var response = await Http.dio.post('/mobile/punch/punchByCode',
+        queryParameters: { 'code': url });
     return FcResponse.fromJson(response.data);
   }
 }
