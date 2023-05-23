@@ -119,18 +119,22 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     margin: const EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(node.location),
-                            if (node.status == 2 || node.remark.isNotEmpty)
-                              Text(
-                                node.punchTime!,
-                                style: const TextStyle(
-                                    fontSize: 12, color: FcColor.base9),
-                              )
-                          ],
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(node.location),
+                              if (node.status == 2 || node.remark.isNotEmpty)
+                                Text(
+                                  node.punchTime!,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: FcColor.base9),
+                                )
+                            ],
+                          ),
                         ),
                         if (node.status == 1 && status == 1)
                           GestureDetector(
@@ -138,9 +142,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               PunchParam param = PunchParam(taskId: _detail!.taskId, nodeId: node.nodeId);
                               String? routeName;
                               if (_detail?.planType == InspectionWay.qrcode) {
-                                routeName = ScanPunchPage.routeName;
+                                routeName = PunchScanPage.routeName;
                               } else if (_detail?.planType == InspectionWay.nfc) {
-                                routeName = NfcPage.routeName;
+                                routeName = PunchNfcPage.routeName;
                               }
                               if (routeName != null) {
                                 Navigator.pushNamed(context, routeName, arguments: param).then((value) {
@@ -162,8 +166,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 3, horizontal: 8),
-                              child: Row(
-                                children: const [
+                              child: const Row(
+                                children: [
                                   Icon(
                                     Icons.note_alt_outlined,
                                     color: Color(0xff1976D2),
@@ -180,18 +184,21 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             style: TextStyle(color: FcColor.err),
                           ),
                         if (node.remark.isNotEmpty)
-                          Column(
-                            children: [
-                              const Text(
-                                '异常打卡',
-                                style: TextStyle(color: FcColor.warn),
-                              ),
-                              Text(
-                                node.remark,
-                                style: const TextStyle(
-                                    fontSize: 12, color: FcColor.base6),
-                              )
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const Text(
+                                  '异常打卡',
+                                  style: TextStyle(color: FcColor.warn),
+                                ),
+                                Text(
+                                  node.remark,
+                                  style: const TextStyle(
+                                    fontSize: 12, color: FcColor.base6, ),
+                                )
+                              ],
+                            ),
                           ),
                         if (node.status != 1 && node.remark.isEmpty)
                           const Text(

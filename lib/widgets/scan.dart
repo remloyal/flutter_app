@@ -49,6 +49,8 @@ class _ScanState extends State<Scan> {
             });
       }
     });
+    setState(() {
+    });
   }
 
   void _stop() {

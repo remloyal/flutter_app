@@ -212,6 +212,28 @@ class HandleButton extends StatelessWidget {
   }
 }
 
+/// 文本button
+class FcTextButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final String? text;
+
+  const FcTextButton({super.key, required this.onPressed, this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+          padding: MaterialStateProperty.all(
+              const EdgeInsets.symmetric(vertical: 12)),
+          minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
+          shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
+      child: Text(text ?? '取消'),
+    );
+  }
+}
+
 /// 信息状态
 class InfoStatus extends StatelessWidget {
   final String? processingText;

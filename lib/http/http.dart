@@ -62,6 +62,10 @@ class Http {
     handler.next(options);
   }
 
+  static List<String> excludes = [
+    '/qrCode/confirm',
+  ];
+
   /// 相应拦截器
   static void _onResponse(
       Response response, ResponseInterceptorHandler handler) async {
@@ -74,7 +78,9 @@ class Http {
     if (data?['code'] != 200 || response.statusCode != 200) {
       print(data?["message"]);
       // data?["message"] != null ? Message.error(data?["message"]) : '';
-      if (data.containsKey('message') && data?["message"] != '') {
+      if (!excludes.contains(response.requestOptions.path) &&
+          data.containsKey('message') &&
+          data?["message"] != '') {
         Message.error(data["message"]);
       }
     }

@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/common/global.dart';
-import 'package:fire_control_app/main.dart';
+import 'package:fire_control_app/models/account.dart';
+import 'package:fire_control_app/models/response.dart';
 
 class LoginService {
   final appUrl = 'https://api.zhxf.ltd';
@@ -183,5 +184,14 @@ class LoginService {
     var data = base.replaceAll('\n', '');
     data = data.replaceAll('\r', '');
     return data;
+  }
+}
+
+class LoginApi {
+  //扫码登陆
+  static Future<FcWebResponse> scan(LoginScanParam param) async {
+    var response = await Http.dio.post('/qrCode/confirm',
+        queryParameters: param.toJson());
+    return FcWebResponse.fromJson(response.data);
   }
 }

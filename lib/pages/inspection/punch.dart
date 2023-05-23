@@ -12,18 +12,18 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
 /// nfc打卡
-class NfcPage extends StatefulWidget {
+class PunchNfcPage extends StatefulWidget {
   static const routeName = '/nfcPunch';
 
   final PunchParam param;
 
-  const NfcPage({super.key, required this.param});
+  const PunchNfcPage({super.key, required this.param});
 
   @override
-  State<StatefulWidget> createState() => _NfcPageState();
+  State<StatefulWidget> createState() => _PunchNfcPageState();
 }
 
-class _NfcPageState extends State<NfcPage> {
+class _PunchNfcPageState extends State<PunchNfcPage> {
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
   @override
@@ -149,12 +149,12 @@ class _NfcPageState extends State<NfcPage> {
 }
 
 ///扫码打卡
-class ScanPunchPage extends StatelessWidget {
+class PunchScanPage extends StatelessWidget {
   static const routeName = '/scanPunch';
 
   final PunchParam param;
 
-  const ScanPunchPage({super.key, required this.param});
+  const PunchScanPage({super.key, required this.param});
 
   @override
   Widget build(BuildContext context) {

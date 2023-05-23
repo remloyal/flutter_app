@@ -56,9 +56,10 @@ class RouterUtil {
         TaskDetailPage(taskId: arguments),
     RouteDetailPage.routeName: (context, {arguments}) =>
         RouteDetailPage(routeId: arguments),
-    NfcPage.routeName: (context, {arguments}) => NfcPage(param: arguments),
+    PunchNfcPage.routeName: (context, {arguments}) => PunchNfcPage(param: arguments),
     ScanPage.routeName: (context, {arguments}) => const ScanPage(),
-    ScanPunchPage.routeName: (context, {arguments}) => ScanPunchPage(param: arguments),
+    LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(url: arguments,),
+    PunchScanPage.routeName: (context, {arguments}) => PunchScanPage(param: arguments),
     PunchErrorPage.routeName: (context, {arguments}) => PunchErrorPage(param: arguments),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
