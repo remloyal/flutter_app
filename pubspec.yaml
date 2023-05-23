@@ -26,9 +26,12 @@ dependencies:
   package_info_plus: ^3.0.3
   overlay_support: ^2.1.0
   just_audio: ^0.9.32
-  intl: ^0.17.0
+  intl: ^0.18.0
   webview_flutter: ^4.2.0
   image_picker: ^0.8.7+5
+  device_info_plus: ^9.0.0
+  nfc_manager: ^3.2.0
+  mobile_scanner: ^3.2.0
   
 
 dev_dependencies:

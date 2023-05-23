@@ -242,3 +242,30 @@ class RouteDetail extends RouteItem {
             .cast<InspectionNode>(),
         super.fromJson();
 }
+
+class PunchParam {
+  int taskId;
+  int nodeId;
+  String? code;
+  InspectionWay? way;
+  String? remark;
+
+  PunchParam({required this.taskId, required this.nodeId});
+
+  Map<String, dynamic> toJson() => {
+    'taskId': taskId,
+    'nodeId': nodeId,
+    'code': code,
+    'remark': remark,
+  };
+}
+
+class PunchResult {
+  String time;
+  int finish;
+  String? remark;
+
+  PunchResult.fromJson(Map<String, dynamic> json)
+      : time = json['time'],
+        finish = json['finish'];
+}

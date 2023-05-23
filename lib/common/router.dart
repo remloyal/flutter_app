@@ -1,3 +1,5 @@
+import 'package:fire_control_app/pages/home/scan_page.dart';
+import 'package:fire_control_app/pages/inspection/punch.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
@@ -54,6 +56,11 @@ class RouterUtil {
         TaskDetailPage(taskId: arguments),
     RouteDetailPage.routeName: (context, {arguments}) =>
         RouteDetailPage(routeId: arguments),
+    PunchNfcPage.routeName: (context, {arguments}) => PunchNfcPage(param: arguments),
+    ScanPage.routeName: (context, {arguments}) => const ScanPage(),
+    LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(url: arguments,),
+    PunchScanPage.routeName: (context, {arguments}) => PunchScanPage(param: arguments),
+    PunchErrorPage.routeName: (context, {arguments}) => PunchErrorPage(param: arguments),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),

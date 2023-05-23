@@ -3,6 +3,7 @@ import 'package:fire_control_app/common/fc_icon.dart';
 import 'package:fire_control_app/http/inspection_api.dart';
 import 'package:fire_control_app/models/inspection.dart';
 import 'package:fire_control_app/pages/inspection/inspection_card.dart';
+import 'package:fire_control_app/pages/inspection/punch.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class TaskDetailPage extends StatefulWidget {
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
   TaskDetail? _detail;
+  late StateSetter _nodeSetter;
 
   @override
   void initState() {
@@ -70,7 +72,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           ),
         ),
         Expanded(
-          child: _buildNodeList(_detail?.nodes ?? [], _detail?.status ?? 0),
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter stateSetter) {
+              _nodeSetter = stateSetter;
+              return _buildNodeList(_detail?.nodes ?? [], _detail?.status ?? 0);
+            },
+          ),
         )
       ],
     );
@@ -112,22 +119,45 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     margin: const EdgeInsets.all(10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(node.location),
-                            if (node.status == 2 || node.remark.isNotEmpty)
-                              Text(
-                                node.punchTime!,
-                                style: const TextStyle(
-                                    fontSize: 12, color: FcColor.base9),
-                              )
-                          ],
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(node.location),
+                              if (node.status == 2 || node.remark.isNotEmpty)
+                                Text(
+                                  node.punchTime!,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: FcColor.base9),
+                                )
+                            ],
+                          ),
                         ),
                         if (node.status == 1 && status == 1)
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              PunchParam param = PunchParam(taskId: _detail!.taskId, nodeId: node.nodeId);
+                              String? routeName;
+                              if (_detail?.planType == InspectionWay.qrcode) {
+                                routeName = PunchScanPage.routeName;
+                              } else if (_detail?.planType == InspectionWay.nfc) {
+                                routeName = PunchNfcPage.routeName;
+                              }
+                              if (routeName != null) {
+                                Navigator.pushNamed(context, routeName, arguments: param).then((value) {
+                                  if (value != null) {
+                                    PunchResult result = value as PunchResult;
+                                    node.punchTime = result.time;
+                                    node.remark = result.remark ?? '';
+                                    node.status = 2;
+                                    _nodeSetter(() {});
+                                  }
+                                });
+                              }
+                            },
                             child: Container(
                               decoration: const BoxDecoration(
                                 borderRadius:
@@ -136,8 +166,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 3, horizontal: 8),
-                              child: Row(
-                                children: const [
+                              child: const Row(
+                                children: [
                                   Icon(
                                     Icons.note_alt_outlined,
                                     color: Color(0xff1976D2),
@@ -154,22 +184,23 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             style: TextStyle(color: FcColor.err),
                           ),
                         if (node.remark.isNotEmpty)
-                          Column(
-                            children: [
-                              const Text(
-                                '异常打卡',
-                                style: TextStyle(color: FcColor.warn),
-                              ),
-                              Text(
-                                node.remark,
-                                style: const TextStyle(
-                                    fontSize: 12, color: FcColor.base6),
-                              )
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                const Text(
+                                  '异常打卡',
+                                  style: TextStyle(color: FcColor.warn),
+                                ),
+                                Text(
+                                  node.remark,
+                                  style: const TextStyle(
+                                    fontSize: 12, color: FcColor.base6, ),
+                                )
+                              ],
+                            ),
                           ),
-                        if (node.status != 1 &&
-                            status == 2 &&
-                            node.remark.isEmpty)
+                        if (node.status != 1 && node.remark.isEmpty)
                           const Text(
                             '已完成',
                             style: TextStyle(color: FcColor.ok),

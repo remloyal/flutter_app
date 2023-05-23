@@ -9,6 +9,20 @@ class FcResponse {
         data = json['data'];
 }
 
+class FcWebResponse {
+  int status;
+  int errorCode;
+  String? message;
+  String? field;
+  dynamic data;
+
+  FcWebResponse.fromJson(Map<String, dynamic> json)
+      : status = json['status'],
+        errorCode = json['errorCode'],
+        message = json['message'],
+        field = json['field'],
+        data = json['data'];
+}
 
 abstract class ListResponse<T extends ListItemData> {
   int currentPage;

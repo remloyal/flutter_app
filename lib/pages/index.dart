@@ -2,6 +2,7 @@ import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/http/unit_api.dart';
 import 'package:fire_control_app/common/router.dart';
+import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/notification/push.dart';
 import 'package:fire_control_app/states/unit_model.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _IndexPageState extends State<IndexPage> {
         elevation: _selectedIndex == 4 ? 0 : 1,
         backgroundColor: _selectedIndex == 4
             ? FcColor.barMineColor
-            : FcColor.barColor,
+            : null,
         title: _buildTitle(_selectedIndex != 4),
       ),
       body: Container(
@@ -84,7 +85,7 @@ class _IndexPageState extends State<IndexPage> {
         items: bottomNavigationBarItems,
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        fixedColor: FcColor.fixedColor,
+        // fixedColor: FcColor.fixedColor,
         onTap: (index) {
           setState(() {
             _pageController.jumpToPage(index);
@@ -118,7 +119,7 @@ class _IndexPageState extends State<IndexPage> {
                 ),
         ),
         _buildCircleButton(() {
-          print("打开扫一扫");
+          Navigator.pushNamed(context, ScanPage.routeName);
         }, FcmIcon.scan)
       ],
     );
