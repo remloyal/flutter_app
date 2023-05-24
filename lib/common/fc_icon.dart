@@ -37,6 +37,9 @@ class FcmIcon {
 
   // 闪光灯
   static const light = IconData(0xe609, fontFamily: 'fcm');
+
+  // 标记已读
+  static const read = IconData(0xe80b, fontFamily: 'fcm');
 }
 
 /// 报警相关的图标

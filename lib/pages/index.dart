@@ -2,6 +2,7 @@ import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/http/unit_api.dart';
 import 'package:fire_control_app/common/router.dart';
+import 'package:fire_control_app/pages/home/message_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/notification/push.dart';
 import 'package:fire_control_app/states/unit_model.dart';
@@ -103,7 +104,7 @@ class _IndexPageState extends State<IndexPage> {
     return Row(
       children: [
         _buildCircleButton(() {
-          print("打开消息");
+          Navigator.pushNamed(context, MessageCenterPage.routeName);
         }, FcmIcon.message),
         Expanded(
           flex: 1,

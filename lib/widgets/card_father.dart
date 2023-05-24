@@ -102,7 +102,8 @@ class CardDivider extends StatelessWidget {
 }
 
 class CardHeader extends StatelessWidget {
-  final Color leadingColor;
+  final Color? leadingColor;
+  final Color? titleColor;
   final String title;
   final Widget? tail;
   final bool divider;
@@ -111,13 +112,16 @@ class CardHeader extends StatelessWidget {
   const CardHeader(
       {super.key,
       required this.title,
-      this.leadingColor = FcColor.baseColor,
+      this.leadingColor,
       this.tail,
       this.divider = true,
-      this.standStart = true});
+      this.standStart = true,
+      this.titleColor});
 
   @override
   Widget build(BuildContext context) {
+    Color color = leadingColor ?? Theme.of(context).primaryColor;
+
     return Column(
       children: [
         Row(children: [
@@ -127,17 +131,22 @@ class CardHeader extends StatelessWidget {
                 height: 13,
                 margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                 decoration: BoxDecoration(
-                  color: leadingColor,
-                  border: Border.all(width: 1, color: leadingColor),
+                  color: color,
+                  border: Border.all(width: 1, color: color),
                   borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                 )),
           Expanded(
               flex: 1,
               child: Text(
                 title,
-                style: const TextStyle(fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12, color: titleColor),
               )),
-          tail ?? Container()
+          if (tail != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: tail,
+            )
         ]),
         if (divider) const CardDivider(),
       ],
