@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/home/find_device_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/inspection/punch.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,8 @@ class RouterUtil {
     LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(url: arguments,),
     PunchScanPage.routeName: (context, {arguments}) => PunchScanPage(param: arguments),
     PunchErrorPage.routeName: (context, {arguments}) => PunchErrorPage(param: arguments),
+    FindDevicePage.routeName: (context, {arguments}) => const FindDevicePage(),
+    FindResultPage.routeName: (context, {arguments}) => FindResultPage(param: arguments),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),

@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/home/find_device_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -134,7 +135,9 @@ class _HomePageState extends State<HomePage> {
         'text': '查找设备',
         "color": const Color(0xff1976D2),
         "bgColor": const Color(0xffBBDEFB),
-        'onTap': onTop,
+        'onTap': () {
+          Navigator.pushNamed(context, FindDevicePage.routeName);
+        },
         "iconData": const IconData(0xe623, fontFamily: 'fcm'),
       },
       {

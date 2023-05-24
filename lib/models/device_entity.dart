@@ -312,3 +312,10 @@ class DeviceType {
     "name": name,
   };
 }
+
+class FindParam {
+  String source;
+  String keyword;
+
+  FindParam({required this.source, required this.keyword});
+}
