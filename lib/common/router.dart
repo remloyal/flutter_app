@@ -1,5 +1,6 @@
 import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/pages/home/find_device_page.dart';
+import 'package:fire_control_app/pages/home/home_report.dart';
 import 'package:fire_control_app/pages/home/message_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/inspection/punch.dart';
@@ -42,7 +43,10 @@ class RouterUtil {
   static Map<String, WidgetBuilder> routes = {
     login: (context) => const Login(),
     index: (context) => const IndexPage(),
-    unitSelect: (context) => UnitSelect(),
+    unitSelect: (context, {arguments}) => UnitSelect(
+          type: arguments?['type'],
+          param: arguments?['param'],
+        ),
     FireDetailPage.routeName: (context, {arguments}) => FireDetailPage(fireId: arguments),
     AlarmFaultDetailPage.routeName: (context, {arguments}) => AlarmFaultDetailPage(param: arguments),
     TroubleDetailPage.routeName: (context, {arguments}) => TroubleDetailPage(troubleId: arguments),
@@ -51,17 +55,25 @@ class RouterUtil {
     RouteDetailPage.routeName: (context, {arguments}) => RouteDetailPage(routeId: arguments),
     PunchNfcPage.routeName: (context, {arguments}) => PunchNfcPage(param: arguments),
     ScanPage.routeName: (context, {arguments}) => const ScanPage(),
-    LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(url: arguments,),
+    LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(
+          url: arguments,
+        ),
     PunchScanPage.routeName: (context, {arguments}) => PunchScanPage(param: arguments),
     PunchErrorPage.routeName: (context, {arguments}) => PunchErrorPage(param: arguments),
     FindDevicePage.routeName: (context, {arguments}) => const FindDevicePage(),
     FindResultPage.routeName: (context, {arguments}) => FindResultPage(param: arguments),
     MessageCenterPage.routeName: (context, {arguments}) => const MessageCenterPage(),
-    NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(noticeId: arguments,),
-    ActivityDetailPage.routeName: (context, {arguments}) => ActivityDetailPage(activityId: arguments,),
-    FireHandlePage.routeName: (context, {arguments}) => FireHandlePage(fireId: arguments,),
-    '/deviceDetails': (context, {arguments}) =>
-        DeviceDetailsMain(deviceId: arguments),
+    NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(
+          noticeId: arguments,
+        ),
+    ActivityDetailPage.routeName: (context, {arguments}) => ActivityDetailPage(
+          activityId: arguments,
+        ),
+    FireHandlePage.routeName: (context, {arguments}) => FireHandlePage(
+          fireId: arguments,
+        ),
+    HomeReport.routeName: (context, {arguments}) => const HomeReport(),
+    '/deviceDetails': (context, {arguments}) => DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),
     '/mainWorkMain': (context, {arguments}) => MainWorkMain(
           id: arguments?['id'],
@@ -100,8 +112,7 @@ class RouterUtil {
         });
         return route;
       } else {
-        return MaterialPageRoute(
-            builder: (context) => pageContentBuilder(context));
+        return MaterialPageRoute(builder: (context) => pageContentBuilder(context));
       }
     }
   };

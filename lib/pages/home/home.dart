@@ -1,4 +1,5 @@
 import 'package:fire_control_app/pages/home/find_device_page.dart';
+import 'package:fire_control_app/pages/home/home_report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -144,7 +145,9 @@ class _HomePageState extends State<HomePage> {
         'text': '立即上报',
         "color": const Color(0xffFF9800),
         "bgColor": const Color(0xffFFE0B2),
-        'onTap': onTop,
+        'onTap': () {
+          Navigator.pushNamed(context, HomeReport.routeName);
+        },
         "iconData": const IconData(0xe625, fontFamily: 'fcm'),
       },
       {

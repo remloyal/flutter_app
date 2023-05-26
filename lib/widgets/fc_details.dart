@@ -3,6 +3,8 @@ import 'package:fire_control_app/models/alarm_entity.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:flutter/material.dart';
 
+typedef onBack = Future<bool> Function();
+
 /// 详情页骨架
 class FcDetailPage extends StatelessWidget {
   final String title;
@@ -11,6 +13,8 @@ class FcDetailPage extends StatelessWidget {
   final List<Widget>? actions;
   final bool? loadingState;
   final bool? roll;
+  final bool? shouldPop;
+  final onBack? onBackPressed;
 
   const FcDetailPage(
       {super.key,
@@ -19,35 +23,46 @@ class FcDetailPage extends StatelessWidget {
       this.actions = const <Widget>[],
       this.loadingState = true,
       this.roll = true,
+      this.shouldPop = true,
+      this.onBackPressed,
       this.footer});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          titleSpacing: 0,
-          elevation: 0.5,
-          title: Text(
-            title,
-            style: const TextStyle(fontSize: 18),
-          ),
-          // backgroundColor: FcColor.bodyTitleColor,
-          actions: actions,
-        ),
-        backgroundColor: FcColor.bodyColor,
-        body: loadingState == false
-            ? const Loading()
-            : roll == true
-                ? SingleChildScrollView(
-                    child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: body,
-                  ))
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: body,
-                  ),
-        bottomNavigationBar: _buildFooter());
+    return WillPopScope(
+        onWillPop: () async {
+          bool? result = shouldPop;
+          if (shouldPop == false) {
+            result = await onBackPressed!();
+          }
+          result ??= false;
+          return result;
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              titleSpacing: 0,
+              elevation: 0.5,
+              title: Text(
+                title,
+                style: const TextStyle(fontSize: 18),
+              ),
+              // backgroundColor: FcColor.bodyTitleColor,
+              actions: actions,
+            ),
+            backgroundColor: FcColor.bodyColor,
+            body: loadingState == false
+                ? const Loading()
+                : roll == true
+                    ? SingleChildScrollView(
+                        child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: body,
+                      ))
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: body,
+                      ),
+            bottomNavigationBar: _buildFooter()));
   }
 
   Widget? _buildFooter() {

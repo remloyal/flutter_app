@@ -7,8 +7,10 @@ class ButtonGroup extends StatefulWidget {
   final List<String> names;
 
   final double? height;
+  final double? width;
 
-  const ButtonGroup({super.key, required this.names, this.onTap, this.height});
+  const ButtonGroup(
+      {super.key, required this.names, this.onTap, this.height, this.width});
 
   @override
   State<StatefulWidget> createState() => _ButtonGroupState();
@@ -44,10 +46,12 @@ class _ButtonGroupState extends State<ButtonGroup> {
         borderRadius: BorderRadius.circular(5),
         children: widget.names
             .map((e) => Container(
+                width: widget.width,
                 padding: const EdgeInsets.only(
                     left: 10, top: 0, right: 10, bottom: 0),
                 child: Text(
                   e,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 14),
                 )))
             .toList(),
