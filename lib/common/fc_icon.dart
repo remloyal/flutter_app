@@ -26,8 +26,8 @@ class FcmIcon {
   // 单位
   static const unit = IconData(0xe626, fontFamily: 'fcm');
 
-  // 右箭头 >
-  static const rightArrow = IconData(0xe62d, fontFamily: 'fcm');
+  // 双向箭头
+  static const exchangeArrow = IconData(0xe62d, fontFamily: 'fcm');
 
   // 关闭
   static const close = IconData(0xe690, fontFamily: 'fcm');

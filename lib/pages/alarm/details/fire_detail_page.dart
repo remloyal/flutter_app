@@ -1,6 +1,7 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
@@ -202,7 +203,9 @@ class _FireDetailPageState extends State<FireDetailPage> {
           flex: 3,
           child: HandleButton(
             title: '关闭火情',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, FireHandlePage.routeName, arguments: widget.fireId);
+            },
           ),
         )
       ];

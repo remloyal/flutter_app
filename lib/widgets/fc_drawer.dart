@@ -1,16 +1,6 @@
-import 'dart:ui';
-
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/fc_icon.dart';
 import 'package:flutter/material.dart';
-
-double getScreenWidth() {
-  return window.physicalSize.width / window.devicePixelRatio;
-}
-
-double getScreenHeight() {
-  return window.physicalSize.height / window.devicePixelRatio;
-}
 
 class RightDrawer extends StatefulWidget {
   // 占屏幕宽度得百分比，默认0.6
@@ -24,70 +14,74 @@ class RightDrawer extends StatefulWidget {
   State<StatefulWidget> createState() => _RightDrawerState();
 }
 
-class _RightDrawerState extends State<RightDrawer>
-    with SingleTickerProviderStateMixin {
-  late double _width;
+class _RightDrawerState extends State<RightDrawer> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<RelativeRect> _animation;
 
   @override
   void initState() {
     super.initState();
-    _width = getScreenWidth() * widget.ratio;
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-    final CurvedAnimation curve =
-        CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _animation = RelativeRectTween(
-            begin: RelativeRect.fromLTRB(_width, 0, -_width, 0),
-            end: const RelativeRect.fromLTRB(0, 0, 0, 0))
-        .animate(curve);
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _controller.forward();
   }
 
   ///关闭页面动画
-  void close() {
+  void _close() {
     _controller.reverse().then((value) => Navigator.pop(context));
   }
 
   @override
   Widget build(BuildContext context) {
+    //获取屏幕尺寸
     MediaQueryData data = MediaQuery.of(context);
     double width = data.size.width;
-    double height = data.size.height -
-        data.systemGestureInsets.top -
-        data.systemGestureInsets.bottom;
-    double left = width - _width;
+    double height = data.size.height;
+
+    double finalWidth = width * widget.ratio;
+
+    //设置动画
+    final CurvedAnimation curve = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    Animation<RelativeRect> animation = RelativeRectTween(
+        begin: RelativeRect.fromLTRB(finalWidth, 0, -finalWidth, 0),
+        end: const RelativeRect.fromLTRB(0, 0, 0, 0)
+    ).animate(curve);
+
     return Material(
       type: MaterialType.transparency,
       child: Stack(
         children: [
           GestureDetector(
+            onTap: _close,
             child: Container(
               color: Colors.transparent,
               width: width,
               height: height,
             ),
-            onTap: () => close(),
           ),
-          Positioned(
-            left: left,
-            top: 0,
+          Align(
+            alignment: Alignment.topRight,
             child: SizedBox(
-              width: _width,
+              width: finalWidth,
               height: height,
               child: Stack(
                 children: [
                   PositionedTransition(
-                    rect: _animation,
+                    rect: animation,
                     child: Container(
                       decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(
-                              left: Radius.circular(15)),
-                          color: Colors.white),
-                      width: _width,
+                          borderRadius: BorderRadius.horizontal(left: Radius.circular(15)),
+                          color: Colors.white
+                      ),
+                      width: finalWidth,
                       height: height,
-                      child: widget.body,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                            top: data.padding.top + 20,
+                            bottom: data.padding.bottom + 10
+                        ),
+                        child: widget.body,
+                      ),
                     ),
                   )
                 ],
@@ -108,6 +102,16 @@ class _RightDrawerState extends State<RightDrawer>
 
 typedef WidgetsBuilder = List<Widget> Function(BuildContext context);
 
+showRightDrawer({required BuildContext context, required WidgetBuilder builder}) {
+  showDialog(
+      context: context,
+      useSafeArea: false,
+      builder: (ctx) => RightDrawer(
+        body: builder(ctx),
+      )
+  );
+}
+
 class FilterButton extends StatelessWidget {
   final WidgetsBuilder filterBodyBuilder;
 
@@ -122,19 +126,18 @@ class FilterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        showDialog(
+        showRightDrawer(
             context: context,
-            builder: (ctx) => RightDrawer(
-                  body: _FilterContainer(
-                    controller: controller,
-                    body: filterBodyBuilder(ctx),
-                  ),
-                ));
+            builder: (ctx) => _FilterContainer(
+                body: filterBodyBuilder(ctx),
+                controller: controller
+            )
+        );
       },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 8),
+      child: const Padding(
+        padding: EdgeInsets.only(left: 8),
         child: Row(
-          children: const [
+          children: [
             Icon(
               FcmIcon.filter,
               color: Color.fromARGB(255, 0, 0, 0),
@@ -163,68 +166,68 @@ class _FilterContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
-      child: Column(
-        children: [
-          Expanded(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, children: body),
+    return Column(
+      children: [
+        Expanded(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: body
           ),
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: FcColor.err)),
-            margin: const EdgeInsets.only(top: 10),
-            clipBehavior: Clip.hardEdge,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: GestureDetector(
-                    onTap: () {
-                      controller._reset();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding:
-                          const EdgeInsets.only(top: 5, bottom: 5, left: 8),
-                      child: const Text(
-                        '重置条件',
-                        style: TextStyle(color: FcColor.baseColor),
-                      ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: FcColor.err)
+          ),
+          margin: const EdgeInsets.only(top: 10),
+          clipBehavior: Clip.hardEdge,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: GestureDetector(
+                  onTap: () {
+                    controller._reset();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding:
+                    const EdgeInsets.only(top: 5, bottom: 5, left: 8),
+                    child: const Text(
+                      '重置条件',
+                      style: TextStyle(color: FcColor.baseColor),
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: GestureDetector(
-                    onTap: () {
-                      _RightDrawerState? state =
-                          context.findAncestorStateOfType<_RightDrawerState>();
-                      state?.close();
-                      if (controller.confirm != null) {
-                        controller.confirm!();
-                      }
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: FcColor.err,
-                          borderRadius: BorderRadius.circular(30)),
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: const Text(
-                        '确定',
-                        style: TextStyle(color: Colors.white),
-                      ),
+              ),
+              Expanded(
+                flex: 3,
+                child: GestureDetector(
+                  onTap: () {
+                    _RightDrawerState? state =
+                    context.findAncestorStateOfType<_RightDrawerState>();
+                    state?._close();
+                    if (controller.confirm != null) {
+                      controller.confirm!();
+                    }
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: FcColor.err,
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: const Text(
+                      '确定',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                ),
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 }

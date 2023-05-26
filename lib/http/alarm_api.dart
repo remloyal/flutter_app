@@ -92,3 +92,12 @@ class RemindApi extends ListApi<RemindResponse, RemindParam> {
   }
 
 }
+
+class AnalogApi extends ListApi<AnalogResponse, AnalogParam> {
+  @override
+  Future<AnalogResponse> loadList(AnalogParam params) async {
+    var response = await Http.dio
+        .get('/mobile/alarmAnaLog/list', queryParameters: params.toJson());
+    return AnalogResponse.fromJson(response.data['data']['pager']);
+  }
+}

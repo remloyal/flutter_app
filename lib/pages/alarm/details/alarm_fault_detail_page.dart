@@ -1,28 +1,44 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/pages/alarm/details/alarm_analog.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
+import 'package:fire_control_app/widgets/fc_drawer.dart';
 import 'package:flutter/material.dart';
 
-class FaultDetailPage extends StatefulWidget {
-  static const routeName = '/faultDetail';
-
-  final int alarmId;
-
-  const FaultDetailPage({super.key, required this.alarmId});
-
-  @override
-  State<StatefulWidget> createState() => _FaultDetailPageState();
+enum AlarmDetailType {
+  //告警
+  alarm,
+  //故障
+  fault
 }
 
-class _FaultDetailPageState extends State<FaultDetailPage> {
+class AlarmDetailParam {
+  int alarmId;
+  AlarmDetailType type;
+
+  AlarmDetailParam({required this.alarmId, required this.type});
+}
+
+class AlarmFaultDetailPage extends StatefulWidget {
+  static const routeName = '/alarmFaultDetail';
+
+  final AlarmDetailParam param;
+
+  const AlarmFaultDetailPage({super.key, required this.param});
+
+  @override
+  State<StatefulWidget> createState() => _AlarmFaultDetailPageState();
+}
+
+class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
   AlarmDetail? _detail;
 
   @override
   void initState() {
-    AlarmApi.getAlarmFaultDetail(widget.alarmId).then((value) {
+    AlarmApi.getAlarmFaultDetail(widget.param.alarmId).then((value) {
       if (mounted) {
         setState(() {
           _detail = value;
@@ -34,17 +50,28 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FcDetailPage(
-      title: '故障详情',
-      body: [_buildAlarmInfo(), ..._buildConfirmInfo(), ..._buildResetInfo()],
-      footer: [
-        Expanded(
-          flex: 1,
+    String title = '告警详情';
+    int flex = 2;
+    if (widget.param.type == AlarmDetailType.fault) {
+      title = '故障详情';
+      flex = 1;
+    }
+
+    List<Widget> footer = [
+      Expanded(
+          flex: flex,
           child: LocationButton(
             onPressed: () {},
-          ),
-        ),
-      ],
+          )
+      ),
+      if (widget.param.type == AlarmDetailType.alarm)
+        ..._buildHandleButton()
+    ];
+
+    return FcDetailPage(
+      title: title,
+      body: [_buildAlarmInfo(), ..._buildConfirmInfo(), ..._buildResetInfo()],
+      footer: footer,
     );
   }
 
@@ -55,7 +82,7 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
           title: '告警信息',
           tail: InfoStatus(
             processingText: _detail?.status == 0 ? '进行中' : null,
-            endedText: _detail?.status == 1 ? '已复位' : null,
+            endedText: _detail?.status == 1 ? '已结束' : null,
           ),
         ),
         XfItem(
@@ -89,9 +116,6 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
         ),
         if (_detail?.eventCount != null && _detail!.eventCount! > 0)
           _buildAlarmCount(_detail!.eventCount!),
-        const SizedBox(
-          height: 10,
-        ),
         if (_detail?.videos != null && _detail!.videos!.isNotEmpty)
           AssociateVideos(videos: _detail!.videos!)
       ],
@@ -104,12 +128,11 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
         borderRadius: BorderRadius.circular(5),
         color: FcColor.barMineColor,
       ),
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.only(left: 10),
       child: Row(
         children: [
           Expanded(
-            flex: 1,
             child: Text.rich(TextSpan(children: [
               TextSpan(text: '报警次数 '),
               TextSpan(
@@ -119,7 +142,12 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
             ])),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showRightDrawer(
+                  context: context,
+                  builder: (ctx) => AlarmAnalog(alarmId: widget.param.alarmId)
+              );
+            },
             child: Container(
               padding:
                   EdgeInsets.only(left: 30, top: 10, bottom: 10, right: 10),
@@ -177,17 +205,38 @@ class _FaultDetailPageState extends State<FaultDetailPage> {
     if (_detail?.resetTime != null) {
       return [
         Text(formatDuration(_detail!.startTime, _detail!.resetTime)),
-        CardContainer(backgroundColor: Color(0xffA5D6A7), children: [
-          CardHeader(
-            title: '复位时间',
-            leadingColor: Color(0xff4CAF50),
-            divider: false,
-            tail: Text(
-              _detail!.resetTime!,
-              style: TextStyle(color: Color(0xff4CAF50)),
+        CardContainer(
+          backgroundColor: Color(0xffA5D6A7),
+          children: [
+            CardHeader(
+              title: '复位时间',
+              leadingColor: Color(0xff4CAF50),
+              divider: false,
+              tail: Text(
+                _detail!.resetTime!,
+                style: TextStyle(color: Color(0xff4CAF50)),
+              ),
             ),
+          ],
+        )
+      ];
+    }
+    return [];
+  }
+
+  List<Widget> _buildHandleButton() {
+    if (_detail?.status == 0 && _detail?.confirmResult == 0) {
+      return [
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          flex: 3,
+          child: HandleButton(
+            title: '关闭告警',
+            onPressed: () {},
           ),
-        ])
+        )
       ];
     }
     return [];

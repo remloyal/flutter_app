@@ -1,5 +1,5 @@
 import 'package:fire_control_app/pages/alarm/alarm_filter.dart';
-import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
+import 'package:fire_control_app/pages/alarm/details/alarm_fault_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -56,8 +56,11 @@ class _AlarmListState extends State<AlarmList> with ListBuilder<AlarmItem> {
   Widget buildItem(BuildContext context, AlarmItem item) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, AlarmDetailPage.routeName,
-            arguments: item.id);
+        Navigator.pushNamed(
+            context,
+            AlarmFaultDetailPage.routeName,
+            arguments: AlarmDetailParam(alarmId: item.id, type: AlarmDetailType.alarm)
+        );
       },
       child: CardParent(
         header: Row(

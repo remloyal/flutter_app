@@ -175,7 +175,7 @@ class _IndexPageState extends State<IndexPage> {
                           )),
                 )),
             const Icon(
-              FcmIcon.rightArrow,
+              FcmIcon.exchangeArrow,
               color: FcColor.base3,
               size: 18,
             )

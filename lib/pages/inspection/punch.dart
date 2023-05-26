@@ -259,13 +259,13 @@ class _PunchErrorPageState extends State<PunchErrorPage> {
       ),
       // backgroundColor: Colors.black,
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             ListView.separated(
-              separatorBuilder: (ctx, index) => Divider(),
+              separatorBuilder: (ctx, index) => const Divider(),
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: items.length,
               itemBuilder: (ctx, index) {
                 _ErrorItem item = items[index];
@@ -296,11 +296,11 @@ class _PunchErrorPageState extends State<PunchErrorPage> {
             if (_select == 9)
               Column(
                 children: [
-                  Divider(),
+                  const Divider(),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(left: 16, top: 11, right: 16),
                         child: Text(
                           '异常原因',
@@ -313,7 +313,7 @@ class _PunchErrorPageState extends State<PunchErrorPage> {
                           maxLines: null,
                           autofocus: true,
                           keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             // focusedBorder: InputBorder.none,
                             // enabledBorder: InputBorder.none,
                             hintText: '请输入原因',
@@ -332,7 +332,7 @@ class _PunchErrorPageState extends State<PunchErrorPage> {
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           child: HandleButton(
             onPressed: () {
               if (isPunching) return;

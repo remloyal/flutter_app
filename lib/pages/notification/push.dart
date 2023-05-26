@@ -2,22 +2,18 @@
 import 'dart:convert';
 
 import 'package:fire_control_app/common/constants.dart';
-import 'package:fire_control_app/common/fc_icon.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/common/log.dart';
 import 'package:fire_control_app/http/push_api.dart';
 import 'package:fire_control_app/models/notification.dart';
 import 'package:fire_control_app/models/profile.dart';
-import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
+import 'package:fire_control_app/pages/alarm/details/alarm_fault_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
-import 'package:fire_control_app/pages/alarm/details/fault_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/fire_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/trouble_detail_page.dart';
-import 'package:fire_control_app/states/notify_message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:provider/provider.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
@@ -25,9 +21,9 @@ import 'package:umeng_push_sdk/umeng_push_sdk.dart';
 
 class NotifyCenter extends StatefulWidget {
 
-  NotifyCenterController controller;
+  final NotifyCenterController controller;
 
-  NotifyCenter({required this.controller});
+  const NotifyCenter({super.key, required this.controller});
 
 
   @override
@@ -36,32 +32,52 @@ class NotifyCenter extends StatefulWidget {
 
 class _NotifyCenterState extends State<NotifyCenter> {
 
+  _NotifyCenterMessage? _message;
+
+  @override
+  void initState() {
+    super.initState();
+    _message = widget.controller._message;
+    widget.controller.addListener(_processMessage);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controller.removeListener(_processMessage);
+  }
+
+  void _processMessage() {
+    setState(() {
+      _message = widget.controller._message;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var of = Provider.of<NotifyMessageModel>(context);
+    if (_message == null) return Container();
 
     List<Widget> children = [];
 
-    if (of.currentMessage != null) {
-      children.add(_buildBanner(of.currentMessage!));
+    _NotifyCenterMessage message = _message!;
+    if (message.currentMessage != null) {
+      children.add(_buildBanner(message.currentMessage!));
     }
 
-    if (of.nextMessage != null) {
-      children.add(_buildBanner(of.nextMessage!));
+    if (message.nextMessage != null) {
+      children.add(_buildBanner(message.nextMessage!));
     }
 
-    if (of.remainCount > 0) {
-      children.add(_buildFooter(of.remainCount));
+    if (message.remainCount > 0) {
+      children.add(_buildFooter(message.remainCount));
     }
-
-    if (children.isEmpty) return Container();
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
         color: Color.fromRGBO(0, 0, 0, 0.5),
       ),
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
       child: Column(
         children: children,
       ),
@@ -74,17 +90,20 @@ class _NotifyCenterState extends State<NotifyCenter> {
     return GestureDetector(
       onTap: () {
         String routeName = '';
-        switch (config!.type) {
+        dynamic param = message.referenceId;
+        switch (config.type) {
           case BannerType.fire:
             routeName = FireDetailPage.routeName;
             break;
           case BannerType.none:
             break;
           case BannerType.alarm:
-            routeName = AlarmDetailPage.routeName;
+            routeName = AlarmFaultDetailPage.routeName;
+            param = AlarmDetailParam(alarmId: message.referenceId!, type: AlarmDetailType.alarm);
             break;
           case BannerType.fault:
-            routeName = FaultDetailPage.routeName;
+            routeName = AlarmFaultDetailPage.routeName;
+            param = AlarmDetailParam(alarmId: message.referenceId!, type: AlarmDetailType.fault);
             break;
           case BannerType.trouble:
             routeName = TroubleDetailPage.routeName;
@@ -95,37 +114,55 @@ class _NotifyCenterState extends State<NotifyCenter> {
         }
 
         if (routeName.isNotEmpty) {
-          Navigator.pushNamed(context, DangerDetailPage.routeName, arguments: message.referenceId);
+          Navigator.pushNamed(context, DangerDetailPage.routeName, arguments: param);
         }
       },
       child: Container(
-        color: config!.bgColor,
-        margin: EdgeInsets.only(bottom: 8),
-        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: config.bgColor,
+          borderRadius: BorderRadius.circular(10)
+        ),
+        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
         child: Column(
           children: [
-            Row(
-              children: [
-                config!.icon,
-                SizedBox(width: 5,),
-                Expanded(child: Text(config!.name)),
-                Text(message.time),
-                SizedBox(width: 5,),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    widget.controller.closeMessage(message);
-                  },)
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Icon(config.iconData, size: 18),
+                  ),
+                  Expanded(child: Text(config.name)),
+                  Text(message.time),
+                  InkWell(
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Icon(Icons.close, size: 18,)
+                    ),
+                    onTap: () {
+                      widget.controller._closeMessage(message);
+                    },)
+                ],
+              ),
             ),
             Container(
-              color: Color.fromRGBO(0, 0, 0, 0.1),
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(0, 0, 0, 0.1),
+                borderRadius: BorderRadius.circular(10)
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Expanded(child: Text(message.title), flex: 1,),
-                  Icon(FcmIcon.rightArrow)
+                  Expanded(
+                      child: Text(
+                        message.title,
+                        style: const TextStyle(fontSize: 14.0)
+                      )
+                  ),
+                  const Icon(Icons.arrow_forward, size: 15,)
                 ],
               ),
             )
@@ -139,29 +176,35 @@ class _NotifyCenterState extends State<NotifyCenter> {
     return Row(
       children: [
         Expanded(
-          flex: 1,
           child: Container(
             height: 50,
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 borderRadius: BorderRadius.horizontal(left: Radius.circular(10)),
                 color: Color(0xffeceff1)
             ),
-            child: Center(child: Text("还剩$count条通知", style: TextStyle(color: Color(0xff607d8b)),),),
+            child: Text(
+                "还剩$count条通知",
+                style: const TextStyle(color: Color(0xff607d8b))
+            ),
           ),
         ),
         Expanded(
-          flex: 1,
           child: GestureDetector(
             onTap: () {
-              widget.controller.closeNotifyCenter();
+              widget.controller._closeNotifyCenter();
             },
             child: Container(
               height: 50,
+              alignment: Alignment.center,
               decoration: const BoxDecoration(
                   borderRadius: BorderRadius.horizontal(right: Radius.circular(10)),
                   color: Color(0xff455A64)
               ),
-              child:  const Center(child: Text("清除消息", style: TextStyle(color: Color(0xffeceff1)))),
+              child:  const Text(
+                  "清除消息",
+                  style: TextStyle(color: Color(0xffeceff1))
+              ),
             ),
           ),
         ),
@@ -170,13 +213,28 @@ class _NotifyCenterState extends State<NotifyCenter> {
   }
 }
 
-class NotifyCenterController {
+class _NotifyCenterMessage {
+  // 当前播放的横幅信息
+  NotifyMessage? currentMessage;
+
+  // 即将播放的横幅信息
+  NotifyMessage? nextMessage;
+
+  // 剩余的信息数量
+  int remainCount = 0;
+
+}
+
+class NotifyCenterController extends ChangeNotifier {
 
   // 待播报的信息
   final List<NotifyMessage> _remainMessages = [];
 
   // 正在播报的信息
   late NotifyMessage _playingMessage;
+
+  // 通知的消息封装
+  final _NotifyCenterMessage _message = _NotifyCenterMessage();
 
   OverlaySupportEntry? _entry;
 
@@ -186,23 +244,18 @@ class NotifyCenterController {
 
   String token = "";
 
-  NotifyMessageModel _getModel() {
-    var context = Global.navigatorKey!.currentContext;
-    return Provider.of<NotifyMessageModel>(context!, listen: false);
-  }
-
   void processMessage(NotifyMessage message) {
-    NotifyMessageModel model = _getModel();
-    if (model.currentMessage == null) {
-      model.currentMessage = message;
+    if (_message.currentMessage == null) {
+      _message.currentMessage = message;
       _showNotifyCenter();
       _playAudio(message);
-    } else if (model.nextMessage == null) {
-      model.nextMessage = message;
+    } else if (_message.nextMessage == null) {
+      _message.nextMessage = message;
     } else {
       _remainMessages.add(message);
-      model.remainCount = _remainMessages.length;
+      _message.remainCount = _remainMessages.length;
     }
+    notifyListeners();
   }
 
   void _playAudio(NotifyMessage? message) {
@@ -250,43 +303,45 @@ class NotifyCenterController {
     _player?.playerStateStream.listen((event) {
       if (event.processingState == ProcessingState.completed) {
         // print("播放完成");
-        closeMessage(_playingMessage);
+        _closeMessage(_playingMessage);
       }
     });
   }
 
-  void closeMessage(NotifyMessage message) {
-    NotifyMessageModel model = _getModel();
-    if (model.currentMessage == message) {
-      if (model.nextMessage == null) {
-        closeNotifyCenter();
+  void _closeMessage(NotifyMessage message) {
+    if (_message.currentMessage == message) {
+      if (_message.nextMessage == null) {
+        _closeNotifyCenter();
+        //最后一条消息,直接关闭通知,不需要通知监听
+        return;
       } else {
-        model.currentMessage = model.nextMessage;
-        _playAudio(model.currentMessage);
-        _setNextMessage(model);
+        _message.currentMessage = _message.nextMessage;
+        _playAudio(_message.currentMessage);
+        _setNextMessage();
       }
-    } else if (model.nextMessage == message) {
-      _setNextMessage(model);
+    } else if (_message.nextMessage == message) {
+      _setNextMessage();
     }
+    notifyListeners();
   }
 
-  void _setNextMessage(NotifyMessageModel model) {
-    model.nextMessage = _remainMessages.isNotEmpty ? _remainMessages.removeAt(0) : null;
-    model.remainCount = _remainMessages.length;
+  void _setNextMessage() {
+    _message.nextMessage = _remainMessages.isNotEmpty ? _remainMessages.removeAt(0) : null;
+    _message.remainCount = _remainMessages.length;
   }
 
-  void closeNotifyCenter() {
+  void _closeNotifyCenter() {
     _entry?.dismiss();
     _entry = null;
 
-    NotifyMessageModel model = _getModel();
-    model.clear();
+    _message.currentMessage = null;
+    _message.nextMessage = null;
+    _message.remainCount = 0;
 
     _player?.stop();
     _player?.dispose();
     _player = null;
   }
-
 }
 
 class PushHelper {

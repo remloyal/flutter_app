@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/alarm_list.dart';
-import 'package:fire_control_app/pages/alarm/alarm_main/analog_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/danger_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/fault_list.dart';
 import 'package:fire_control_app/pages/alarm/alarm_main/fire_list.dart';

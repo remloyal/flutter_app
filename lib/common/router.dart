@@ -1,11 +1,11 @@
+import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/pages/home/find_device_page.dart';
 import 'package:fire_control_app/pages/home/message_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/inspection/punch.dart';
 import 'package:flutter/material.dart';
-import 'package:fire_control_app/pages/alarm/details/alarm_detail_page.dart';
+import 'package:fire_control_app/pages/alarm/details/alarm_fault_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
-import 'package:fire_control_app/pages/alarm/details/fault_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/fire_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/trouble_detail_page.dart';
 import 'package:fire_control_app/pages/home/unit_select.dart';
@@ -43,21 +43,12 @@ class RouterUtil {
     login: (context) => const Login(),
     index: (context) => const IndexPage(),
     unitSelect: (context) => UnitSelect(),
-    FireDetailPage.routeName: (context, {arguments}) => FireDetailPage(
-          fireId: arguments,
-        ),
-    AlarmDetailPage.routeName: (context, {arguments}) =>
-        AlarmDetailPage(alarmId: arguments),
-    FaultDetailPage.routeName: (context, {arguments}) =>
-        FaultDetailPage(alarmId: arguments),
-    TroubleDetailPage.routeName: (context, {arguments}) =>
-        TroubleDetailPage(troubleId: arguments),
-    DangerDetailPage.routeName: (context, {arguments}) =>
-        DangerDetailPage(dangerId: arguments),
-    TaskDetailPage.routeName: (context, {arguments}) =>
-        TaskDetailPage(taskId: arguments),
-    RouteDetailPage.routeName: (context, {arguments}) =>
-        RouteDetailPage(routeId: arguments),
+    FireDetailPage.routeName: (context, {arguments}) => FireDetailPage(fireId: arguments),
+    AlarmFaultDetailPage.routeName: (context, {arguments}) => AlarmFaultDetailPage(param: arguments),
+    TroubleDetailPage.routeName: (context, {arguments}) => TroubleDetailPage(troubleId: arguments),
+    DangerDetailPage.routeName: (context, {arguments}) => DangerDetailPage(dangerId: arguments),
+    TaskDetailPage.routeName: (context, {arguments}) => TaskDetailPage(taskId: arguments),
+    RouteDetailPage.routeName: (context, {arguments}) => RouteDetailPage(routeId: arguments),
     PunchNfcPage.routeName: (context, {arguments}) => PunchNfcPage(param: arguments),
     ScanPage.routeName: (context, {arguments}) => const ScanPage(),
     LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(url: arguments,),
@@ -68,6 +59,7 @@ class RouterUtil {
     MessageCenterPage.routeName: (context, {arguments}) => const MessageCenterPage(),
     NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(noticeId: arguments,),
     ActivityDetailPage.routeName: (context, {arguments}) => ActivityDetailPage(activityId: arguments,),
+    FireHandlePage.routeName: (context, {arguments}) => FireHandlePage(fireId: arguments,),
     '/deviceDetails': (context, {arguments}) =>
         DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),

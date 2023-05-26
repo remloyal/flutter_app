@@ -924,3 +924,46 @@ class DangerDetail {
         xRate = json['xRate'],
         yRate = json['yRate'];
 }
+
+//日志
+class AnalogParam extends Param {
+  int alarmId;
+
+  AnalogParam({required this.alarmId});
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...super.toJson(),
+    'alarmId': alarmId
+  };
+
+}
+
+class AnalogItem extends ListItemData {
+  int deviceTime;
+  int time;
+  int type;
+  String? valueFive;
+  String? valueFour;
+  String? valueOne;
+  String? valueThree;
+  String? valueTwo;
+
+  AnalogItem.fromJson(Map<String, dynamic> json)
+      : deviceTime = json['deviceTime'],
+        time = json['time'],
+        type = json['type'],
+        valueFive = json['valueFive'],
+        valueFour = json['valueFour'],
+        valueOne = json['valueOne'],
+        valueThree = json['valueThree'],
+        valueTwo = json['valueTwo'];
+}
+
+class AnalogResponse extends ListResponse<AnalogItem> {
+  AnalogResponse.fromJson(super.json) : super.fromJson();
+
+  @override
+  AnalogItem generateRecord(Map<String, dynamic> data) =>
+      AnalogItem.fromJson(data);
+}
