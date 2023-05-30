@@ -7,24 +7,23 @@ import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/utils/alarm_tool.dart';
 
-class RemindList extends StatefulWidget {
-  const RemindList({Key? key}) : super(key: key);
+class RemindList extends StatelessWidget {
 
-  @override
-  State<RemindList> createState() => _RemindListState();
-}
+  final RemindParam _alarmParam;
 
-class _RemindListState extends State<RemindList> with ListBuilder<RemindItem> {
-  final RemindParam _alarmParam = RemindParam();
+  RemindList({super.key}) : _alarmParam = RemindParam();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<RemindApi, RemindParam>(
-        api: RemindApi(), param: _alarmParam, listBuilder: this);
+    return LoadList<RemindApi, RemindParam, RemindItem>(
+      api: RemindApi(),
+      param: _alarmParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -41,8 +40,7 @@ class _RemindListState extends State<RemindList> with ListBuilder<RemindItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, RemindItem item) {
+  Widget _buildItem(BuildContext context, RemindItem item, int index) {
     return InkWell(
       onTap: () {
 

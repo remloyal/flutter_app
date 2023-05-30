@@ -139,7 +139,7 @@ class MineFireResponse extends ListResponse<MineFireItem> {
       MineFireItem.fromJson(data);
 }
 
-class MineFireItem extends ListItemData {
+class MineFireItem {
   int id;
   String? deviceName;
   String? unitName;
@@ -242,7 +242,7 @@ class MineAlarmResponse extends ListResponse<MineAlarmItem> {
       MineAlarmItem.fromJson(data);
 }
 
-class MineAlarmItem extends ListItemData {
+class MineAlarmItem {
   int id;
   String? unitName;
   String? buildingName;
@@ -355,7 +355,7 @@ class MineInspectionResponse extends ListResponse<MineInspectionItem> {
       MineInspectionItem.fromJson(data);
 }
 
-class MineInspectionItem extends ListItemData {
+class MineInspectionItem {
   int taskId;
   String name;
   String unitName;
@@ -467,7 +467,7 @@ class MineTroubleResponse extends ListResponse<MineTroubleItem> {
       MineTroubleItem.fromJson(data);
 }
 
-class MineTroubleItem extends ListItemData {
+class MineTroubleItem {
   int id;
   String unitName;
   String? buildingName;
@@ -572,7 +572,7 @@ class MineDangerResponse extends ListResponse<MineDangerItem> {
       MineDangerItem.fromJson(data);
 }
 
-class MineDangerItem extends ListItemData {
+class MineDangerItem {
   int id;
   String unitName;
   String? buildingName;

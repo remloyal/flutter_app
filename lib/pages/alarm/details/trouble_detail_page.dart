@@ -1,6 +1,7 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/utils/alarm_tool.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -23,6 +24,11 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
 
   @override
   void initState() {
+    _fetchData();
+    super.initState();
+  }
+
+  void _fetchData() {
     TroubleApi.getTroubleDetail(widget.troubleId).then((value) {
       if (mounted) {
         setState(() {
@@ -30,7 +36,6 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
         });
       }
     });
-    super.initState();
   }
 
   @override
@@ -148,7 +153,20 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
           flex: 3,
           child: HandleButton(
             title: '处理隐患',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(
+                  context,
+                  HandlePage.routeName,
+                  arguments: HandlePageParam(
+                      id: widget.troubleId,
+                      type: HandlePageType.trouble
+                  )
+              ).then((value) {
+                if (value != null && value as bool) {
+                  _fetchData();
+                }
+              });
+            },
           ),
         )
       ];

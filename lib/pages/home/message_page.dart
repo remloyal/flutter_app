@@ -127,7 +127,8 @@ extension _MessageTypeExtension on _MessageType {
   }
 }
 
-class _MessageList extends StatelessWidget with ListBuilder<MessageItem> {
+class _MessageList extends StatelessWidget {
+
   final MessageParam _param;
 
   final _MessageType type;
@@ -136,12 +137,15 @@ class _MessageList extends StatelessWidget with ListBuilder<MessageItem> {
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<MessageApi, MessageParam>(
-        api: MessageApi(), param: _param, listBuilder: this);
+    return LoadList<MessageApi, MessageParam, MessageItem>(
+      api: MessageApi(),
+      param: _param,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -164,8 +168,7 @@ class _MessageList extends StatelessWidget with ListBuilder<MessageItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, MessageItem item) {
+  Widget _buildItem(BuildContext context, MessageItem item, int index) {
 
     String receiveLabel = type == _MessageType.notice ? '接收单位' : '活动单位';
     String contentLabel = type == _MessageType.notice ? '公告内容' : '活动内容';

@@ -10,25 +10,24 @@ import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 import 'package:fire_control_app/utils/alarm_tool.dart';
 
-class TroubleList extends StatefulWidget {
-  const TroubleList({Key? key}) : super(key: key);
+class TroubleList extends StatelessWidget {
 
-  @override
-  State<TroubleList> createState() => _TroubleListState();
-}
+  final TroubleParam _alarmParam;
 
-class _TroubleListState extends State<TroubleList>
-    with ListBuilder<TroubleItem> {
-  final TroubleParam _alarmParam = TroubleParam();
+  TroubleList({super.key}) : _alarmParam = TroubleParam();
+
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<TroubleApi, TroubleParam>(
-        api: TroubleApi(), param: _alarmParam, listBuilder: this);
+    return LoadList<TroubleApi, TroubleParam, TroubleItem>(
+      api: TroubleApi(),
+      param: _alarmParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -54,8 +53,7 @@ class _TroubleListState extends State<TroubleList>
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, TroubleItem item) {
+  Widget _buildItem(BuildContext context, TroubleItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, TroubleDetailPage.routeName,

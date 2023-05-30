@@ -1,6 +1,7 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
@@ -22,6 +23,11 @@ class _DangerDetailPageState extends State<DangerDetailPage> {
 
   @override
   void initState() {
+    _fetchData();
+    super.initState();
+  }
+
+  void _fetchData() {
     DangerApi.getDangerDetail(widget.dangerId).then((value) {
       if (mounted) {
         setState(() {
@@ -29,7 +35,6 @@ class _DangerDetailPageState extends State<DangerDetailPage> {
         });
       }
     });
-    super.initState();
   }
 
   @override
@@ -163,7 +168,20 @@ class _DangerDetailPageState extends State<DangerDetailPage> {
           flex: 3,
           child: HandleButton(
             title: '处理危险品',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(
+                  context,
+                  HandlePage.routeName,
+                  arguments: HandlePageParam(
+                      id: widget.dangerId,
+                      type: HandlePageType.danger
+                  )
+              ).then((value) {
+                if (value != null && value as bool) {
+                  _fetchData();
+                }
+              });
+            },
           ),
         )
       ];

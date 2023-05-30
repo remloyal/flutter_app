@@ -15,8 +15,7 @@ class DetailsEvent extends StatefulWidget {
   State<DetailsEvent> createState() => _DetailsEventState();
 }
 
-class _DetailsEventState extends State<DetailsEvent>
-    with ListBuilder<DeviceEventItem> {
+class _DetailsEventState extends State<DetailsEvent> {
   late DeviceEventParams _deviceEventParam;
   @override
   void initState() {
@@ -29,8 +28,7 @@ class _DetailsEventState extends State<DetailsEvent>
     });
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -79,12 +77,15 @@ class _DetailsEventState extends State<DetailsEvent>
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<DeviceEventApi, DeviceEventParams>(
-        api: DeviceEventApi(), param: _deviceEventParam, listBuilder: this);
+    return LoadList<DeviceEventApi, DeviceEventParams, DeviceEventItem>(
+      api: DeviceEventApi(),
+      param: _deviceEventParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget buildItem(BuildContext context, DeviceEventItem item) {
+  Widget _buildItem(BuildContext context, DeviceEventItem item, int index) {
     return InkWell(
       highlightColor: Colors.amberAccent,
       onTap: () {

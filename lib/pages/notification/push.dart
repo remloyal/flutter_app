@@ -114,7 +114,7 @@ class _NotifyCenterState extends State<NotifyCenter> {
         }
 
         if (routeName.isNotEmpty) {
-          Navigator.pushNamed(context, DangerDetailPage.routeName, arguments: param);
+          Navigator.pushNamed(context, routeName, arguments: param);
         }
       },
       child: Container(

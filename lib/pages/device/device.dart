@@ -5,52 +5,33 @@ import 'package:fire_control_app/models/device_entity.dart';
 import 'package:fire_control_app/http/device_api.dart';
 import 'package:fire_control_app/utils/value.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
-import 'package:fire_control_app/common/global.dart';
 import './device_filter.dart';
 import 'package:fire_control_app/widgets/popup/popup_main.dart';
 
-class Device extends StatefulWidget {
+class Device extends StatelessWidget {
 
-  final bool showFilter;
+  final bool showToolbar;
 
   final DeviceParams? params;
+  final DeviceParams _deviceParam;
 
-  const Device({super.key, this.showFilter = true, this.params});
+  Device({super.key, this.showToolbar = true, this.params})
+      : _deviceParam = params ?? DeviceParams();
 
-  @override
-  State<Device> createState() => _DeviceState();
-}
-
-class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
-  late DeviceParams _deviceParam;
-  List data = [];
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<DeviceApi, DeviceParams>(
-        api: DeviceApi(), param: _deviceParam, listBuilder: this);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    List unit = Global.units;
-    for (var i = 0; i < unit.length; i++) {
-      Map todo = {
-        'name': unit[i].name,
-        'unitId': unit[i].unitId,
-        "type": 'unit'
-      };
-      data.add(todo);
-    }
-    _deviceParam = widget.params ?? DeviceParams();
+    return LoadList<DeviceApi, DeviceParams, DeviceItem>(
+      api: DeviceApi(),
+      param: _deviceParam,
+      toolbarBuilder: showToolbar ? _buildToolbar : null,
+      itemBuilder: _buildItem,
+    );
   }
 
   final GlobalKey<FilterDialogState> modelkey = GlobalKey();
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
-    if (!widget.showFilter) return null;
+  Widget _buildToolbar(BuildContext context, int total) {
     return SizedBox(
         height: 50,
         child: Row(
@@ -97,10 +78,8 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
                               body: DeviceFilter(
                                   param: _deviceParam,
                                   onChange: (DeviceParams data) {
-                                    setState(() {
-                                      _deviceParam = data;
-                                      _deviceParam.change();
-                                    });
+                                    // _deviceParam = data;
+                                    // _deviceParam.change();
                                     modelkey.currentState!.closeModel();
                                   }),
                             )));
@@ -130,8 +109,7 @@ class _DeviceState extends State<Device> with ListBuilder<DeviceItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, DeviceItem item) {
+  Widget _buildItem(BuildContext context, DeviceItem item, int index) {
     return InkWell(
       highlightColor: Colors.amberAccent,
       onTap: () {

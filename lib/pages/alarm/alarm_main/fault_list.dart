@@ -9,30 +9,22 @@ import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 
-class FaultList extends StatefulWidget {
-  const FaultList({Key? key}) : super(key: key);
+class FaultList extends StatelessWidget {
+  final AlarmParam _alarmParam;
 
-  @override
-  State<FaultList> createState() => _FaultListState();
-}
-
-class _FaultListState extends State<FaultList> with ListBuilder<AlarmItem> {
-  final AlarmParam _alarmParam = AlarmParam();
-
-  @override
-  void initState() {
-    _alarmParam.eventLevel = 0;
-    super.initState();
-  }
+  FaultList({super.key}) : _alarmParam = AlarmParam()..eventLevel = 0;
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<AlarmApi, AlarmParam>(
-        api: AlarmApi(), param: _alarmParam, listBuilder: this);
+    return LoadList<AlarmApi, AlarmParam, AlarmItem>(
+      api: AlarmApi(),
+      param: _alarmParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -58,8 +50,7 @@ class _FaultListState extends State<FaultList> with ListBuilder<AlarmItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, AlarmItem item) {
+  Widget _buildItem(BuildContext context, AlarmItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(

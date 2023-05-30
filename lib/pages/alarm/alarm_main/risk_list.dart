@@ -8,24 +8,24 @@ import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 import 'package:fire_control_app/utils/alarm_tool.dart';
 
-class RiskList extends StatefulWidget {
-  const RiskList({Key? key}) : super(key: key);
+class RiskList extends StatelessWidget {
 
-  @override
-  State<RiskList> createState() => _RiskListState();
-}
+  final RiskParam _alarmParam;
 
-class _RiskListState extends State<RiskList> with ListBuilder<RiskItem> {
-  final RiskParam _alarmParam = RiskParam();
+  RiskList({super.key}) : _alarmParam = RiskParam();
+
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<RiskApi, RiskParam>(
-        api: RiskApi(), param: _alarmParam, listBuilder: this);
+    return LoadList<RiskApi, RiskParam, RiskItem>(
+      api: RiskApi(),
+      param: _alarmParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -51,8 +51,7 @@ class _RiskListState extends State<RiskList> with ListBuilder<RiskItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, RiskItem item) {
+  Widget _buildItem(BuildContext context, RiskItem item, int index) {
     return InkWell(
       onTap: () {
 

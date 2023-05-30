@@ -23,6 +23,11 @@ class _FireDetailPageState extends State<FireDetailPage> {
 
   @override
   void initState() {
+    _fetchData();
+    super.initState();
+  }
+
+  void _fetchData() {
     FireApi.getFireDetail(widget.fireId).then((value) {
       if (mounted) {
         setState(() {
@@ -30,7 +35,6 @@ class _FireDetailPageState extends State<FireDetailPage> {
         });
       }
     });
-    super.initState();
   }
 
   @override
@@ -204,7 +208,18 @@ class _FireDetailPageState extends State<FireDetailPage> {
           child: HandleButton(
             title: '关闭火情',
             onPressed: () {
-              Navigator.pushNamed(context, FireHandlePage.routeName, arguments: widget.fireId);
+              Navigator.pushNamed(
+                  context,
+                  HandlePage.routeName,
+                  arguments: HandlePageParam(
+                      id: widget.fireId,
+                      type: HandlePageType.fire
+                  )
+              ).then((value) {
+                if (value != null && value as bool) {
+                  _fetchData();
+                }
+              });
             },
           ),
         )

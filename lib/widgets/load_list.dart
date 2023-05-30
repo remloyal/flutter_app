@@ -7,34 +7,40 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:fire_control_app/widgets/keep_alive.dart';
 
-abstract class ListBuilder<T> {
-  // 创建过滤的工具栏
-  Widget? buildToolbar(BuildContext context, int total) {
-    return null;
-  }
+// 创建列表的item
+typedef ItemBuilder<T> = Widget Function(BuildContext context, T item, int index);
 
-  // 创建列表的item
-  Widget buildItem(BuildContext context, T item);
-}
+// 创建过滤的工具栏
+typedef ToolbarBuilder = Widget Function(BuildContext context, int total);
 
-class LoadList<T extends ListApi, P extends Param> extends StatefulWidget {
-  const LoadList(
-      {super.key,
-      required this.param,
-      required this.listBuilder,
-      required this.api});
+class LoadList<T extends ListApi, P extends Param, I> extends StatefulWidget {
+  const LoadList({
+    super.key,
+    required this.api,
+    required this.param,
+    required this.itemBuilder,
+    this.toolbarBuilder
+  });
 
-  final ListBuilder listBuilder;
+  //获取数据接口类
+  final T api;
+  //获取数据的参数
   final P param;
 
-  final T api;
+  final ItemBuilder<I> itemBuilder;
+
+  final ToolbarBuilder? toolbarBuilder;
+
+  Widget _itemBuilder(BuildContext context, dynamic item, int index) {
+    return itemBuilder(context, item as I, index);
+  }
 
   @override
   State<LoadList> createState() => _LoadListState();
 }
 
-class _LoadListState<T> extends State<LoadList> {
-  final List _records = <T>[];
+class _LoadListState extends State<LoadList> {
+  final List _records = [];
   int _total = 0;
 
   final ScrollController _listController = ScrollController();
@@ -77,7 +83,8 @@ class _LoadListState<T> extends State<LoadList> {
       children: [
         Column(
           children: [
-            widget.listBuilder.buildToolbar(context, _total) ?? Container(),
+            if (widget.toolbarBuilder != null)
+              widget.toolbarBuilder!(context, _total),
             Expanded(child: Container(child: _buildList()))
           ],
         ),
@@ -133,7 +140,7 @@ class _LoadListState<T> extends State<LoadList> {
         child: ListView.builder(
           reverse: false,
           controller: _listController,
-          itemBuilder: (c, i) => widget.listBuilder.buildItem(context, _records[i]),
+          itemBuilder: (c, i) => widget._itemBuilder(context, _records[i], i),
           shrinkWrap: true,
           itemCount: _records.length,
         ),

@@ -1,31 +1,119 @@
-import 'dart:io';
-
 import 'package:fire_control_app/common/fc_color.dart';
+import 'package:fire_control_app/http/alarm_api.dart';
+import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/models/home.dart';
+import 'package:fire_control_app/models/response.dart';
+import 'package:fire_control_app/pages/home/report/file_upload.dart';
 import 'package:fire_control_app/utils/toast.dart';
+import 'package:fire_control_app/widgets/button_group.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class FireHandlePage extends StatelessWidget {
+enum HandlePageType {
+  fire,
+  alarm,
+  trouble,
+  danger
+}
 
-  static const routeName = '/fireHandle';
+class HandlePageParam {
+  int id;
+  HandlePageType type;
 
-  final int fireId;
+  HandlePageParam({required this.id, required this.type});
+}
 
-  const FireHandlePage({super.key, required this.fireId});
+class HandlePage extends StatefulWidget {
+
+  static const routeName = '/handlePage';
+
+  final HandlePageParam param;
+
+  const HandlePage({super.key, required this.param});
+
+  @override
+  State<StatefulWidget> createState() => _HandlePageState();
+}
+
+class _HandlePageState extends State<HandlePage> {
+  late HandleParam _param;
+  late FileData _fileData;
+
+  int _selected = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fileData = FileData();
+    _param = _generateUploadParam();
+  }
+
+  HandleParam _generateUploadParam() {
+    int id = widget.param.id;
+    switch (widget.param.type) {
+      case HandlePageType.fire:
+        return FireHandleParam(alarmId: id);
+      case HandlePageType.alarm:
+        return AlarmHandleParam(alarmId: id);
+      case HandlePageType.trouble:
+        return TroubleHandleParam(troubleId: id);
+      case HandlePageType.danger:
+        return DangerHandleParam(dangerId: id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    String title = '关闭火情';
+
+    if (widget.param.type == HandlePageType.alarm) {
+      title = '处理告警';
+    } else if (widget.param.type == HandlePageType.trouble) {
+      title = '处理危险品';
+    } else if (widget.param.type == HandlePageType.danger) {
+      title = '处理隐患';
+    }
+
+    HandleDescription description = HandleDescription(
+      onChanged: (String value) {
+        _param.remark = value;
+      },
+    );
+
+    List<Widget> children = [
+      description,
+      const SizedBox(height: 30,),
+      FileUpdate(fileData: _fileData,)
+    ];
+
+    if (widget.param.type == HandlePageType.alarm) {
+      children.insertAll(0, [
+        const CardHeader(title: '是否发生火情',),
+        StatefulBuilder(
+          builder: (BuildContext ctx, StateSetter setter) {
+            return SpaceRadioButtons(
+              names: const ['是', '否'],
+              selected: _selected,
+              onTap: (index) {
+                _selected = index;
+                (_param as AlarmHandleParam).isFire = index + 1;
+                setter((){});
+              },
+            );
+          },
+        ),
+      ]);
+    }
+
     return FcDetailPage(
-      title: '关闭火情',
+      title: title,
       body: [
         CardContainer(
-          children: [
-            HandleDescription(),
-            SizedBox(height: 30,),
-            HandleAttachment(),
-          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
         )
       ],
       footer: [
@@ -33,12 +121,40 @@ class FireHandlePage extends StatelessWidget {
           child: HandleButton(
             title: '提交',
             onPressed: () {
-
+              if (!description.validate()) return;
+              if (_fileData.state == false) {
+                Message.error('文件未全部上传完成，请稍后');
+                return;
+              }
+              if (_fileData.fileIds.isEmpty) {
+                Message.show('请选择附件');
+                return;
+              }
+              _param.attachmentIds = _fileData.fileIds.join(',');
+              _uploadData(context);
             },
           ),
         )
       ],
     );
+  }
+
+  Future<void> _uploadData(context) async {
+    FcResponse? response;
+    if (widget.param.type == HandlePageType.fire) {
+      response = await FireApi.close(_param as FireHandleParam);
+    } else if (widget.param.type == HandlePageType.alarm) {
+      response = await AlarmApi.confirm(_param as AlarmHandleParam);
+    } else if (widget.param.type == HandlePageType.trouble) {
+      response = await TroubleApi.close(_param as TroubleHandleParam);
+    } else if (widget.param.type == HandlePageType.danger) {
+      response = await DangerApi.close(_param as DangerHandleParam);
+    }
+
+    if (response?.code == 200) {
+      Message.show('操作成功');
+      Navigator.pop(context, true);
+    }
   }
 }
 
@@ -46,7 +162,13 @@ class HandleDescription extends StatelessWidget {
 
   final ValueChanged<String>? onChanged;
 
-  const HandleDescription({super.key, this.onChanged});
+  final GlobalKey<FormState> _formKey;
+
+  HandleDescription({super.key, this.onChanged}) : _formKey = GlobalKey<FormState>();
+
+  bool validate() {
+    return _formKey.currentState?.validate() ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +176,7 @@ class HandleDescription extends StatelessWidget {
       children: [
         const CardHeader(title: '事件描述',),
         Form(
+          key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: TextFormField(
             maxLength: 140,
@@ -65,10 +188,7 @@ class HandleDescription extends StatelessWidget {
                 hintMaxLines: 3,
                 hintStyle: TextStyle(color: FcColor.base9)
             ),
-            // onChanged: onChanged,
-            onSaved: (value) {
-
-            },
+            onChanged: onChanged,
             validator: (text) {
               if (text == null || text.isEmpty) {
                 return '请输入描述内容';

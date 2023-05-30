@@ -9,24 +9,23 @@ import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 
-class AlarmList extends StatefulWidget {
-  const AlarmList({Key? key}) : super(key: key);
+class AlarmList extends StatelessWidget {
 
-  @override
-  State<AlarmList> createState() => _AlarmListState();
-}
+  final AlarmParam _alarmParam;
 
-class _AlarmListState extends State<AlarmList> with ListBuilder<AlarmItem> {
-  final AlarmParam _alarmParam = AlarmParam();
+  AlarmList({super.key}) : _alarmParam = AlarmParam();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<AlarmApi, AlarmParam>(
-        api: AlarmApi(), param: _alarmParam, listBuilder: this);
+    return LoadList<AlarmApi, AlarmParam, AlarmItem>(
+      api: AlarmApi(),
+      param: _alarmParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -52,8 +51,7 @@ class _AlarmListState extends State<AlarmList> with ListBuilder<AlarmItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, AlarmItem item) {
+  Widget _buildItem(BuildContext context, AlarmItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(

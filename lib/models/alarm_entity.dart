@@ -8,7 +8,7 @@ class FireResponse extends ListResponse<FireItem> {
   FireItem generateRecord(Map<String, dynamic> data) => FireItem.fromJson(data);
 }
 
-class FireItem extends ListItemData {
+class FireItem {
   int id;
   String? deviceName;
   String unitName;
@@ -116,7 +116,7 @@ class AlarmResponse extends ListResponse<AlarmItem> {
       AlarmItem.fromJson(data);
 }
 
-class AlarmItem extends ListItemData {
+class AlarmItem {
   int id;
   String unitName;
   String? buildingName;
@@ -177,7 +177,7 @@ class TroubleResponse extends ListResponse<TroubleItem> {
       TroubleItem.fromJson(data);
 }
 
-class TroubleItem extends ListItemData {
+class TroubleItem {
   int id;
   String unitName;
   String? buildingName;
@@ -312,7 +312,7 @@ class DangerResponse extends ListResponse<DangerItem> {
       DangerItem.fromJson(data);
 }
 
-class DangerItem extends ListItemData {
+class DangerItem {
   int id;
   String unitName;
   String? buildingName;
@@ -397,7 +397,7 @@ class RiskResponse extends ListResponse<RiskItem> {
   RiskItem generateRecord(Map<String, dynamic> data) => RiskItem.fromJson(data);
 }
 
-class RiskItem extends ListItemData {
+class RiskItem {
   int? id;
   String unitName;
   String? warnSource;
@@ -493,7 +493,7 @@ class RemindResponse extends ListResponse<RemindItem> {
       RemindItem.fromJson(data);
 }
 
-class RemindItem extends ListItemData {
+class RemindItem {
   String unitName;
   int type;
   String source;
@@ -939,7 +939,7 @@ class AnalogParam extends Param {
 
 }
 
-class AnalogItem extends ListItemData {
+class AnalogItem {
   int deviceTime;
   int time;
   int type;
@@ -966,4 +966,63 @@ class AnalogResponse extends ListResponse<AnalogItem> {
   @override
   AnalogItem generateRecord(Map<String, dynamic> data) =>
       AnalogItem.fromJson(data);
+}
+
+//告警处理
+class HandleParam {
+  String? attachmentIds;
+  int? fileNumber;
+  String? remark;
+
+  Map<String, dynamic> toJson() => {
+    'attachmentIds': attachmentIds,
+    'remark': remark,
+    'fileNumber': fileNumber
+  };
+}
+
+class FireHandleParam extends HandleParam {
+  int alarmId;
+  FireHandleParam({required this.alarmId});
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...super.toJson(),
+    'alarmId': alarmId
+  };
+}
+
+class AlarmHandleParam extends HandleParam {
+  int alarmId;
+  int isFire = 2;
+  AlarmHandleParam({required this.alarmId});
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...super.toJson(),
+    'alarmId': alarmId,
+    'isFire': isFire
+  };
+}
+
+class TroubleHandleParam extends HandleParam {
+  int troubleId;
+  TroubleHandleParam({required this.troubleId});
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...super.toJson(),
+    'troubleId': troubleId
+  };
+}
+
+class DangerHandleParam extends HandleParam {
+  int dangerId;
+  DangerHandleParam({required this.dangerId});
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...super.toJson(),
+    'dangerId': dangerId
+  };
 }

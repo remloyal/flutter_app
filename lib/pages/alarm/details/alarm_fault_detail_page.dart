@@ -1,6 +1,7 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_analog.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -38,6 +39,11 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
 
   @override
   void initState() {
+    _fetchData();
+    super.initState();
+  }
+
+  void _fetchData() {
     AlarmApi.getAlarmFaultDetail(widget.param.alarmId).then((value) {
       if (mounted) {
         setState(() {
@@ -45,7 +51,6 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
         });
       }
     });
-    super.initState();
   }
 
   @override
@@ -234,7 +239,20 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
           flex: 3,
           child: HandleButton(
             title: '关闭告警',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(
+                  context,
+                  HandlePage.routeName,
+                  arguments: HandlePageParam(
+                      id: widget.param.alarmId,
+                      type: HandlePageType.alarm
+                  )
+              ).then((value) {
+                if (value != null && value as bool) {
+                  _fetchData();
+                }
+              });
+            },
           ),
         )
       ];

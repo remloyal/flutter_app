@@ -89,25 +89,21 @@ class _MineFireListMainState extends State<MineFireListMain> {
   }
 }
 
-class MineFireList extends StatefulWidget {
+class MineFireList extends StatelessWidget {
   const MineFireList({super.key, required this.mineFireParam});
 
   final MineFireParams mineFireParam;
 
   @override
-  State<MineFireList> createState() => _MineFireListState();
-}
-
-class _MineFireListState extends State<MineFireList>
-    with ListBuilder<MineFireItem> {
-  @override
   Widget build(BuildContext context) {
-    return LoadList<MineFireApi, MineFireParams>(
-        api: MineFireApi(), param: widget.mineFireParam, listBuilder: this);
+    return LoadList<MineFireApi, MineFireParams, MineFireItem>(
+      api: MineFireApi(),
+      param: mineFireParam,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget buildItem(BuildContext context, MineFireItem item) {
+  Widget _buildItem(BuildContext context, MineFireItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, FireDetailPage.routeName,

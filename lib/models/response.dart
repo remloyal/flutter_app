@@ -24,7 +24,7 @@ class FcWebResponse {
         data = json['data'];
 }
 
-abstract class ListResponse<T extends ListItemData> {
+abstract class ListResponse<T> {
   int currentPage;
   int totalRow;
   int totalPage;
@@ -36,11 +36,7 @@ abstract class ListResponse<T extends ListItemData> {
         totalPage = json['totalPage'] ?? 0,
         result = json['result'] ?? [];
 
-  List<T> get records => result!.map((e) => generateRecord(e)).toList();
+  List<T> get records => result!.map((e) => generateRecord(e)).toList().cast<T>();
 
   T generateRecord(Map<String, dynamic> data);
-}
-
-abstract class ListItemData {
-
 }

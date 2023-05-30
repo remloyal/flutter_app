@@ -95,27 +95,21 @@ class _MineInspectionListMainState extends State<MineInspectionListMain> {
   }
 }
 
-class MineInspectionList extends StatefulWidget {
+class MineInspectionList extends StatelessWidget {
   const MineInspectionList({super.key, required this.mineFireParam});
 
   final MineInspectionParams mineFireParam;
 
   @override
-  State<MineInspectionList> createState() => _MineInspectionListState();
-}
-
-class _MineInspectionListState extends State<MineInspectionList>
-    with ListBuilder<MineInspectionItem> {
-  @override
   Widget build(BuildContext context) {
-    return LoadList<MineInspectionApi, MineInspectionParams>(
-        api: MineInspectionApi(),
-        param: widget.mineFireParam,
-        listBuilder: this);
+    return LoadList<MineInspectionApi, MineInspectionParams, MineInspectionItem>(
+      api: MineInspectionApi(),
+      param: mineFireParam,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget buildItem(BuildContext context, MineInspectionItem item) {
+  Widget _buildItem(BuildContext context, MineInspectionItem item, int index) {
     return InkWell(
       onTap: () {
         // Navigator.pushNamed(context, '/alarmDetail', arguments: item.id);

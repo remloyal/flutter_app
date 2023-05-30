@@ -74,7 +74,7 @@ class _AlarmState extends State<Alarm> with SingleTickerProviderStateMixin {
           child: TabBarView(
               //构建
               controller: _tabController,
-              children: const [
+              children: [
                 FireList(),
                 AlarmList(),
                 FaultList(),

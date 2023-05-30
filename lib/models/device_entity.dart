@@ -9,7 +9,7 @@ class DeviceResponse extends ListResponse<DeviceItem> {
       DeviceItem.fromJson(data);
 }
 
-class DeviceItem extends ListItemData {
+class DeviceItem {
   int id;
   String name;
   String unitName;
@@ -199,7 +199,7 @@ class DeviceEventResponse extends ListResponse<DeviceEventItem> {
       DeviceEventItem.fromJson(data);
 }
 
-class DeviceEventItem extends ListItemData {
+class DeviceEventItem {
   // type=1,2
   int? id;
   int? eventLevel;
@@ -264,7 +264,7 @@ class DeviceOperationLogResponse extends ListResponse<OperationLogItem> {
       OperationLogItem.fromJson(data);
 }
 
-class OperationLogItem extends ListItemData {
+class OperationLogItem {
   String? userNickname;
   String? operationTypeName;
   String? operationContent;

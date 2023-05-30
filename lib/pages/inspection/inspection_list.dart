@@ -11,7 +11,7 @@ import 'package:fire_control_app/widgets/load_list.dart';
 import 'package:fire_control_app/common/global.dart';
 
 /// 任务列表
-class PlanList extends StatelessWidget with ListBuilder<TaskItem> {
+class PlanList extends StatelessWidget {
 
   final int? _userId;
 
@@ -21,12 +21,15 @@ class PlanList extends StatelessWidget with ListBuilder<TaskItem> {
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<TaskApi, TaskParam>(
-        api: TaskApi(), param: _taskParam, listBuilder: this);
+    return LoadList<TaskApi, TaskParam, TaskItem>(
+      api: TaskApi(),
+      param: _taskParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -51,11 +54,10 @@ class PlanList extends StatelessWidget with ListBuilder<TaskItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, TaskItem item) {
+  Widget _buildItem(BuildContext context, TaskItem item, int index) {
     return GestureDetector(
       onTap: () {
-        if (_taskParam.status == 1 && _userId != item.userId) {
+        if (_taskParam.status == 1 && _userId != item?.userId) {
           Message.show('无法执行，这不是您的任务');
           return;
         }
@@ -68,19 +70,22 @@ class PlanList extends StatelessWidget with ListBuilder<TaskItem> {
 }
 
 /// 路线列表
-class RouteList extends StatelessWidget with ListBuilder<RouteItem> {
+class RouteList extends StatelessWidget {
   final RouteParam _routeParam;
 
   RouteList({super.key}) : _routeParam = RouteParam();
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<RouteApi, RouteParam>(
-        api: RouteApi(), param: _routeParam, listBuilder: this);
+    return LoadList<RouteApi, RouteParam, RouteItem>(
+      api: RouteApi(),
+      param: _routeParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -110,8 +115,7 @@ class RouteList extends StatelessWidget with ListBuilder<RouteItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, RouteItem item) {
+  Widget _buildItem(BuildContext context, RouteItem item, int index) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, RouteDetailPage.routeName,

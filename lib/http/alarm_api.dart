@@ -1,5 +1,6 @@
 import 'package:fire_control_app/http/http.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/models/response.dart';
 
 class FireApi extends ListApi<FireResponse, FireParam> {
   @override
@@ -11,9 +12,13 @@ class FireApi extends ListApi<FireResponse, FireParam> {
 
   // 火情详情
   static Future<FireDetail> getFireDetail(int id) async {
-    var response =
-    await Http.dio.get('/mobile/fire/details', queryParameters: {'id': id});
+    var response = await Http.dio.get('/mobile/fire/details', queryParameters: {'id': id});
     return FireDetail.fromJson(response.data['data']);
+  }
+
+  static Future<FcResponse> close(FireHandleParam param) async {
+    var response = await Http.dio.post('/mobile/fire/close', queryParameters: param.toJson());
+    return FcResponse.fromJson(response.data);
   }
 }
 
@@ -31,6 +36,11 @@ class AlarmApi extends ListApi<AlarmResponse, AlarmParam> {
         .get('/mobile/alarm/details', queryParameters: {'id': id});
     return AlarmDetail.fromJson(response.data['data']);
   }
+
+  static Future<FcResponse> confirm(AlarmHandleParam param) async {
+    var response = await Http.dio.post('/mobile/alarm/confirm', queryParameters: param.toJson());
+    return FcResponse.fromJson(response.data);
+  }
 }
 
 class TroubleApi extends ListApi<TroubleResponse, TroubleParam> {
@@ -46,6 +56,11 @@ class TroubleApi extends ListApi<TroubleResponse, TroubleParam> {
     var response = await Http.dio
         .get('/mobile/trouble/details', queryParameters: {'id': id});
     return TroubleDetail.fromJson(response.data['data']);
+  }
+
+  static Future<FcResponse> close(TroubleHandleParam param) async {
+    var response = await Http.dio.post('/mobile/trouble/close', queryParameters: param.toJson());
+    return FcResponse.fromJson(response.data);
   }
 }
 
@@ -71,6 +86,11 @@ class DangerApi extends ListApi<DangerResponse, DangerParam> {
         .map((e) => DangerType.fromJson(e))
         .toList(growable: false)
         .cast<DangerType>();
+  }
+
+  static Future<FcResponse> close(DangerHandleParam param) async {
+    var response = await Http.dio.post('/mobile/danger/close', queryParameters: param.toJson());
+    return FcResponse.fromJson(response.data);
   }
 }
 

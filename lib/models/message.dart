@@ -27,7 +27,7 @@ class MessageResponse extends ListResponse<MessageItem> {
   MessageItem generateRecord(Map<String, dynamic> data) => MessageItem.fromJson(data);
 }
 
-class MessageItem extends ListItemData {
+class MessageItem {
   String content;
   int id;
   String receiveUnitName;

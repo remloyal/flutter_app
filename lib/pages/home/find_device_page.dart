@@ -101,7 +101,7 @@ class _FindResultPageState extends State<FindResultPage> {
           ),
         ),
         Expanded(
-          child: Device(showFilter: false, params: params),
+          child: Device(showToolbar: false, params: params),
         ),
       ],
       footer: [

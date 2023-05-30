@@ -88,25 +88,21 @@ class _MineAlarmListMainState extends State<MineAlarmListMain> {
   }
 }
 
-class MineAlarmList extends StatefulWidget {
+class MineAlarmList extends StatelessWidget {
   const MineAlarmList({super.key, required this.mineFireParam});
 
   final MineAlarmParams mineFireParam;
 
   @override
-  State<MineAlarmList> createState() => _MineAlarmListState();
-}
-
-class _MineAlarmListState extends State<MineAlarmList>
-    with ListBuilder<MineAlarmItem> {
-  @override
   Widget build(BuildContext context) {
-    return LoadList<MineAlarmApi, MineAlarmParams>(
-        api: MineAlarmApi(), param: widget.mineFireParam, listBuilder: this);
+    return LoadList<MineAlarmApi, MineAlarmParams, MineAlarmItem>(
+      api: MineAlarmApi(),
+      param: mineFireParam,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget buildItem(BuildContext context, MineAlarmItem item) {
+  Widget _buildItem(BuildContext context, MineAlarmItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, '/alarmDetail', arguments: item.id);

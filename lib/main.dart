@@ -1,7 +1,6 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/common/router.dart';
-import 'package:fire_control_app/states/notify_message_model.dart';
 import 'package:fire_control_app/states/unit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,7 +20,6 @@ class FireControlApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: UnitModel()),
-        ChangeNotifierProvider.value(value: NotifyMessageModel()),
       ],
       child: RefreshConfiguration(
         headerBuilder: () => const ClassicHeader(),

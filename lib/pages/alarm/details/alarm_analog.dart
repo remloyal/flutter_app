@@ -5,7 +5,7 @@ import 'package:fire_control_app/widgets/load_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AlarmAnalog extends StatelessWidget with ListBuilder<AnalogItem> {
+class AlarmAnalog extends StatelessWidget {
 
   final int alarmId;
 
@@ -16,12 +16,15 @@ class AlarmAnalog extends StatelessWidget with ListBuilder<AnalogItem> {
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<AnalogApi, AnalogParam>(
-        api: AnalogApi(), param: _param, listBuilder: this);
+    return LoadList<AnalogApi, AnalogParam, AnalogItem>(
+      api: AnalogApi(),
+      param: _param,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return const DefaultTextStyle(
       style: TextStyle(color: FcColor.base9),
       child: Row(
@@ -33,8 +36,7 @@ class AlarmAnalog extends StatelessWidget with ListBuilder<AnalogItem> {
     );
   }
 
-  @override
-  Widget buildItem(BuildContext context, AnalogItem item) {
+  Widget _buildItem(BuildContext context, AnalogItem item, int index) {
     String prefix = '+';
     if (item.type == 3) prefix = '-';
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
@@ -49,7 +51,7 @@ class AlarmAnalog extends StatelessWidget with ListBuilder<AnalogItem> {
           style: const TextStyle(color: FcColor.base6),
           child: Row(
             children: [
-              const Expanded(child: Text('序号')),
+              Expanded(child: Text(index.toString())),
               Expanded(flex: 3, child: Text('$prefix $time')),
             ],
           ),

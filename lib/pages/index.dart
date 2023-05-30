@@ -79,7 +79,7 @@ class _IndexPageState extends State<IndexPage> {
         child: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
-          children: const [Home(), Inspection(), Alarm(), Device(), Mine()],
+          children: [Home(), Inspection(), Alarm(), Device(), Mine()],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

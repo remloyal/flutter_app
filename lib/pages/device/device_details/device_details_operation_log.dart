@@ -16,8 +16,7 @@ class DetailsOperationLog extends StatefulWidget {
   State<DetailsOperationLog> createState() => _DetailsOperationLogState();
 }
 
-class _DetailsOperationLogState extends State<DetailsOperationLog>
-    with ListBuilder<OperationLogItem> {
+class _DetailsOperationLogState extends State<DetailsOperationLog> {
   late OperationLogParams _operationLogParam;
   @override
   void initState() {
@@ -31,12 +30,14 @@ class _DetailsOperationLogState extends State<DetailsOperationLog>
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<OperationLogApi, OperationLogParams>(
-        api: OperationLogApi(), param: _operationLogParam, listBuilder: this);
+    return LoadList<OperationLogApi, OperationLogParams, OperationLogItem>(
+      api: OperationLogApi(),
+      param: _operationLogParam,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget buildItem(BuildContext context, OperationLogItem item) {
+  Widget _buildItem(BuildContext context, OperationLogItem item, int index) {
     return CardContainer(
       children: [
         CardHeader(

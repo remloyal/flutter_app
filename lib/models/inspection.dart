@@ -28,7 +28,7 @@ class RouteParam extends Param {
   }
 }
 
-class RouteItem implements ListItemData {
+class RouteItem {
   int amount;
   int canReceive;
   int finishedAmount;
@@ -144,7 +144,7 @@ class PlanResponse extends ListResponse<TaskItem> {
   TaskItem generateRecord(Map<String, dynamic> data) => TaskItem.fromJson(data);
 }
 
-class TaskItem extends ListItemData {
+class TaskItem {
   int taskId;
   String name;
   String unitName;

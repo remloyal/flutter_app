@@ -1,7 +1,5 @@
-import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/models/mine_entity.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
-import 'package:fire_control_app/utils/alarm_tool.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/utils/value.dart';
 import 'package:fire_control_app/widgets/load_list.dart';
@@ -92,25 +90,21 @@ class _MineDangerListMainState extends State<MineDangerListMain> {
   }
 }
 
-class MineDangerList extends StatefulWidget {
+class MineDangerList extends StatelessWidget {
   const MineDangerList({super.key, required this.mineFireParam});
 
   final MineDangerParams mineFireParam;
 
   @override
-  State<MineDangerList> createState() => _MineDangerListState();
-}
-
-class _MineDangerListState extends State<MineDangerList>
-    with ListBuilder<MineDangerItem> {
-  @override
   Widget build(BuildContext context) {
-    return LoadList<MineDangerApi, MineDangerParams>(
-        api: MineDangerApi(), param: widget.mineFireParam, listBuilder: this);
+    return LoadList<MineDangerApi, MineDangerParams, MineDangerItem>(
+      api: MineDangerApi(),
+      param: mineFireParam,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget buildItem(BuildContext context, MineDangerItem item) {
+  Widget _buildItem(BuildContext context, MineDangerItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, DangerDetailPage.routeName,

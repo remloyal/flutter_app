@@ -9,24 +9,24 @@ import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 
-class DangerList extends StatefulWidget {
-  const DangerList({Key? key}) : super(key: key);
+class DangerList extends StatelessWidget {
 
-  @override
-  State<DangerList> createState() => _DangerListState();
-}
+  final DangerParam _alarmParam;
 
-class _DangerListState extends State<DangerList> with ListBuilder<DangerItem> {
-  final DangerParam _alarmParam = DangerParam();
+  DangerList({super.key}) : _alarmParam = DangerParam();
+
 
   @override
   Widget build(BuildContext context) {
-    return LoadList<DangerApi, DangerParam>(
-        api: DangerApi(), param: _alarmParam, listBuilder: this);
+    return LoadList<DangerApi, DangerParam, DangerItem>(
+      api: DangerApi(),
+      param: _alarmParam,
+      toolbarBuilder: _buildToolbar,
+      itemBuilder: _buildItem,
+    );
   }
 
-  @override
-  Widget? buildToolbar(BuildContext context, int total) {
+  Widget _buildToolbar(BuildContext context, int total) {
     return Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -52,8 +52,7 @@ class _DangerListState extends State<DangerList> with ListBuilder<DangerItem> {
         ));
   }
 
-  @override
-  Widget buildItem(BuildContext context, DangerItem item) {
+  Widget _buildItem(BuildContext context, DangerItem item, int index) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, DangerDetailPage.routeName,

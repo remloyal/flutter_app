@@ -55,23 +55,15 @@ class RouterUtil {
     RouteDetailPage.routeName: (context, {arguments}) => RouteDetailPage(routeId: arguments),
     PunchNfcPage.routeName: (context, {arguments}) => PunchNfcPage(param: arguments),
     ScanPage.routeName: (context, {arguments}) => const ScanPage(),
-    LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(
-          url: arguments,
-        ),
+    LoginScanPage.routeName: (context, {arguments}) => LoginScanPage(url: arguments),
     PunchScanPage.routeName: (context, {arguments}) => PunchScanPage(param: arguments),
     PunchErrorPage.routeName: (context, {arguments}) => PunchErrorPage(param: arguments),
     FindDevicePage.routeName: (context, {arguments}) => const FindDevicePage(),
     FindResultPage.routeName: (context, {arguments}) => FindResultPage(param: arguments),
     MessageCenterPage.routeName: (context, {arguments}) => const MessageCenterPage(),
-    NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(
-          noticeId: arguments,
-        ),
-    ActivityDetailPage.routeName: (context, {arguments}) => ActivityDetailPage(
-          activityId: arguments,
-        ),
-    FireHandlePage.routeName: (context, {arguments}) => FireHandlePage(
-          fireId: arguments,
-        ),
+    NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(noticeId: arguments,),
+    ActivityDetailPage.routeName: (context, {arguments}) => ActivityDetailPage(activityId: arguments),
+    HandlePage.routeName: (context, {arguments}) => HandlePage(param: arguments),
     HomeReport.routeName: (context, {arguments}) => const HomeReport(),
     '/deviceDetails': (context, {arguments}) => DeviceDetailsMain(deviceId: arguments),
     '/mineMail': (context) => const MineMail(),
