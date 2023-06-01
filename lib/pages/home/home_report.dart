@@ -8,6 +8,7 @@ import 'package:fire_control_app/pages/home/report/danger_report.dart';
 import 'package:fire_control_app/pages/home/report/file_upload.dart';
 import 'package:fire_control_app/pages/home/report/fire_report.dart';
 import 'package:fire_control_app/pages/home/report/trouble_report.dart';
+import 'package:fire_control_app/pages/map/map.dart';
 import 'package:fire_control_app/utils/toast.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -15,6 +16,7 @@ import 'package:fire_control_app/widgets/cascader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeReport extends StatefulWidget {
   const HomeReport({super.key});
@@ -33,13 +35,18 @@ class _HomeReportState extends State<HomeReport> {
   final DangerUpdateParam _dangerUpdateParam = DangerUpdateParam();
 
   List buildingData = [];
-  UpdateInfo updateInfo = UpdateInfo();
+  MapInfo mapInfo = MapInfo();
   late int tableIndex = 0;
   late bool shouldPop = false;
+
+  late bool permissionState = false;
 
   @override
   void initState() {
     super.initState();
+    mapInfo.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -64,6 +71,7 @@ class _HomeReportState extends State<HomeReport> {
                 width: 90,
                 onTap: (index) {
                   tableIndex = index;
+                  mapInfo.typeIndex = index;
                   setState(() {});
                 },
               ),
@@ -86,33 +94,47 @@ class _HomeReportState extends State<HomeReport> {
                   Navigator.pushNamed(context, RouterUtil.unitSelect, arguments: {
                     "type": 'select',
                     "param": (Unit unit) {
-                      updateInfo.unit = unit;
+                      mapInfo.unit = unit;
+                      mapInfo.building = null;
+                      mapInfo.textName = '';
                       setState(() {});
                     }
                   });
                 },
-                child: setPositionItem('单位名称', '选择单位', updateInfo.unit != null ? updateInfo.unit!.name : ''),
+                child: setPositionItem('单位名称', '选择单位', mapInfo.unit != null ? mapInfo.unit!.name : ''),
               ),
-              const Divider(
-                height: 1.0,
-                // indent: 60.0,
-                color: Color(0xFFCCCCCC),
-              ),
-              InkWell(
-                onTap: () async {
-                  buildingData = await _getBuilding();
-                  showSelect();
-                },
-                child: setPositionItem('发生地点', '发生地点', updateInfo.textName),
-              ),
-              const Divider(
-                height: 1.0,
-                // indent: 60.0,
-                color: Color(0xFFCCCCCC),
-              ),
-              InkWell(
-                child: setPositionItem('坐标信息', '坐标信息', ''),
-              ),
+              if (mapInfo.unit != null)
+                const Divider(
+                  height: 1.0,
+                  // indent: 60.0,
+                  color: Color(0xFFCCCCCC),
+                ),
+              if (mapInfo.unit != null)
+                InkWell(
+                  onTap: () async {
+                    buildingData = await _getBuilding();
+                    showSelect();
+                  },
+                  child: setPositionItem('发生地点', '发生地点', mapInfo.textName),
+                ),
+              if (mapInfo.floor != null || mapInfo.textName == '室外')
+                const Divider(
+                  height: 1.0,
+                  // indent: 60.0,
+                  color: Color(0xFFCCCCCC),
+                ),
+              if (mapInfo.floor != null || mapInfo.textName == '室外')
+                InkWell(
+                  onTap: () {
+                    mapInfo.type = mapInfo.building!['name'] == '室外' ? MapType.map : MapType.planView;
+                    if (permissionState) {
+                      callback();
+                    } else {
+                      requestPermission();
+                    }
+                  },
+                  child: setPositionItem('坐标信息', '坐标信息', mapInfo.point != null ? mapInfo.point!.join(',') : ''),
+                ),
             ],
           ),
         ),
@@ -216,20 +238,12 @@ class _HomeReportState extends State<HomeReport> {
             height: 400,
             width: MediaQuery.of(ctx).size.width,
             decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)), color: Colors.grey[200]),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                color: Colors.grey[200]),
             child: Cascader(
               title: '请选择发生地点',
               customField: 'name',
               asyncCallBack: (item, tabIndex, itemIndex) async {
-                // if (item['type'] == 'unit') {
-                //   var data = await _getBuilding(item['unitId']);
-                //   _deviceParam.unitId = item['unitId'];
-                //   _deviceParam.buildId = null;
-                //   _deviceParam.floorId = null;
-                //   _deviceParam.roomId = null;
-                //   return data;
-                // }
-
                 if (item['type'] == 'build') {
                   if (item['id'] == null) return [];
                   var data = await _getBuildingFloors(item['id']);
@@ -255,7 +269,7 @@ class _HomeReportState extends State<HomeReport> {
   }
 
   _getBuilding() async {
-    var data = await UnitApi.getBuilding(updateInfo.unit!.unitId);
+    var data = await UnitApi.getBuilding(mapInfo.unit!.unitId);
     List todo = [];
     for (var i = 0; i < data.length; i++) {
       Map item = {'name': data[i].name, 'id': data[i].id, "type": 'build'};
@@ -269,7 +283,13 @@ class _HomeReportState extends State<HomeReport> {
     var data = await UnitApi.getBuildingFloors(buildingId);
     List todo = [];
     for (var i = 0; i < data.length; i++) {
-      Map item = {'name': data[i].name, 'id': data[i].id, "type": 'floor', 'buildingId': buildingId};
+      Map item = {
+        'name': data[i].name,
+        'id': data[i].id,
+        "type": 'floor',
+        'buildingId': buildingId,
+        'svgUrl': data[i].svgUrl
+      };
       todo.add(item);
     }
     return todo;
@@ -288,24 +308,31 @@ class _HomeReportState extends State<HomeReport> {
   void setUpdateInfo(List todo) {
     for (var item in todo) {
       if (item["type"] == 'build') {
-        updateInfo.building = item;
+        mapInfo.building = item;
       }
       if (item["type"] == 'floor') {
-        updateInfo.floor = item;
+        mapInfo.floor = item;
       }
       if (item["type"] == 'room') {
-        updateInfo.room = item;
+        mapInfo.room = item;
       }
     }
     if (todo.length == 1) {
-      updateInfo.floor = null;
-      updateInfo.room = null;
+      mapInfo.floor = null;
+      mapInfo.room = null;
     }
     if (todo.length == 2) {
-      updateInfo.room = null;
+      mapInfo.room = null;
     }
-    updateInfo.initText();
+    mapInfo.point = null;
+    mapInfo.initText();
     setState(() {});
+  }
+
+  callback() {
+    Navigator.pushNamed(context, MapCase.routeName, arguments: {
+      'info': mapInfo,
+    });
   }
 
   onSubmit() {
@@ -325,18 +352,26 @@ class _HomeReportState extends State<HomeReport> {
   }
 
   onFileSubmit() async {
-    if (updateInfo.unit == null) {
+    if (mapInfo.unit == null) {
       Message.error('请选择单位');
       return;
     }
-    _fileUpdateParam.unitId = updateInfo.unit!.unitId;
-    _fileUpdateParam.buildingId = updateInfo.building!['id'];
-    _fileUpdateParam.floorId = updateInfo.floor == null ? null : updateInfo.floor!['id'];
-    _fileUpdateParam.roomId = updateInfo.room == null ? null : updateInfo.room!['id'];
-    _fileUpdateParam.pointX = 112.938156;
-    _fileUpdateParam.pointY = 28.129494;
+    _fileUpdateParam.unitId = mapInfo.unit!.unitId;
+    _fileUpdateParam.buildingId = mapInfo.building!['id'];
+    _fileUpdateParam.floorId = mapInfo.floor == null ? null : mapInfo.floor!['id'];
+    _fileUpdateParam.roomId = mapInfo.room == null ? null : mapInfo.room!['id'];
     _fileUpdateParam.fileNumber = fileData.converts.length;
     _fileUpdateParam.attachmentIds = fileData.fileIds.join(',');
+
+    if (mapInfo.building!["name"] == "室外" && mapInfo.point != null) {
+      _fileUpdateParam.pointX = mapInfo.point![0];
+      _fileUpdateParam.pointY = mapInfo.point![1];
+    }
+
+    if (mapInfo.floor != null && mapInfo.point != null) {
+      _fileUpdateParam.xRate = mapInfo.point![0];
+      _fileUpdateParam.yRate = mapInfo.point![1];
+    }
 
     var data = _fileUpdateParam.check();
     if (data == true) {
@@ -358,18 +393,26 @@ class _HomeReportState extends State<HomeReport> {
   }
 
   onTroubleSubmit() async {
-    if (updateInfo.unit == null) {
+    if (mapInfo.unit == null) {
       Message.error('请选择单位');
       return;
     }
-    _troubleUpdateParam.unitId = updateInfo.unit!.unitId;
-    _troubleUpdateParam.buildingId = updateInfo.building!['id'];
-    _troubleUpdateParam.floorId = updateInfo.floor == null ? null : updateInfo.floor!['id'];
-    _troubleUpdateParam.roomId = updateInfo.room == null ? null : updateInfo.room!['id'];
-    _troubleUpdateParam.pointX = 112.938156;
-    _troubleUpdateParam.pointY = 28.129494;
+    _troubleUpdateParam.unitId = mapInfo.unit!.unitId;
+    _troubleUpdateParam.buildingId = mapInfo.building!['id'];
+    _troubleUpdateParam.floorId = mapInfo.floor == null ? null : mapInfo.floor!['id'];
+    _troubleUpdateParam.roomId = mapInfo.room == null ? null : mapInfo.room!['id'];
     _troubleUpdateParam.fileNumber = fileData.converts.length;
     _troubleUpdateParam.attachmentIds = fileData.fileIds.join(',');
+
+    if (mapInfo.building!["name"] == "室外" && mapInfo.point != null) {
+      _troubleUpdateParam.pointX = mapInfo.point![0];
+      _troubleUpdateParam.pointY = mapInfo.point![1];
+    }
+
+    if (mapInfo.floor != null && mapInfo.point != null) {
+      _troubleUpdateParam.xRate = mapInfo.point![0];
+      _troubleUpdateParam.yRate = mapInfo.point![1];
+    }
 
     var data = _troubleUpdateParam.check();
     if (data == true) {
@@ -391,18 +434,27 @@ class _HomeReportState extends State<HomeReport> {
   }
 
   onDangerSubmit() async {
-    if (updateInfo.unit == null) {
+    if (mapInfo.unit == null) {
       Message.error('请选择单位');
       return;
     }
-    _dangerUpdateParam.unitId = updateInfo.unit!.unitId;
-    _dangerUpdateParam.buildingId = updateInfo.building!['id'];
-    _dangerUpdateParam.floorId = updateInfo.floor == null ? null : updateInfo.floor!['id'];
-    _dangerUpdateParam.roomId = updateInfo.room == null ? null : updateInfo.room!['id'];
-    _dangerUpdateParam.pointX = 112.938156;
-    _dangerUpdateParam.pointY = 28.129494;
+
+    _dangerUpdateParam.unitId = mapInfo.unit!.unitId;
+    _dangerUpdateParam.buildingId = mapInfo.building!['id'];
+    _dangerUpdateParam.floorId = mapInfo.floor == null ? null : mapInfo.floor!['id'];
+    _dangerUpdateParam.roomId = mapInfo.room == null ? null : mapInfo.room!['id'];
     _dangerUpdateParam.fileNumber = fileData.converts.length;
     _dangerUpdateParam.attachmentIds = fileData.fileIds.join(',');
+
+    if (mapInfo.building!["name"] == "室外" && mapInfo.point != null) {
+      _dangerUpdateParam.pointX = mapInfo.point![0];
+      _dangerUpdateParam.pointY = mapInfo.point![1];
+    }
+
+    if (mapInfo.floor != null && mapInfo.point != null) {
+      _dangerUpdateParam.xRate = mapInfo.point![0];
+      _dangerUpdateParam.yRate = mapInfo.point![1];
+    }
 
     var data = _dangerUpdateParam.check();
     if (data == true) {
@@ -421,5 +473,36 @@ class _HomeReportState extends State<HomeReport> {
     } else {
       Message.error(data);
     }
+  }
+
+  // 申请权限
+  // final PermissionStatus permissionStatus = PermissionStatus.denied;
+
+  requestPermission() async {
+    getMicrophonePermission().then((value) => {
+          setState(() {
+            permissionState = value;
+          })
+        });
+  }
+
+  Future<bool> getMicrophonePermission() async {
+    // You can request multiple permissions at once.
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.location,
+      Permission.locationAlways,
+      Permission.locationWhenInUse,
+    ].request();
+
+    //granted 通过，denied 被拒绝，permanentlyDenied 拒绝且不在提示
+    if (statuses[Permission.camera]!.isGranted &&
+        statuses[Permission.location]!.isGranted &&
+        statuses[Permission.locationAlways]!.isGranted &&
+        statuses[Permission.locationWhenInUse]!.isGranted) {
+      callback();
+      return true;
+    }
+    return false;
   }
 }

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:fire_control_app/models/unit.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -48,14 +49,8 @@ class AlarmStats {
         danger = json['danger'],
         risk = json['risk'];
 
-  Map<String, dynamic> toJson() => {
-        'fire': fire,
-        'alarm': alarm,
-        'fault': fault,
-        'trouble': trouble,
-        'danger': danger,
-        'risk': risk
-      };
+  Map<String, dynamic> toJson() =>
+      {'fire': fire, 'alarm': alarm, 'fault': fault, 'trouble': trouble, 'danger': danger, 'risk': risk};
 }
 
 class InspectStats {
@@ -151,8 +146,7 @@ class FileData with ChangeNotifier {
   bool state = true;
   FileData();
   // 將 FileData 對象轉換為 JSON 格式
-  Map<String, dynamic> toJson() =>
-      {'fileIds': fileIds, 'type': type, 'fileTerms': converts};
+  Map<String, dynamic> toJson() => {'fileIds': fileIds, 'type': type, 'fileTerms': converts};
   // 通知監聽器有更改發生
   void change() {
     notifyListeners();
@@ -165,8 +159,7 @@ class FileData with ChangeNotifier {
     var data = await MultipartFile.fromFile(
       file.path,
     );
-    FileTerm item =
-        FileTerm(type: 'image', data: data, uint8List: bytes, file: papers);
+    FileTerm item = FileTerm(type: 'image', data: data, uint8List: bytes, file: papers);
     converts.add(item);
     return [item, converts.indexOf(item)];
   }
@@ -191,8 +184,7 @@ class FileData with ChangeNotifier {
       quality: 25,
     );
     var data = await MultipartFile.fromFile(file.path);
-    FileTerm item = FileTerm(
-        type: 'video', data: data, videoImage: videoImage, file: bytes);
+    FileTerm item = FileTerm(type: 'video', data: data, videoImage: videoImage, file: bytes);
     converts.add(item);
     return [item, converts.indexOf(item)];
   }
@@ -211,13 +203,7 @@ class FileTerm {
   MultipartFile data;
   double? progress;
   File? file;
-  FileTerm(
-      {required this.type,
-      this.id,
-      this.uint8List,
-      this.videoImage,
-      this.file,
-      required this.data});
+  FileTerm({required this.type, this.id, this.uint8List, this.videoImage, this.file, required this.data});
   // 將 FileTerm 對象轉換為 JSON 格式
   Map<String, dynamic> toJson() => {
         'type': type,
@@ -230,21 +216,36 @@ class FileTerm {
       };
 }
 
-// 上报信息参数
-class UpdateInfo {
+// 地图信息参数
+class MapInfo extends ChangeNotifier {
+  // 地图处理类型
+  MapType? type;
+
   Unit? unit;
   Map? building;
   Map? floor;
   Map? room;
+  List<double>? point;
+  String? pointRate;
 
   String textName = '';
+
+  int typeIndex = 0;
+
+  // 需渲染的点
+  List<Marker> lbsList = [];
 
   Map<String, dynamic> toJson() => {
         'unit': unit,
         'building': building,
         'floor': floor,
         'room': room,
-        'textName': textName
+        'textName': textName,
+        'point': point,
+        'pointRate': pointRate,
+        'type': type,
+        'typeIndex': typeIndex,
+        'lbsList': lbsList
       };
 
   initText() {
@@ -257,6 +258,11 @@ class UpdateInfo {
     if (room != null) {
       textName = '$textName - ${room!['name']}';
     }
+  }
+
+  setPoint(List<double> data) {
+    point = data;
+    notifyListeners();
   }
 }
 
@@ -414,3 +420,5 @@ class DangerType {
         "name": name,
       };
 }
+
+enum MapType { map, planView, mapPlan }

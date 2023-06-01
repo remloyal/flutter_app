@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 2.0.0+4
 
 environment:
-  sdk: '>=2.19.2 <3.0.0'
+  sdk: '>=2.19.2 <4.0.0'
 
 dependencies:
   flutter:
@@ -34,7 +34,12 @@ dependencies:
   mobile_scanner: ^3.2.0
   video_player: ^2.6.1
   video_thumbnail: ^0.5.3
-  
+
+  permission_handler: ^10.2.0
+
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.2
+
 
 dev_dependencies:
   flutter_test:
@@ -50,3 +55,6 @@ flutter:
    - family: fcm
      fonts:
        - asset: assets/fonts/iconfont.ttf
+   - family: iconfont
+     fonts:
+       - asset: assets/fonts/device.ttf

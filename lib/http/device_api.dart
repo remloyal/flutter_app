@@ -4,8 +4,7 @@ import 'package:fire_control_app/models/device_entity.dart';
 class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
   @override
   Future<DeviceResponse> loadList(DeviceParams params) async {
-    var response = await Http.dio
-        .get('/mobile/device/list', queryParameters: params.toJson());
+    var response = await Http.dio.get('/mobile/device/list', queryParameters: params.toJson());
     return DeviceResponse.fromJson(response.data);
   }
 
@@ -18,23 +17,18 @@ class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
   //设备类型
   static Future<List<DeviceType>> getDeviceTypes() async {
     var response = await Http.dio.get('/mobile/deviceType/list');
-    return (response.data['data'] ?? [])
-        .map((e) => DeviceType.fromJson(e))
-        .toList(growable: false)
-        .cast<DeviceType>();
+    return (response.data['data'] ?? []).map((e) => DeviceType.fromJson(e)).toList(growable: false).cast<DeviceType>();
   }
 
   // 危险品详情
   static Future<DeviceDetails> useDeviceDetails(int id) async {
-    var response = await Http.dio
-        .get('/mobile/device/detail', queryParameters: {'deviceId': id});
+    var response = await Http.dio.get('/mobile/device/detail', queryParameters: {'deviceId': id});
     return DeviceDetails.fromJson(response.data['data']);
   }
 
   // 实时数据
   static Future<List<RealTimeParam>> useDeviceAttributes(int deviceId) async {
-    var response = await Http.dio.get('/mobile/device/attributes',
-        queryParameters: {'deviceId': deviceId});
+    var response = await Http.dio.get('/mobile/device/attributes', queryParameters: {'deviceId': deviceId});
     late List<RealTimeParam> data = [];
     final List record = response.data['data'];
     for (var i = 0; i < record.length; i++) {
@@ -45,15 +39,19 @@ class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
 
   // 设备封停
   static Future setDevicStop(int id, {int? type, String? reason}) async {
-    var response = await Http.dio.get('/mobile/device/stop',
-        queryParameters: {'deviceId': id, 'type': type, 'reason': reason});
+    var response = await Http.dio.get('/mobile/device/stop', queryParameters: {'deviceId': id, 'type': type, 'reason': reason});
     return response.data;
   }
 
   // 设备解封
   static Future setDevicStart(int id) async {
-    var response = await Http.dio
-        .get('/mobile/device/start', queryParameters: {'deviceId': id});
+    var response = await Http.dio.get('/mobile/device/start', queryParameters: {'deviceId': id});
+    return response.data;
+  }
+
+  // 设备类型Icon
+  static Future getDeviceIcon() async {
+    var response = await Http.dio.request('https://stdos.zhxf.ltd/fcstd/css/devices_move/deviceTypes.json');
     return response.data;
   }
 }
@@ -62,19 +60,16 @@ class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
 class DeviceEventApi extends ListApi<DeviceEventResponse, DeviceEventParams> {
   @override
   Future<DeviceEventResponse> loadList(DeviceEventParams params) async {
-    var response = await Http.dio
-        .get('/mobile/device/events', queryParameters: params.toJson());
+    var response = await Http.dio.get('/mobile/device/events', queryParameters: params.toJson());
     return DeviceEventResponse.fromJson(response.data);
   }
 }
 
 // 操作记录
-class OperationLogApi
-    extends ListApi<DeviceOperationLogResponse, OperationLogParams> {
+class OperationLogApi extends ListApi<DeviceOperationLogResponse, OperationLogParams> {
   @override
   Future<DeviceOperationLogResponse> loadList(OperationLogParams params) async {
-    var response = await Http.dio
-        .get('/mobile/device/operation/logs', queryParameters: params.toJson());
+    var response = await Http.dio.get('/mobile/device/operation/logs', queryParameters: params.toJson());
     return DeviceOperationLogResponse.fromJson(response.data);
   }
 }

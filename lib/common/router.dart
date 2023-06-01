@@ -4,6 +4,7 @@ import 'package:fire_control_app/pages/home/home_report.dart';
 import 'package:fire_control_app/pages/home/message_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/inspection/punch.dart';
+import 'package:fire_control_app/pages/map/map.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_fault_detail_page.dart';
 import 'package:fire_control_app/pages/alarm/details/danger_detail_page.dart';
@@ -61,7 +62,9 @@ class RouterUtil {
     FindDevicePage.routeName: (context, {arguments}) => const FindDevicePage(),
     FindResultPage.routeName: (context, {arguments}) => FindResultPage(param: arguments),
     MessageCenterPage.routeName: (context, {arguments}) => const MessageCenterPage(),
-    NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(noticeId: arguments,),
+    NoticeDetailPage.routeName: (context, {arguments}) => NoticeDetailPage(
+          noticeId: arguments,
+        ),
     ActivityDetailPage.routeName: (context, {arguments}) => ActivityDetailPage(activityId: arguments),
     HandlePage.routeName: (context, {arguments}) => HandlePage(param: arguments),
     HomeReport.routeName: (context, {arguments}) => const HomeReport(),
@@ -80,6 +83,9 @@ class RouterUtil {
     '/mineexternalDetails': (context, {arguments}) => MineExternalDetails(
           url: arguments?['url'],
           type: arguments?['type'],
+        ),
+    MapCase.routeName: (context, {arguments}) => MapCase(
+          info: arguments?['info'],
         ),
   };
 

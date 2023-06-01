@@ -4,6 +4,7 @@ import 'package:fire_control_app/http/unit_api.dart';
 import 'package:fire_control_app/common/router.dart';
 import 'package:fire_control_app/pages/home/message_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
+import 'package:fire_control_app/pages/map/cache/app_dir.dart';
 import 'package:fire_control_app/pages/notification/push.dart';
 import 'package:fire_control_app/states/unit_model.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,13 @@ class _IndexPageState extends State<IndexPage> {
     });
     super.initState();
     PushHelper.initNotify();
+    init();
+  }
+
+  init() async {
+    while (AppDir.data.path.isEmpty || AppDir.cache.path.isEmpty) {
+      await AppDir.setDir();
+    }
   }
 
   @override
@@ -69,9 +77,7 @@ class _IndexPageState extends State<IndexPage> {
       appBar: AppBar(
         titleSpacing: 0,
         elevation: _selectedIndex == 4 ? 0 : 1,
-        backgroundColor: _selectedIndex == 4
-            ? FcColor.barMineColor
-            : null,
+        backgroundColor: _selectedIndex == 4 ? FcColor.barMineColor : null,
         title: _buildTitle(_selectedIndex != 4),
       ),
       body: Container(
@@ -131,8 +137,7 @@ class _IndexPageState extends State<IndexPage> {
       height: 40,
       width: 40,
       margin: const EdgeInsets.all(5),
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
       child: GestureDetector(
           onTap: onPressed,
           child: Icon(
@@ -151,8 +156,7 @@ class _IndexPageState extends State<IndexPage> {
       child: Container(
         height: 40,
         padding: const EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 0),
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
         child: Row(
           children: [
             const Icon(
@@ -163,15 +167,11 @@ class _IndexPageState extends State<IndexPage> {
             Expanded(
                 flex: 1,
                 child: Container(
-                  padding: const EdgeInsets.only(
-                      left: 5, top: 0, right: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 5, top: 0, right: 5, bottom: 0),
                   child: Consumer<UnitModel>(
                       builder: (BuildContext context, unitModel, _) => Text(
-                            unitModel.unit != null
-                                ? unitModel.unit!.name
-                                : "全部单位(${Global.units.length})",
-                            style: const TextStyle(
-                                color: FcColor.base3, fontSize: 18),
+                            unitModel.unit != null ? unitModel.unit!.name : "全部单位(${Global.units.length})",
+                            style: const TextStyle(color: FcColor.base3, fontSize: 18),
                           )),
                 )),
             const Icon(
