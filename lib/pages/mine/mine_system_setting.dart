@@ -6,6 +6,7 @@ import 'package:fire_control_app/widgets/fc_details.dart';
 import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/http/mine_api.dart';
 import 'package:fire_control_app/http/login_api.dart';
+import 'package:fire_control_app/pages/map/cache/app_dir.dart';
 
 class MineSystemSetting extends StatefulWidget {
   const MineSystemSetting({super.key});
@@ -19,6 +20,17 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
   late Timer _timer;
   late int _countdownTime = 0;
   late String? logOffCode = '';
+  late int size = 0;
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async {
+    size = await CacheUtil.total();
+    setState(() {});
+  }
 
   // 倒计时
   void startCountdownTimer() {
@@ -122,34 +134,73 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
               )),
         ]),
         CardContainer(
+          children: [
+            const CardHeader(
+              title: "其他",
+            ),
+            CardHeader(
+              standStart: false,
+              title: '缓存',
+              tail: Row(children: [
+                Text('${CacheUtil.renderSize(size)}'),
+                TextButton(
+                    onPressed: () async {
+                      setState(() {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext removeContext) {
+                            return AlertDialog(
+                              title: const Text("提示"),
+                              content: const Text("是否清除缓存？"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    "取消",
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ),
+                                TextButton(
+                                    onPressed: () async {
+                                      clear();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("确定",
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ))),
+                              ],
+                            );
+                          },
+                        );
+                      });
+                    },
+                    child: const Text('清除缓存'))
+              ]),
+            ),
+          ],
+        ),
+        CardContainer(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const CardHeader(
               title: "账号注销",
-              tail: Text('请谨慎操作',
-                  style: TextStyle(color: Colors.red, fontSize: 14)),
+              tail: Text('请谨慎操作', style: TextStyle(color: Colors.red, fontSize: 14)),
             ),
             const Text(
               '注销后您的帐号将发生如下变化：',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
             ),
             const Text(
               '1、永久注销，无法登录',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
             ),
             const Text('为了保障您的用户权利，注销后我们会永久删除您的数据，且解除第三方帐号的绑定关系'),
             const Text(
               '2、此帐号关联的信息将无法找回',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
             ),
             const Text('为了保障您的数据安全，我们将永久删除本帐号所属的产品数据，无法恢复'),
             Padding(
@@ -174,12 +225,9 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
                 },
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.red),
-                    side: MaterialStateProperty.all(
-                        const BorderSide(color: Colors.red, width: 1)),
-                    minimumSize:
-                        const MaterialStatePropertyAll(Size.fromHeight(40)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)))),
+                    side: MaterialStateProperty.all(const BorderSide(color: Colors.red, width: 1)),
+                    minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
                 child: const Text(
                   '已知晓，确认注销',
                   style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
@@ -208,8 +256,7 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
               },
               decoration: InputDecoration(
                   // border: InputBorder.none,
-                  contentPadding: const EdgeInsets.only(
-                      top: 4.0, left: 10.0, right: 10.0, bottom: 4.0),
+                  contentPadding: const EdgeInsets.only(top: 4.0, left: 10.0, right: 10.0, bottom: 4.0),
                   border: const OutlineInputBorder(
                     ///设置边框四个角的弧度
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -259,19 +306,14 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
                         Navigator.pop(context);
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFFD6D6D6)),
-                          side: MaterialStateProperty.all(const BorderSide(
-                              color: Color(0xFFD6D6D6), width: 1)),
-                          minimumSize: const MaterialStatePropertyAll(
-                              Size.fromHeight(40)),
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFFD6D6D6)),
+                          side: MaterialStateProperty.all(const BorderSide(color: Color(0xFFD6D6D6), width: 1)),
+                          minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
                           shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)))),
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
                       child: const Text(
                         '取消',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255)),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                       ),
                     )),
                 const SizedBox(
@@ -284,19 +326,14 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
                         removeDialog(context);
                       },
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red),
-                          side: MaterialStateProperty.all(
-                              const BorderSide(color: Colors.red, width: 1)),
-                          minimumSize: const MaterialStatePropertyAll(
-                              Size.fromHeight(40)),
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
+                          side: MaterialStateProperty.all(const BorderSide(color: Colors.red, width: 1)),
+                          minimumSize: const MaterialStatePropertyAll(Size.fromHeight(40)),
                           shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)))),
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)))),
                       child: const Text(
                         '确认注销',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 255, 255, 255)),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                       ),
                     ))
               ],
@@ -344,8 +381,7 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
                     }
                     Message.error('账号已注销，退出中...');
                     Navigator.pop(ctx);
-                    Future.delayed(const Duration(milliseconds: 2000))
-                        .then((e) {
+                    Future.delayed(const Duration(milliseconds: 2000)).then((e) {
                       LoginService.clearInfo();
                     });
                   } else {
@@ -363,5 +399,10 @@ class _MineSystemSettingState extends State<MineSystemSetting> {
         );
       },
     );
+  }
+
+  clear() async {
+    await CacheUtil.clear();
+    await init();
   }
 }

@@ -35,10 +35,10 @@ dependencies:
   video_player: ^2.6.1
   video_thumbnail: ^0.5.3
 
-  permission_handler: ^10.2.0
 
   flutter_map: ^4.0.0
   latlong2: ^0.8.2
+  permission_handler: ^10.2.0
 
 
 dev_dependencies:
