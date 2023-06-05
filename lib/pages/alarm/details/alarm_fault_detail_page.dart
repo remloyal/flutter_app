@@ -1,8 +1,11 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/models/home.dart';
 import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
 import 'package:fire_control_app/pages/alarm/details/alarm_analog.dart';
+import 'package:fire_control_app/pages/map/map.dart';
+import 'package:fire_control_app/pages/map/map_method.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
@@ -37,6 +40,8 @@ class AlarmFaultDetailPage extends StatefulWidget {
 class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
   AlarmDetail? _detail;
 
+  MapInfo mapInfo = MapInfo();
+
   @override
   void initState() {
     _fetchData();
@@ -48,9 +53,35 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
       if (mounted) {
         setState(() {
           _detail = value;
+          initMapPoint();
         });
+        print(widget.param.type);
       }
     });
+  }
+
+  initMapPoint() async {
+    String type = 'alarm';
+
+    if (widget.param.type == AlarmDetailType.alarm) {
+      type = 'alarm';
+    } else {
+      type = 'fault';
+    }
+    if (_detail!.svgUrl != null) {
+      mapInfo.type = MapType.mapPlan;
+      mapInfo.setPlan(
+        _detail!.svgUrl!,
+        [_detail!.xRate, _detail!.yRate],
+        type,
+      );
+    } else {
+      mapInfo.type = MapType.map;
+    }
+    mapInfo.typeIndex = 4;
+    mapInfo.setUnnit(_detail!.unitId);
+    mapInfo.point = [_detail!.pointX, _detail!.pointY];
+    mapInfo.setMainPoint([_detail!.pointY, _detail!.pointX], type);
   }
 
   @override
@@ -66,11 +97,13 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
       Expanded(
           flex: flex,
           child: LocationButton(
-            onPressed: () {},
-          )
-      ),
-      if (widget.param.type == AlarmDetailType.alarm)
-        ..._buildHandleButton()
+            onPressed: () {
+              Navigator.pushNamed(context, MapCase.routeName, arguments: {
+                'info': mapInfo,
+              });
+            },
+          )),
+      if (widget.param.type == AlarmDetailType.alarm) ..._buildHandleButton()
     ];
 
     return FcDetailPage(
@@ -96,8 +129,7 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
         ),
         XfItem(
           label: "发生位置",
-          content:
-              '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+          content: '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
         ),
         XfItem(
           label: "告警时间",
@@ -119,10 +151,8 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
           label: "告警事件",
           contentWidget: ErrorContent(message: _detail?.eventTypeContent),
         ),
-        if (_detail?.eventCount != null && _detail!.eventCount! > 0)
-          _buildAlarmCount(_detail!.eventCount!),
-        if (_detail?.videos != null && _detail!.videos!.isNotEmpty)
-          AssociateVideos(videos: _detail!.videos!)
+        if (_detail?.eventCount != null && _detail!.eventCount! > 0) _buildAlarmCount(_detail!.eventCount!),
+        if (_detail?.videos != null && _detail!.videos!.isNotEmpty) AssociateVideos(videos: _detail!.videos!)
       ],
     );
   }
@@ -141,25 +171,17 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
             child: Text.rich(TextSpan(children: [
               TextSpan(text: '报警次数 '),
               TextSpan(
-                  text: '${_detail?.eventCount ?? 0}',
-                  style:
-                      TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
+                  text: '${_detail?.eventCount ?? 0}', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
             ])),
           ),
           GestureDetector(
             onTap: () {
-              showRightDrawer(
-                  context: context,
-                  builder: (ctx) => AlarmAnalog(alarmId: widget.param.alarmId)
-              );
+              showRightDrawer(context: context, builder: (ctx) => AlarmAnalog(alarmId: widget.param.alarmId));
             },
             child: Container(
-              padding:
-                  EdgeInsets.only(left: 30, top: 10, bottom: 10, right: 10),
-              decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.horizontal(left: Radius.circular(25)),
-                  color: Colors.red),
+              padding: EdgeInsets.only(left: 30, top: 10, bottom: 10, right: 10),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.horizontal(left: Radius.circular(25)), color: Colors.red),
               child: Text(
                 '查看日志',
                 style: TextStyle(color: Colors.white),
@@ -181,10 +203,7 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
               title: "确认信息",
               tail: Text(_detail?.confirmTime ?? ''),
             ),
-            XfItem(
-                label: "是否火情",
-                contentWidget: ErrorContent(
-                    message: _detail?.confirmResult == 1 ? '是' : '误报')),
+            XfItem(label: "是否火情", contentWidget: ErrorContent(message: _detail?.confirmResult == 1 ? '是' : '误报')),
             XfItem(
                 label: "确认人员",
                 contentWidget: UserContent(
@@ -240,14 +259,9 @@ class _AlarmFaultDetailPageState extends State<AlarmFaultDetailPage> {
           child: HandleButton(
             title: '关闭告警',
             onPressed: () {
-              Navigator.pushNamed(
-                  context,
-                  HandlePage.routeName,
-                  arguments: HandlePageParam(
-                      id: widget.param.alarmId,
-                      type: HandlePageType.alarm
-                  )
-              ).then((value) {
+              Navigator.pushNamed(context, HandlePage.routeName,
+                      arguments: HandlePageParam(id: widget.param.alarmId, type: HandlePageType.alarm))
+                  .then((value) {
                 if (value != null && value as bool) {
                   _fetchData();
                 }

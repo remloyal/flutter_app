@@ -1,3 +1,4 @@
+import 'package:fire_control_app/pages/alarm/details/alarm_fault_detail_page.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/models/device_entity.dart';
@@ -65,8 +66,7 @@ class _DetailsEventState extends State<DetailsEvent> {
                 children: [
                   Text(
                     '共 $total 条',
-                    style:
-                        const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
+                    style: const TextStyle(fontSize: 14, color: Color(0xff6A6A6A)),
                   ),
                 ],
               ),
@@ -90,10 +90,12 @@ class _DetailsEventState extends State<DetailsEvent> {
       highlightColor: Colors.amberAccent,
       onTap: () {
         if (_deviceEventParam.type == 1) {
-          Navigator.pushNamed(context, '/alarmDetail', arguments: item.id);
+          Navigator.pushNamed(context, AlarmFaultDetailPage.routeName,
+              arguments: AlarmDetailParam(alarmId: item.id!, type: AlarmDetailType.alarm));
         }
         if (_deviceEventParam.type == 0) {
-          Navigator.pushNamed(context, '/faultDetail', arguments: item.id);
+          Navigator.pushNamed(context, AlarmFaultDetailPage.routeName,
+              arguments: AlarmDetailParam(alarmId: item.id!, type: AlarmDetailType.fault));
         }
       },
       child: _alarmLampItem(item),
@@ -122,17 +124,14 @@ class _DetailsEventState extends State<DetailsEvent> {
                       size: 18,
                     ),
                   ),
-                  if (_deviceEventParam.type != 5)
-                    Text('${item.eventTypeContent} ${item.eventCount ?? 0}次'),
-                  if (_deviceEventParam.type == 5)
-                    Text(setRemindType(item.type))
+                  if (_deviceEventParam.type != 5) Text('${item.eventTypeContent} ${item.eventCount ?? 0}次'),
+                  if (_deviceEventParam.type == 5) Text(setRemindType(item.type))
                 ],
               ),
               if (_deviceEventParam.type == 5)
                 Text(
                   '${setHappenTime(item.happenTime)}',
-                  style:
-                      const TextStyle(color: Color(0xFF999999), fontSize: 12),
+                  style: const TextStyle(color: Color(0xFF999999), fontSize: 12),
                 ),
             ],
           ),
@@ -146,14 +145,12 @@ class _DetailsEventState extends State<DetailsEvent> {
                 children: [
                   Text(
                     '发生：${item.startTime}',
-                    style:
-                        const TextStyle(color: Color(0xFF999999), fontSize: 12),
+                    style: const TextStyle(color: Color(0xFF999999), fontSize: 12),
                   ),
                   if (item.status == 1)
                     Text(
                       '复位：${item.resetTime ?? ''}',
-                      style: const TextStyle(
-                          color: Color(0xFF999999), fontSize: 12),
+                      style: const TextStyle(color: Color(0xFF999999), fontSize: 12),
                     ),
                 ],
               ),

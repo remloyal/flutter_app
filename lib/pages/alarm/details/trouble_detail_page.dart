@@ -1,7 +1,10 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/models/home.dart';
 import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
+import 'package:fire_control_app/pages/map/map.dart';
+import 'package:fire_control_app/pages/map/map_method.dart';
 import 'package:fire_control_app/utils/alarm_tool.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -22,6 +25,8 @@ class TroubleDetailPage extends StatefulWidget {
 class _TroubleDetailPageState extends State<TroubleDetailPage> {
   TroubleDetail? _detail;
 
+  MapInfo mapInfo = MapInfo();
+
   @override
   void initState() {
     _fetchData();
@@ -33,9 +38,27 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
       if (mounted) {
         setState(() {
           _detail = value;
+          initMapPoint();
         });
       }
     });
+  }
+
+  initMapPoint() async {
+    if (_detail!.svgUrl != null) {
+      mapInfo.type = MapType.mapPlan;
+      mapInfo.setPlan(
+        _detail!.svgUrl!,
+        [_detail!.xRate, _detail!.yRate],
+        'trouble',
+      );
+    } else {
+      mapInfo.type = MapType.map;
+    }
+    mapInfo.typeIndex = 4;
+    mapInfo.setUnnit(_detail!.unitId);
+    mapInfo.point = [_detail!.pointX, _detail!.pointY];
+    mapInfo.setMainPoint([_detail!.pointY, _detail!.pointX], 'trouble');
   }
 
   @override
@@ -47,7 +70,11 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
         Expanded(
           flex: 2,
           child: LocationButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, MapCase.routeName, arguments: {
+                'info': mapInfo,
+              });
+            },
           ),
         ),
         ..._buildHandleButton()
@@ -70,8 +97,7 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
         ),
         XfItem(
           label: "发生位置",
-          content:
-              '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+          content: '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
         ),
         XfItem(
           label: "上报时间",
@@ -154,14 +180,9 @@ class _TroubleDetailPageState extends State<TroubleDetailPage> {
           child: HandleButton(
             title: '处理隐患',
             onPressed: () {
-              Navigator.pushNamed(
-                  context,
-                  HandlePage.routeName,
-                  arguments: HandlePageParam(
-                      id: widget.troubleId,
-                      type: HandlePageType.trouble
-                  )
-              ).then((value) {
+              Navigator.pushNamed(context, HandlePage.routeName,
+                      arguments: HandlePageParam(id: widget.troubleId, type: HandlePageType.trouble))
+                  .then((value) {
                 if (value != null && value as bool) {
                   _fetchData();
                 }

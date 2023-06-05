@@ -34,6 +34,7 @@ class FireMap<T> extends StatefulWidget {
 
 class _FireMapState extends State<FireMap> {
   final mapController = MapController();
+  late double mapzoom = 15.0;
   late LatLng _latLng = LatLng(
     28.196346,
     112.977216,
@@ -45,16 +46,28 @@ class _FireMapState extends State<FireMap> {
 
   late List<Marker> markers = [];
 
+  late List<CircleMarker> circleMarkers = [];
+
   Widget? trendsPoint;
 
   @override
   void initState() {
-    // print(widget.type);
     super.initState();
-    initMap();
+    if (widget.info.typeIndex == 4) {
+      if (widget.info.lbsList.isNotEmpty) {
+        markers.addAll(widget.info.lbsList);
+      }
+      _latLng = LatLng(widget.info.point![1], widget.info.point![0]);
+      circleMarkers.addAll(widget.info.circle);
+      Future.delayed(const Duration(milliseconds: 50)).then((e) {
+        mapController.move(_latLng, 16);
+      });
+    } else {
+      initMap();
+    }
   }
 
-  initMap() {
+  initMap() async {
     if (widget.info.type == MapType.planView) {
       _index = 1;
     }
@@ -68,11 +81,11 @@ class _FireMapState extends State<FireMap> {
     if ([0, 1, 2].contains(widget.info.typeIndex)) {
       int index = widget.info.typeIndex;
       MarkerParam fireMaker = index == 0
-          ? MarkerTypes.fire
+          ? MarkerTypes.fire()
           : index == 1
-              ? MarkerTypes.trouble
-              : MarkerTypes.danger;
-      trendsPoint = MapPoint.file(fireMaker, maker: false);
+              ? MarkerTypes.trouble()
+              : MarkerTypes.danger();
+      trendsPoint = await MapPoint.file(fireMaker, maker: false);
     }
 
     if (widget.info.type == MapType.map || widget.info.type == MapType.mapPlan) {
@@ -108,16 +121,26 @@ class _FireMapState extends State<FireMap> {
                           28.19485,
                           112.972898,
                         ),
-                        zoom: 15,
+                        zoom: mapzoom,
                         enableScrollWheel: true,
                         debugMultiFingerGestureWinner: true,
                         minZoom: 5,
-                        maxZoom: 18,
+                        maxZoom: 18.4,
                         keepAlive: true,
                         onTap: (tapPosition, LatLng point) {
-                          widget.info.setPoint([point.longitude, point.latitude]);
-                          _latLng = point;
-                          setState(() {});
+                          if (widget.info.typeIndex != 4) {
+                            widget.info.setPoint([
+                              double.parse(point.longitude.toStringAsFixed(6)),
+                              double.parse(point.latitude.toStringAsFixed(6))
+                            ]);
+                            _latLng = point;
+                            setState(() {});
+                          }
+                        },
+                        onPositionChanged: (position, hasGesture) {
+                          setState(() {
+                            mapzoom = double.parse(position.zoom!.toStringAsFixed(2));
+                          });
                         },
                       ),
                       // nonRotatedChildren: [
@@ -141,33 +164,27 @@ class _FireMapState extends State<FireMap> {
                           userAgentPackageName: 'dev.fire_control_app',
                         ),
                         // roadTileLayer,
-                        const CircleLayer(
-                          circles: [
-                            // CircleMarker(
-                            //   point: _latLng,
-                            //   radius: 600,
-                            //   color: const Color(0x33F44336),
-                            //   borderStrokeWidth: 1,
-                            //   borderColor: Colors.red,
-                            //   useRadiusInMeter: true,
-                            // ),
-                          ],
+                        CircleLayer(
+                          circles: [...circleMarkers],
                         ),
                         MarkerLayer(
+                          rotate: true,
                           markers: [
                             ...markers,
-                            Marker(
-                                width: 150,
-                                height: 120,
-                                point: _latLng,
-                                rotateOrigin: const Offset(-10, -10),
-                                builder: (ctx) => trendsPoint ?? Container() //
-                                ),
+                            if (widget.info.typeIndex != 4)
+                              Marker(
+                                  width: 150,
+                                  height: 120,
+                                  point: _latLng,
+                                  rotateOrigin: const Offset(-10, -10),
+                                  builder: (ctx) => trendsPoint ?? Container() //
+                                  ),
                           ],
                         ),
                       ],
                     ),
                   ),
+                Positioned(bottom: 20, left: 18, child: Text('$mapzoom')),
                 Positioned(
                     child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -216,7 +233,7 @@ class _FireMapState extends State<FireMap> {
                       right: 18,
                       child: InkWell(
                         onTap: () {
-                          mapController.move(_latLng, 15);
+                          mapController.move(_latLng, 16);
                         },
                         child: Container(
                           width: 40,

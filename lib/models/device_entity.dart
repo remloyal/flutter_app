@@ -1,12 +1,14 @@
 import 'package:fire_control_app/models/param.dart';
 import 'package:fire_control_app/models/response.dart';
+import 'package:flutter/material.dart';
+
+import '../common/fc_icon.dart';
 
 class DeviceResponse extends ListResponse<DeviceItem> {
   DeviceResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  DeviceItem generateRecord(Map<String, dynamic> data) =>
-      DeviceItem.fromJson(data);
+  DeviceItem generateRecord(Map<String, dynamic> data) => DeviceItem.fromJson(data);
 }
 
 class DeviceItem {
@@ -138,6 +140,7 @@ class DeviceDetails {
   int? manufactorId;
   int? runDay;
   String? startDate;
+  String? svgUrl;
 
   DeviceDetails.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -173,7 +176,8 @@ class DeviceDetails {
         network = json["network"],
         manufactorId = json["manufactorId"],
         runDay = json["runDay"],
-        startDate = json["startDate"];
+        startDate = json["startDate"],
+        svgUrl = json['svgUrl'];
 }
 
 // 实时数据
@@ -195,8 +199,7 @@ class DeviceEventResponse extends ListResponse<DeviceEventItem> {
   DeviceEventResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  DeviceEventItem generateRecord(Map<String, dynamic> data) =>
-      DeviceEventItem.fromJson(data);
+  DeviceEventItem generateRecord(Map<String, dynamic> data) => DeviceEventItem.fromJson(data);
 }
 
 class DeviceEventItem {
@@ -244,8 +247,7 @@ class DeviceEventParams extends Param {
   int deviceId;
   int type;
 
-  DeviceEventParams({required this.deviceId, required this.type})
-      : super(pageSize: 15);
+  DeviceEventParams({required this.deviceId, required this.type}) : super(pageSize: 15);
 
   @override
   Map<String, dynamic> toJson() => {
@@ -260,8 +262,7 @@ class DeviceOperationLogResponse extends ListResponse<OperationLogItem> {
   DeviceOperationLogResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  OperationLogItem generateRecord(Map<String, dynamic> data) =>
-      OperationLogItem.fromJson(data);
+  OperationLogItem generateRecord(Map<String, dynamic> data) => OperationLogItem.fromJson(data);
 }
 
 class OperationLogItem {
@@ -308,9 +309,9 @@ class DeviceType {
         name = json["name"];
 
   Map<String, dynamic> toJson() => {
-    "type": type,
-    "name": name,
-  };
+        "type": type,
+        "name": name,
+      };
 }
 
 class FindParam {
@@ -318,4 +319,34 @@ class FindParam {
   String keyword;
 
   FindParam({required this.source, required this.keyword});
+}
+
+// 设备类型Icon
+class DeviceIcon {
+  int type;
+  String name;
+  String groupType;
+  String icon;
+  String color;
+  String unicode;
+  IconData iconData;
+
+  DeviceIcon.fromJson(Map<String, dynamic> json)
+      : type = int.parse(json["type"]),
+        name = json["name"],
+        groupType = json["groupType"],
+        icon = json["icon"],
+        color = json["color"],
+        unicode = json["unicode"],
+        iconData =
+            DeviceFont.iconMap[json["icon"].replaceAll('equip-', '')] ?? const IconData(0xe632, fontFamily: 'fcm');
+
+  Map<String, dynamic> toJson() => {
+        "type": type,
+        "name": name,
+        "groupType": groupType,
+        "icon": icon,
+        "color": color,
+        "unicode": unicode,
+      };
 }

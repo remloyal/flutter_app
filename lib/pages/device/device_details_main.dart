@@ -1,4 +1,7 @@
 import 'package:fire_control_app/common/fc_color.dart';
+import 'package:fire_control_app/models/home.dart';
+import 'package:fire_control_app/pages/map/map.dart';
+import 'package:fire_control_app/pages/map/map_method.dart';
 import 'package:flutter/material.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
 import 'package:fire_control_app/http/device_api.dart';
@@ -18,12 +21,13 @@ class DeviceDetailsMain extends StatefulWidget {
   State<DeviceDetailsMain> createState() => _DeviceDetailsMainState();
 }
 
-class _DeviceDetailsMainState extends State<DeviceDetailsMain>
-    with SingleTickerProviderStateMixin {
+class _DeviceDetailsMainState extends State<DeviceDetailsMain> with SingleTickerProviderStateMixin {
   DeviceDetails? _details;
   late bool loadingState = false;
   TabController? _tabController;
   GlobalKey _operationLogKey = GlobalKey();
+
+  MapInfo mapInfo = MapInfo();
 
   @override
   void initState() {
@@ -45,8 +49,27 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
     _details = await DeviceApi.useDeviceDetails(widget.deviceId);
     loadingState = true;
     Future.delayed(const Duration(milliseconds: 200)).then((e) {
-      setState(() {});
+      setState(() {
+        initMapPoint();
+      });
     });
+  }
+
+  initMapPoint() async {
+    if (_details!.svgUrl != null) {
+      mapInfo.type = MapType.mapPlan;
+      mapInfo.setPlan(
+        _details!.svgUrl!,
+        [_details!.xRate!, _details!.yRate!],
+        'device',
+      );
+    } else {
+      mapInfo.type = MapType.map;
+    }
+    mapInfo.typeIndex = 4;
+    mapInfo.setUnnit(_details!.unitId);
+    mapInfo.point = [_details!.pointX, _details!.pointY];
+    mapInfo.setDevicePoint([_details!.pointY, _details!.pointX], _details!.deviceTypeId, title: _details!.name);
   }
 
   @override
@@ -108,12 +131,14 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
           : null,
       loadingState: loadingState,
       roll: false,
-      body:
-          loadingState == false ? [] : [..._detailsTitle(), ..._detailsBody()],
+      body: loadingState == false ? [] : [..._detailsTitle(), ..._detailsBody()],
       actions: [
         IconButton(
           onPressed: () {
             print('object');
+            Navigator.pushNamed(context, MapCase.routeName, arguments: {
+              'info': mapInfo,
+            });
           },
           icon: const Icon(
             IconData(0xe60B, fontFamily: 'fcm'),
@@ -127,8 +152,7 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
   List<Widget> _detailsTitle() {
     return [
       Container(
-          padding:
-              const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+          padding: const EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -143,15 +167,12 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
                     padding: const EdgeInsets.only(left: 6),
                     child: Text(
                       _details!.name,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   )
                 ],
               ),
-              if (_details!.deviceTypeId == 7 ||
-                  _details!.deviceTypeId == 242 ||
-                  _details!.deviceTypeId == 243)
+              if (_details!.deviceTypeId == 7 || _details!.deviceTypeId == 242 || _details!.deviceTypeId == 243)
                 TextButton.icon(
                     onPressed: () {},
                     icon: const Icon(
@@ -160,18 +181,15 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
                       size: 14,
                     ),
                     style: ButtonStyle(
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(60, 30)),
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith((states) {
+                        minimumSize: MaterialStateProperty.all(const Size(60, 30)),
+                        backgroundColor: MaterialStateProperty.resolveWith((states) {
                           if (states.contains(MaterialState.pressed)) {
                             return const Color.fromARGB(255, 0, 88, 160);
                           }
                           return const Color(0XFF1976D2);
                         }),
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.only(
-                                top: 2, bottom: 2, left: 6, right: 6))),
+                        padding:
+                            MaterialStateProperty.all(const EdgeInsets.only(top: 2, bottom: 2, left: 6, right: 6))),
                     label: const Text(
                       "查看监控",
                       style: TextStyle(color: Colors.white, fontSize: 14),
@@ -180,8 +198,7 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
           )),
       Container(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(
             children: [
               DeviceTag(
@@ -326,8 +343,7 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
       return;
     }
 
-    DeviceApi.setDevicStop(widget.deviceId, type: checked, reason: checkVal)
-        .then((value) {
+    DeviceApi.setDevicStop(widget.deviceId, type: checked, reason: checkVal).then((value) {
       if (value['code'] == 200) {
         Message.show('封停成功');
         setState(() {
@@ -407,15 +423,11 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
                   children: [
                     TextButton(
                         style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(
-                              const Color.fromARGB(255, 0, 0, 0)),
-                          backgroundColor:
-                              MaterialStateProperty.all(Color(0xFFEEEEEE)),
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(100, 10)),
+                          foregroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
+                          backgroundColor: MaterialStateProperty.all(Color(0xFFEEEEEE)),
+                          minimumSize: MaterialStateProperty.all(const Size(100, 10)),
                           shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50))),
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
                         ),
                         onPressed: () {
                           // widget.onChange(_deviceParam);
@@ -430,15 +442,11 @@ class _DeviceDetailsMainState extends State<DeviceDetailsMain>
                         )),
                     TextButton(
                         style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(
-                              const Color.fromARGB(255, 0, 0, 0)),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red),
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(100, 15)),
+                          foregroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 0, 0, 0)),
+                          backgroundColor: MaterialStateProperty.all(Colors.red),
+                          minimumSize: MaterialStateProperty.all(const Size(100, 15)),
                           shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50))),
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
                         ),
                         onPressed: () {
                           // widget.onChange(_deviceParam);
@@ -494,17 +502,13 @@ class DeviceTag extends StatelessWidget {
                   ),
                   Text(
                     text,
-                    style: TextStyle(
-                        fontSize: fontSize ?? 12,
-                        color: textColor ?? const Color.fromARGB(255, 0, 0, 0)),
+                    style: TextStyle(fontSize: fontSize ?? 12, color: textColor ?? const Color.fromARGB(255, 0, 0, 0)),
                   ),
                 ],
               )
             : Text(
                 text,
-                style: TextStyle(
-                    fontSize: fontSize ?? 12,
-                    color: textColor ?? const Color.fromARGB(255, 0, 0, 0)),
+                style: TextStyle(fontSize: fontSize ?? 12, color: textColor ?? const Color.fromARGB(255, 0, 0, 0)),
               ));
   }
 }

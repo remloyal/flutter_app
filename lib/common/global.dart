@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fire_control_app/http/http.dart';
+import 'package:fire_control_app/models/device_entity.dart';
 import 'package:fire_control_app/models/profile.dart';
 import 'package:fire_control_app/models/unit.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// 全局变量及配置类，配置采用本地存储
 class Global {
-
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 
   static late SharedPreferences _prefs;
 
@@ -22,6 +21,9 @@ class Global {
 
   // 单位列表
   static List<Unit> units = [];
+
+  // 设备Icon列表
+  static List<DeviceIcon> deviceIcons = [];
 
   // 本地缓存key
   static const String _profileKey = "profile";
@@ -52,8 +54,7 @@ class Global {
   }
 
   // 持久化Profile信息
-  static saveProfile() =>
-      _prefs.setString(_profileKey, jsonEncode(profile.toJson()));
+  static saveProfile() => _prefs.setString(_profileKey, jsonEncode(profile.toJson()));
 
   // 清除Profile的信息
   static clearProfile() => _prefs.remove(_profileKey);

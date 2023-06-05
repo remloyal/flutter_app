@@ -27,18 +27,24 @@ class _MapPlanState extends State<MapPlan> {
 
   late String imgUrl = '';
   Widget? trendsPoint;
+  List<Positioned> planMakers = [];
 
   @override
   void initState() {
     super.initState();
-    if (widget.info.floor!['svgUrl'] == null) {
-      imgUrl = '';
+    if (widget.info.typeIndex == 4) {
+      imgUrl = widget.info.svgUrl != null ? Global.profile.apiInfo.imgUrl + widget.info.svgUrl! : '';
     } else {
-      imgUrl = Global.profile.apiInfo.imgUrl + widget.info.floor!['svgUrl'];
+      if (widget.info.floor!['svgUrl'] == null) {
+        imgUrl = '';
+      } else {
+        imgUrl = Global.profile.apiInfo.imgUrl + widget.info.floor!['svgUrl'];
+      }
     }
   }
 
-  init() {
+  // 上报初始化
+  init() async {
     if (widget.info.point != null) {
       planPoint = widget.info.point!;
       _offset = Offset(planPoint[0] * layerSize.width, planPoint[1] * layerSize.height);
@@ -46,13 +52,32 @@ class _MapPlanState extends State<MapPlan> {
     if ([0, 1, 2].contains(widget.info.typeIndex)) {
       int index = widget.info.typeIndex;
       MarkerParam fireMaker = index == 0
-          ? MarkerTypes.fire
+          ? MarkerTypes.fire()
           : index == 1
-              ? MarkerTypes.trouble
-              : MarkerTypes.danger;
-      trendsPoint = MapPoint.file(fireMaker, maker: false, titleColor: Colors.white);
+              ? MarkerTypes.trouble()
+              : MarkerTypes.danger();
+      trendsPoint = await MapPoint.file(fireMaker, maker: false, titleColor: Colors.white);
     }
     setState(() {});
+  }
+
+  initDetail() async {
+    List<MarkerParam> maker = widget.info.planMarkers;
+    for (var i = 0; i < maker.length; i++) {
+      var point = await MapPoint.matchMaker(maker[i], maker: false, titleColor: Colors.white);
+      planMakers
+          .add(setMaker(point, Offset(maker[i].point[0] * layerSize.width, maker[i].point[1] * layerSize.height)));
+    }
+  }
+
+  Positioned setMaker(Widget data, Offset offset) {
+    return Positioned(
+      left: offset.dx - 60,
+      top: offset.dy - 60,
+      width: 120,
+      height: 120,
+      child: data,
+    );
   }
 
   @override
@@ -108,15 +133,17 @@ class _MapPlanState extends State<MapPlan> {
                                 // color: Colors.red,
                                 ),
                             child: Stack(children: [
-                              Positioned(
-                                left: _offset.dx - 60,
-                                top: _offset.dy - 60,
-                                width: 120,
-                                height: 120,
-                                child: Container(
-                                  child: trendsPoint ?? Container(),
+                              if (widget.info.typeIndex != 4)
+                                Positioned(
+                                  left: _offset.dx - 60,
+                                  top: _offset.dy - 60,
+                                  width: 120,
+                                  height: 120,
+                                  child: Container(
+                                    child: trendsPoint ?? Container(),
+                                  ),
                                 ),
-                              ),
+                              ...planMakers
                             ]),
                           ),
                           // if (imgUrl != '')
@@ -128,20 +155,25 @@ class _MapPlanState extends State<MapPlan> {
                               print(layerSize);
 
                               setState(() {
-                                init();
+                                if (widget.info.typeIndex == 4) {
+                                  initDetail();
+                                } else {
+                                  init();
+                                }
                               });
                             },
                           ),
                         ],
                       )),
                 ))),
-        Positioned(
-            child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          color: const Color(0xD7FFFFFF),
-          child: Center(child: Text(planPoint.join(','))),
-        )),
+        if (widget.info.typeIndex != 4)
+          Positioned(
+              child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            color: const Color(0xD7FFFFFF),
+            child: Center(child: Text(planPoint.join(','))),
+          )),
       ]),
     );
   }

@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:fire_control_app/models/unit.dart';
-import 'package:flutter_map/plugin_api.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -214,56 +212,6 @@ class FileTerm {
         'progress': progress,
         'file': file
       };
-}
-
-// 地图信息参数
-class MapInfo extends ChangeNotifier {
-  // 地图处理类型
-  MapType? type;
-
-  Unit? unit;
-  Map? building;
-  Map? floor;
-  Map? room;
-  List<double>? point;
-  String? pointRate;
-
-  String textName = '';
-
-  int typeIndex = 0;
-
-  // 需渲染的点
-  List<Marker> lbsList = [];
-
-  Map<String, dynamic> toJson() => {
-        'unit': unit,
-        'building': building,
-        'floor': floor,
-        'room': room,
-        'textName': textName,
-        'point': point,
-        'pointRate': pointRate,
-        'type': type,
-        'typeIndex': typeIndex,
-        'lbsList': lbsList
-      };
-
-  initText() {
-    if (building != null) {
-      textName = building!['name'];
-    }
-    if (floor != null) {
-      textName = '$textName - ${floor!['name']}';
-    }
-    if (room != null) {
-      textName = '$textName - ${room!['name']}';
-    }
-  }
-
-  setPoint(List<double> data) {
-    point = data;
-    notifyListeners();
-  }
 }
 
 // 火情上报参数

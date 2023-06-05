@@ -68,11 +68,7 @@ class FireParam extends Param with TimeParam {
       };
 }
 
-enum FireAlarmType {
-  all,
-  person,
-  device
-}
+enum FireAlarmType { all, person, device }
 
 extension FireAlarmTypeExtension on FireAlarmType {
   int get value {
@@ -112,8 +108,7 @@ class AlarmResponse extends ListResponse<AlarmItem> {
   AlarmResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  AlarmItem generateRecord(Map<String, dynamic> data) =>
-      AlarmItem.fromJson(data);
+  AlarmItem generateRecord(Map<String, dynamic> data) => AlarmItem.fromJson(data);
 }
 
 class AlarmItem {
@@ -173,8 +168,7 @@ class TroubleResponse extends ListResponse<TroubleItem> {
   TroubleResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  TroubleItem generateRecord(Map<String, dynamic> data) =>
-      TroubleItem.fromJson(data);
+  TroubleItem generateRecord(Map<String, dynamic> data) => TroubleItem.fromJson(data);
 }
 
 class TroubleItem {
@@ -308,8 +302,7 @@ class DangerResponse extends ListResponse<DangerItem> {
   DangerResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  DangerItem generateRecord(Map<String, dynamic> data) =>
-      DangerItem.fromJson(data);
+  DangerItem generateRecord(Map<String, dynamic> data) => DangerItem.fromJson(data);
 }
 
 class DangerItem {
@@ -384,9 +377,9 @@ class DangerType {
         name = json["name"];
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-  };
+        "id": id,
+        "name": name,
+      };
 }
 
 // 风险
@@ -489,8 +482,7 @@ class RemindResponse extends ListResponse<RemindItem> {
   RemindResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  RemindItem generateRecord(Map<String, dynamic> data) =>
-      RemindItem.fromJson(data);
+  RemindItem generateRecord(Map<String, dynamic> data) => RemindItem.fromJson(data);
 }
 
 class RemindItem {
@@ -522,12 +514,7 @@ class RemindParam extends Param with TimeParam {
   int? type;
 
   @override
-  Map<String, dynamic> toJson() => {
-        ...super.toJson(),
-        'beginTime': beginTime,
-        'endTime': endTime,
-        'type': type
-      };
+  Map<String, dynamic> toJson() => {...super.toJson(), 'beginTime': beginTime, 'endTime': endTime, 'type': type};
 }
 
 enum RemindType {
@@ -606,12 +593,12 @@ class FireDetail {
   List<CameraInfo>? videos;
   double xRate;
   double yRate;
+  String? svgUrl;
 
   FireDetail.fromJson(Map<String, dynamic> json)
-      : attachments = json['attachments']
-            ?.map((v) => Attachment.fromJson(v))
-            .toList()
-            .cast<Attachment>(),
+      : attachments = json['attachments'] != null
+            ? List<Attachment>.from(json['attachments']?.map((v) => Attachment.fromJson(v)).toList())
+            : [],
         buildingName = json['buildingName'],
         cancelNickName = json['cancelNickName'],
         cancelPhone = json['cancelPhone'],
@@ -630,10 +617,7 @@ class FireDetail {
         fireType = json['fireType'],
         floorNumber = json['floorNumber'],
         id = json['id'],
-        lbsList = json['lbsList']
-            ?.map((v) => LbsInfo.fromJson(v))
-            .toList()
-            .cast<LbsInfo>(),
+        lbsList = List<LbsInfo>.from(json['lbsList']?.map((v) => LbsInfo.fromJson(v)).toList()),
         nickName = json['nickName'],
         phone = json['phone'],
         pointX = json['pointX'],
@@ -644,12 +628,10 @@ class FireDetail {
         status = json['status'],
         unitId = json['unitId'],
         unitName = json['unitName'],
-        videos = json['videos']
-            ?.map((v) => CameraInfo.fromJson(v))
-            .toList()
-            .cast<CameraInfo>(),
+        videos = List<CameraInfo>.from(json['videos']?.map((v) => CameraInfo.fromJson(v)).toList()),
         xRate = json['xRate'],
-        yRate = json['yRate'];
+        yRate = json['yRate'],
+        svgUrl = json['svgUrl'];
 }
 
 class Attachment {
@@ -745,15 +727,15 @@ class LbsLoc {
 
   LbsLoc.fromJson(Map<String, dynamic> json)
       : type = json['type'],
-        coordinates = json['coordinates'].cast<double>();
+        coordinates = List<double>.from(json['coordinates']);
 }
 
 class AlarmDetail {
   List<Attachment>? attachments;
   String buildingName;
-  String confirmNickName;
+  String? confirmNickName;
   String? confirmPhone;
-  String confirmReason;
+  String? confirmReason;
   int confirmResult;
   String? confirmTime;
   int deviceId;
@@ -780,10 +762,7 @@ class AlarmDetail {
   double yRate;
 
   AlarmDetail.fromJson(Map<String, dynamic> json)
-      : attachments = json['attachments']
-            ?.map((v) => Attachment.fromJson(v))
-            .toList()
-            .cast<Attachment>(),
+      : attachments = json['attachments']?.map((v) => Attachment.fromJson(v)).toList().cast<Attachment>(),
         buildingName = json['buildingName'],
         confirmNickName = json['confirmNickName'],
         confirmPhone = json['confirmPhone'],
@@ -809,10 +788,7 @@ class AlarmDetail {
         svgUrl = json['svgUrl'],
         unitId = json['unitId'],
         unitName = json['unitName'],
-        videos = json['videos']
-            ?.map((v) => CameraInfo.fromJson(v))
-            .toList()
-            .cast<CameraInfo>(),
+        videos = json['videos']?.map((v) => CameraInfo.fromJson(v)).toList().cast<CameraInfo>(),
         xRate = json['xRate'],
         yRate = json['yRate'];
 }
@@ -843,10 +819,7 @@ class TroubleDetail {
   double yRate;
 
   TroubleDetail.fromJson(Map<String, dynamic> json)
-      : attachments = json['attachments']
-            ?.map((v) => Attachment.fromJson(v))
-            .toList()
-            .cast<Attachment>(),
+      : attachments = json['attachments']?.map((v) => Attachment.fromJson(v)).toList().cast<Attachment>(),
         buildingName = json['buildingName'],
         cont = json['cont'],
         createTime = json['createTime'],
@@ -897,10 +870,7 @@ class DangerDetail {
   double yRate;
 
   DangerDetail.fromJson(Map<String, dynamic> json)
-      : attachments = json['attachments']
-            ?.map((v) => Attachment.fromJson(v))
-            .toList()
-            .cast<Attachment>(),
+      : attachments = json['attachments']?.map((v) => Attachment.fromJson(v)).toList().cast<Attachment>(),
         buildingName = json['buildingName'],
         cont = json['cont'],
         createTime = json['createTime'],
@@ -932,11 +902,7 @@ class AnalogParam extends Param {
   AnalogParam({required this.alarmId});
 
   @override
-  Map<String, dynamic> toJson() => {
-    ...super.toJson(),
-    'alarmId': alarmId
-  };
-
+  Map<String, dynamic> toJson() => {...super.toJson(), 'alarmId': alarmId};
 }
 
 class AnalogItem {
@@ -964,8 +930,7 @@ class AnalogResponse extends ListResponse<AnalogItem> {
   AnalogResponse.fromJson(super.json) : super.fromJson();
 
   @override
-  AnalogItem generateRecord(Map<String, dynamic> data) =>
-      AnalogItem.fromJson(data);
+  AnalogItem generateRecord(Map<String, dynamic> data) => AnalogItem.fromJson(data);
 }
 
 //告警处理
@@ -974,11 +939,7 @@ class HandleParam {
   int? fileNumber;
   String? remark;
 
-  Map<String, dynamic> toJson() => {
-    'attachmentIds': attachmentIds,
-    'remark': remark,
-    'fileNumber': fileNumber
-  };
+  Map<String, dynamic> toJson() => {'attachmentIds': attachmentIds, 'remark': remark, 'fileNumber': fileNumber};
 }
 
 class FireHandleParam extends HandleParam {
@@ -986,10 +947,7 @@ class FireHandleParam extends HandleParam {
   FireHandleParam({required this.alarmId});
 
   @override
-  Map<String, dynamic> toJson() => {
-    ...super.toJson(),
-    'alarmId': alarmId
-  };
+  Map<String, dynamic> toJson() => {...super.toJson(), 'alarmId': alarmId};
 }
 
 class AlarmHandleParam extends HandleParam {
@@ -998,11 +956,7 @@ class AlarmHandleParam extends HandleParam {
   AlarmHandleParam({required this.alarmId});
 
   @override
-  Map<String, dynamic> toJson() => {
-    ...super.toJson(),
-    'alarmId': alarmId,
-    'isFire': isFire
-  };
+  Map<String, dynamic> toJson() => {...super.toJson(), 'alarmId': alarmId, 'isFire': isFire};
 }
 
 class TroubleHandleParam extends HandleParam {
@@ -1010,10 +964,7 @@ class TroubleHandleParam extends HandleParam {
   TroubleHandleParam({required this.troubleId});
 
   @override
-  Map<String, dynamic> toJson() => {
-    ...super.toJson(),
-    'troubleId': troubleId
-  };
+  Map<String, dynamic> toJson() => {...super.toJson(), 'troubleId': troubleId};
 }
 
 class DangerHandleParam extends HandleParam {
@@ -1021,8 +972,5 @@ class DangerHandleParam extends HandleParam {
   DangerHandleParam({required this.dangerId});
 
   @override
-  Map<String, dynamic> toJson() => {
-    ...super.toJson(),
-    'dangerId': dangerId
-  };
+  Map<String, dynamic> toJson() => {...super.toJson(), 'dangerId': dangerId};
 }

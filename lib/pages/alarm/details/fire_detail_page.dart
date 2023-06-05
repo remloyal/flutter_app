@@ -1,7 +1,9 @@
-import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/http/alarm_api.dart';
 import 'package:fire_control_app/models/alarm_entity.dart';
+import 'package:fire_control_app/models/home.dart';
 import 'package:fire_control_app/pages/alarm/alarm_handle.dart';
+import 'package:fire_control_app/pages/map/map.dart';
+import 'package:fire_control_app/pages/map/map_method.dart';
 import 'package:fire_control_app/utils/fire_date.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
 import 'package:fire_control_app/widgets/fc_details.dart';
@@ -21,6 +23,8 @@ class FireDetailPage extends StatefulWidget {
 class _FireDetailPageState extends State<FireDetailPage> {
   FireDetail? _detail;
 
+  MapInfo mapInfo = MapInfo();
+
   @override
   void initState() {
     _fetchData();
@@ -32,6 +36,7 @@ class _FireDetailPageState extends State<FireDetailPage> {
       if (mounted) {
         setState(() {
           _detail = value;
+          initMapPoint();
         });
       }
     });
@@ -46,7 +51,11 @@ class _FireDetailPageState extends State<FireDetailPage> {
         Expanded(
           flex: 2,
           child: LocationButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, MapCase.routeName, arguments: {
+                'info': mapInfo,
+              });
+            },
           ),
         ),
         ..._buildHandleButton()
@@ -70,8 +79,7 @@ class _FireDetailPageState extends State<FireDetailPage> {
         ),
         XfItem(
           label: "发生位置",
-          content:
-              '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
+          content: '${_detail?.buildingName ?? '室外'} ${_detail?.floorNumber ?? ''} ${_detail?.roomNumber ?? ''}',
         ),
         XfItem(
           label: "告警时间",
@@ -208,14 +216,9 @@ class _FireDetailPageState extends State<FireDetailPage> {
           child: HandleButton(
             title: '关闭火情',
             onPressed: () {
-              Navigator.pushNamed(
-                  context,
-                  HandlePage.routeName,
-                  arguments: HandlePageParam(
-                      id: widget.fireId,
-                      type: HandlePageType.fire
-                  )
-              ).then((value) {
+              Navigator.pushNamed(context, HandlePage.routeName,
+                      arguments: HandlePageParam(id: widget.fireId, type: HandlePageType.fire))
+                  .then((value) {
                 if (value != null && value as bool) {
                   _fetchData();
                 }
@@ -226,5 +229,26 @@ class _FireDetailPageState extends State<FireDetailPage> {
       ];
     }
     return [];
+  }
+
+  initMapPoint() async {
+    if (_detail!.svgUrl != null) {
+      mapInfo.type = MapType.mapPlan;
+      mapInfo.setPlan(
+        _detail!.svgUrl!,
+        [_detail!.xRate, _detail!.yRate],
+        'fire',
+      );
+    } else {
+      mapInfo.type = MapType.map;
+    }
+    mapInfo.typeIndex = 4;
+
+    mapInfo.setUnnit(_detail!.unitId);
+    if (_detail!.lbsList != null) {
+      mapInfo.setDevice(_detail!.lbsList!);
+    }
+    mapInfo.point = [_detail!.pointX, _detail!.pointY];
+    mapInfo.setMainPoint([_detail!.pointY, _detail!.pointX], 'fire');
   }
 }

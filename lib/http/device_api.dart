@@ -39,7 +39,8 @@ class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
 
   // 设备封停
   static Future setDevicStop(int id, {int? type, String? reason}) async {
-    var response = await Http.dio.get('/mobile/device/stop', queryParameters: {'deviceId': id, 'type': type, 'reason': reason});
+    var response =
+        await Http.dio.get('/mobile/device/stop', queryParameters: {'deviceId': id, 'type': type, 'reason': reason});
     return response.data;
   }
 
@@ -50,9 +51,12 @@ class DeviceApi extends ListApi<DeviceResponse, DeviceParams> {
   }
 
   // 设备类型Icon
-  static Future getDeviceIcon() async {
+  static Future<List<DeviceIcon>> getDeviceIcon() async {
     var response = await Http.dio.request('https://stdos.zhxf.ltd/fcstd/css/devices_move/deviceTypes.json');
-    return response.data;
+
+    List<DeviceIcon> data =
+        List.from(response.data['data'].values.toList().map((v) => DeviceIcon.fromJson(v)).toList());
+    return data;
   }
 }
 

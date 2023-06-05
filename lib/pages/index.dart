@@ -1,5 +1,6 @@
 import 'package:fire_control_app/common/fc_color.dart';
 import 'package:fire_control_app/common/global.dart';
+import 'package:fire_control_app/http/device_api.dart';
 import 'package:fire_control_app/http/unit_api.dart';
 import 'package:fire_control_app/common/router.dart';
 import 'package:fire_control_app/pages/home/message_page.dart';
@@ -45,6 +46,8 @@ class _IndexPageState extends State<IndexPage> {
     while (AppDir.data.path.isEmpty || AppDir.cache.path.isEmpty) {
       await AppDir.setDir();
     }
+    await DeviceFont.getDeviceJson();
+    Global.deviceIcons = await DeviceApi.getDeviceIcon();
   }
 
   @override

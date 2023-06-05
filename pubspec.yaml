@@ -55,6 +55,3 @@ flutter:
    - family: fcm
      fonts:
        - asset: assets/fonts/iconfont.ttf
-   - family: iconfont
-     fonts:
-       - asset: assets/fonts/device.ttf

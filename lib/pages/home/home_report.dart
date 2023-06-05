@@ -9,6 +9,7 @@ import 'package:fire_control_app/pages/home/report/file_upload.dart';
 import 'package:fire_control_app/pages/home/report/fire_report.dart';
 import 'package:fire_control_app/pages/home/report/trouble_report.dart';
 import 'package:fire_control_app/pages/map/map.dart';
+import 'package:fire_control_app/pages/map/map_method.dart';
 import 'package:fire_control_app/utils/toast.dart';
 import 'package:fire_control_app/widgets/button_group.dart';
 import 'package:fire_control_app/widgets/card_father.dart';
@@ -489,20 +490,44 @@ class _HomeReportState extends State<HomeReport> {
   Future<bool> getMicrophonePermission() async {
     // You can request multiple permissions at once.
     Map<Permission, PermissionStatus> statuses = await [
-      Permission.camera,
       Permission.location,
-      Permission.locationAlways,
-      Permission.locationWhenInUse,
     ].request();
 
-    //granted 通过，denied 被拒绝，permanentlyDenied 拒绝且不在提示
-    if (statuses[Permission.camera]!.isGranted &&
-        statuses[Permission.location]!.isGranted &&
-        statuses[Permission.locationAlways]!.isGranted &&
-        statuses[Permission.locationWhenInUse]!.isGranted) {
+    // PermissionStatus status = await Permission.location.request();
+
+    // 拒绝前往设置
+    if (statuses[Permission.location]!.isPermanentlyDenied) {
+      openApp();
+    }
+
+    if (statuses[Permission.location]!.isGranted) {
       callback();
       return true;
     }
+    // openAppSettings();
     return false;
+  }
+
+  openApp() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('允许应用访问您位置?'),
+        content: const Text('您需要在设置中启用相应权限，才能在应用程序中使用您的地图'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('拒绝'),
+          ),
+          TextButton(
+            onPressed: () {
+              openAppSettings();
+              Navigator.pop(ctx);
+            },
+            child: const Text('允许'),
+          ),
+        ],
+      ),
+    );
   }
 }
