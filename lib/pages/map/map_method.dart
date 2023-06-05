@@ -87,7 +87,15 @@ class MapInfo extends ChangeNotifier {
         lbsList.add(point);
       }
       // 人员
-      if (data[i].extensions.phone != null) {}
+      if (item.extensions.phone != null) {
+        print(item);
+        MarkerParam maker = MarkerTypes.personnel();
+        maker.point = [item.loc.coordinates[1], item.loc.coordinates[0]];
+        maker.title = item.title;
+        // data[5].extensions.userAvatar
+        Marker point = MapPoint.personnel(maker, Global.profile.apiInfo.imgUrl + item.extensions.userAvatar!);
+        lbsList.add(point);
+      }
     }
   }
 
@@ -285,6 +293,15 @@ class MarkerTypes {
     );
   }
 
+  static MarkerParam personnel() {
+    return MarkerParam(
+      point: [],
+      type: 'personnel',
+      title: '',
+      bgcolor: const Color(0xffffffff),
+    );
+  }
+
   static Map<String, dynamic> toJson() => {
         'fire': MarkerTypes.fire,
         'alarm': MarkerTypes.alarm,
@@ -474,6 +491,49 @@ class MapPoint {
             color: data.iconColor,
           ),
         )
+      ]),
+    ]);
+
+    if (maker) {
+      return Marker(
+        width: 150,
+        height: 120,
+        rotateOrigin: const Offset(-10, -10),
+        point: LatLng(data.point[0], data.point[1]),
+        builder: (ctx) {
+          return lead;
+        },
+      );
+    } else {
+      return lead;
+    }
+  }
+
+  // 人员
+  static personnel(MarkerParam data, String url, {bool maker = true, Color titleColor = Colors.black}) {
+    Widget lead = Column(children: [
+      Center(
+          child: Text(
+        data.title!,
+        style: TextStyle(color: titleColor),
+      )),
+      Stack(children: [
+        Icon(
+          const IconData(0xe62E, fontFamily: 'fcm'),
+          color: data.bgcolor,
+          size: 40,
+        ),
+        Positioned(
+            top: 4,
+            left: 5,
+            child: ClipOval(
+              child: Image(
+                image: NetworkImage(url),
+                fit: BoxFit.cover,
+                width: 30,
+                height: 30,
+              ),
+            ))
       ]),
     ]);
 
