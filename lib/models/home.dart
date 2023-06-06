@@ -370,3 +370,12 @@ class DangerType {
 }
 
 enum MapType { map, planView, mapPlan }
+
+class AlarmType extends ChangeNotifier {
+  String? type;
+
+  setType(String cut) {
+    type = cut;
+    notifyListeners();
+  }
+}

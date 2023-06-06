@@ -3,6 +3,7 @@ import 'package:fire_control_app/common/global.dart';
 import 'package:fire_control_app/http/device_api.dart';
 import 'package:fire_control_app/http/unit_api.dart';
 import 'package:fire_control_app/common/router.dart';
+import 'package:fire_control_app/models/home.dart';
 import 'package:fire_control_app/pages/home/message_page.dart';
 import 'package:fire_control_app/pages/home/scan_page.dart';
 import 'package:fire_control_app/pages/map/cache/app_dir.dart';
@@ -30,6 +31,8 @@ class _IndexPageState extends State<IndexPage> {
   int _selectedIndex = 0;
 
   final PageController _pageController = PageController();
+
+  final AlarmType alarmType = AlarmType();
 
   @override
   void initState() {
@@ -88,7 +91,22 @@ class _IndexPageState extends State<IndexPage> {
         child: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
-          children: [Home(), Inspection(), Alarm(), Device(), Mine()],
+          children: [
+            Home(
+              change: (String type) {
+                _selectedIndex = 2;
+                _pageController.jumpToPage(_selectedIndex);
+                alarmType.setType(type);
+                setState(() {});
+              },
+            ),
+            const Inspection(),
+            Alarm(
+              alarmType: alarmType,
+            ),
+            Device(),
+            const Mine()
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(

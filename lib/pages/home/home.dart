@@ -11,25 +11,17 @@ import 'package:fire_control_app/models/home.dart';
 import 'package:fire_control_app/http/home_api.dart';
 import 'package:fire_control_app/widgets/keep_alive.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key, required this.change});
+
+  final Function(String type) change;
 
   @override
-  Widget build(BuildContext context) {
-    return const HomePage();
-  }
+  State<Home> createState() => _HomePageState();
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+class _HomePageState extends State<Home> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   final Params _alarmStatsParam = Params();
   final Params _inspectStatsParam = Params();
@@ -38,20 +30,10 @@ class _HomePageState extends State<HomePage> {
       AlarmStats(alarm: 0, danger: 0, trouble: 0, fault: 0, fire: 0, risk: 0);
 
   late InspectStats _inspectStats = InspectStats(
-      completionRate: '0',
-      ratedTasks: 0,
-      completionTasks: 0,
-      inspectNumber: 0,
-      inspectRoutes: 0);
+      completionRate: '0', ratedTasks: 0, completionTasks: 0, inspectNumber: 0, inspectRoutes: 0);
 
   late DeviceStats _deviceStats = DeviceStats(
-      total: 0,
-      onlineRate: '0',
-      online: 0,
-      offline: 0,
-      abnormalRate: '0',
-      normal: 0,
-      abnormal: 0);
+      total: 0, onlineRate: '0', online: 0, offline: 0, abnormalRate: '0', normal: 0, abnormal: 0);
 
   final List date = [1, 7, 30];
   // late Params unitId;
@@ -103,8 +85,7 @@ class _HomePageState extends State<HomePage> {
         // enablePullUp: true,
         controller: _refreshController,
         onRefresh: _onRefresh,
-        child: SingleChildScrollView(
-            child: Consumer<UnitModel>(builder: (ctx, unit, child) {
+        child: SingleChildScrollView(child: Consumer<UnitModel>(builder: (ctx, unit, child) {
           if (unit.unit != null) {
             if (unit.unit?.unitId != _alarmStatsParam.unitId) {
               _alarmStatsParam.unitId = unit.unit?.unitId;
@@ -116,12 +97,7 @@ class _HomePageState extends State<HomePage> {
           return KeepAliveWrapper(
               child: Column(
             // crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              head(),
-              alarmStatistics(),
-              patrolStatistics(),
-              deviceStatistics()
-            ],
+            children: <Widget>[head(), alarmStatistics(), patrolStatistics(), deviceStatistics()],
           ));
         })));
   }
@@ -191,8 +167,7 @@ class _HomePageState extends State<HomePage> {
                               color: data['bgColor'],
                               // border:
                               //     Border(left: BorderSide(width: 1, color: Colors.red)),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(35))),
+                              borderRadius: const BorderRadius.all(Radius.circular(35))),
                           child: Icon(
                             data['iconData'],
                             color: data['color'],
@@ -282,40 +257,44 @@ class _HomePageState extends State<HomePage> {
                 ...alarms.sublist(0, 3).map((data) {
                   return Expanded(
                       flex: 1,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.only(
-                            left: 5, right: 5, bottom: 10),
-                        // margin: const EdgeInsets.all(4),
-                        color: const Color(0xffF5F5F5),
-                        child: Flex(
-                            direction: Axis.horizontal,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                data['icon'],
-                                color: data['color'],
-                                size: 30,
-                              ),
-                              Column(children: [
-                                Text(
-                                  data['amount'].toString(),
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: data['color'],
-                                  ),
+                      child: InkWell(
+                        onTap: () {
+                          widget.change(data['type']);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
+                          // margin: const EdgeInsets.all(4),
+                          color: const Color(0xffF5F5F5),
+                          child: Flex(
+                              direction: Axis.horizontal,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  data['icon'],
+                                  color: data['color'],
+                                  size: 30,
                                 ),
-                                Text(
-                                  data['name'],
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    // color: data['color'],
+                                Column(children: [
+                                  Text(
+                                    data['amount'].toString(),
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: data['color'],
+                                    ),
                                   ),
-                                ),
-                              ])
-                            ]),
+                                  Text(
+                                    data['name'],
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      // color: data['color'],
+                                    ),
+                                  ),
+                                ])
+                              ]),
+                        ),
                       ));
                 }).toList()
               ],
@@ -326,90 +305,51 @@ class _HomePageState extends State<HomePage> {
                 ...alarms.sublist(3, 6).map((data) {
                   return Expanded(
                       flex: 1,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.only(left: 5, right: 5),
-                        // margin: const EdgeInsets.all(4),
-                        color: const Color(0xffF5F5F5),
-                        child: Flex(
-                            direction: Axis.horizontal,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(
-                                data['icon'],
-                                color: data['color'],
-                                size: 30,
-                              ),
-                              Column(children: [
-                                Text(
-                                  data['amount'].toString(),
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: data['color'],
-                                  ),
+                      child: InkWell(
+                        onTap: () {
+                          print(data);
+                          widget.change(data['type']);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(left: 5, right: 5),
+                          // margin: const EdgeInsets.all(4),
+                          color: const Color(0xffF5F5F5),
+                          child: Flex(
+                              direction: Axis.horizontal,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(
+                                  data['icon'],
+                                  color: data['color'],
+                                  size: 30,
                                 ),
-                                Text(
-                                  data['name'],
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    // color: data['color'],
+                                Column(children: [
+                                  Text(
+                                    data['amount'].toString(),
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: data['color'],
+                                    ),
                                   ),
-                                ),
-                              ])
-                            ]),
+                                  Text(
+                                    data['name'],
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      // color: data['color'],
+                                    ),
+                                  ),
+                                ])
+                              ]),
+                        ),
                       ));
                 }).toList()
               ],
             )
           ],
-        )
-        // Wrap(
-        //   spacing: 6, //主轴上子控件的间距
-        //   runSpacing: 6, //交叉轴上子控件之间的间距
-        //   runAlignment: WrapAlignment.start,
-        //   children: [
-        //     ...alarms.map((data) {
-        //       return Container(
-        //         // height: 80,
-        //         width: 100,
-        //         padding: const EdgeInsets.all(10),
-        //         // margin: const EdgeInsets.all(4),
-        //         color: const Color(0xffF5F5F5),
-        //         child: Flex(
-        //             direction: Axis.horizontal,
-        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //             children: [
-        //               Icon(
-        //                 data['icon'],
-        //                 color: data['color'],
-        //                 size: 30,
-        //               ),
-        //               Column(children: [
-        //                 Text(
-        //                   '2',
-        //                   textAlign: TextAlign.right,
-        //                   style: TextStyle(
-        //                     fontSize: 20,
-        //                     color: data['color'],
-        //                   ),
-        //                 ),
-        //                 Text(
-        //                   data['name'],
-        //                   textAlign: TextAlign.right,
-        //                   style: const TextStyle(
-        //                     fontSize: 12,
-        //                     // color: data['color'],
-        //                   ),
-        //                 ),
-        //               ])
-        //             ]),
-        //       );
-        //     }).toList()
-        //   ], //要显示的子控件集合
-        // )
-        );
+        ));
   }
 
   // 巡检统计
@@ -468,22 +408,18 @@ class _HomePageState extends State<HomePage> {
                 ]),
               ),
             ),
-            Expanded(
+            const Expanded(
               flex: 1,
               child: Column(
-                children: const [
+                children: [
                   Text(
                     '额定任务',
                     style: TextStyle(
-                        fontSize: 14,
-                        height: 2,
-                        color: Color.fromARGB(255, 126, 126, 126)),
+                        fontSize: 14, height: 2, color: Color.fromARGB(255, 126, 126, 126)),
                   ),
                   Text('完成任务',
                       style: TextStyle(
-                          fontSize: 14,
-                          height: 2,
-                          color: Color.fromARGB(255, 126, 126, 126))),
+                          fontSize: 14, height: 2, color: Color.fromARGB(255, 126, 126, 126))),
                 ],
               ),
             ),
@@ -495,34 +431,26 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     _inspectStats.ratedTasks.toString(),
                     style: const TextStyle(
-                        fontSize: 14,
-                        height: 2,
-                        color: Color.fromARGB(255, 0, 0, 0)),
+                        fontSize: 14, height: 2, color: Color.fromARGB(255, 0, 0, 0)),
                   ),
                   Text(_inspectStats.completionTasks.toString(),
                       style: const TextStyle(
-                          fontSize: 14,
-                          height: 2,
-                          color: Color.fromARGB(255, 0, 0, 0))),
+                          fontSize: 14, height: 2, color: Color.fromARGB(255, 0, 0, 0))),
                 ],
               ),
             ),
-            Expanded(
+            const Expanded(
               flex: 1,
               child: Column(
-                children: const [
+                children: [
                   Text(
                     '巡检路线',
                     style: TextStyle(
-                        fontSize: 14,
-                        height: 2,
-                        color: Color.fromARGB(255, 126, 126, 126)),
+                        fontSize: 14, height: 2, color: Color.fromARGB(255, 126, 126, 126)),
                   ),
                   Text('巡检人数',
                       style: TextStyle(
-                          fontSize: 14,
-                          height: 2,
-                          color: Color.fromARGB(255, 126, 126, 126))),
+                          fontSize: 14, height: 2, color: Color.fromARGB(255, 126, 126, 126))),
                 ],
               ),
             ),
@@ -534,15 +462,11 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     _inspectStats.inspectRoutes.toString(),
                     style: const TextStyle(
-                        fontSize: 14,
-                        height: 2,
-                        color: Color.fromARGB(255, 255, 0, 0)),
+                        fontSize: 14, height: 2, color: Color.fromARGB(255, 255, 0, 0)),
                   ),
                   Text(_inspectStats.inspectNumber.toString(),
                       style: const TextStyle(
-                          fontSize: 14,
-                          height: 2,
-                          color: Color.fromARGB(255, 255, 0, 0))),
+                          fontSize: 14, height: 2, color: Color.fromARGB(255, 255, 0, 0))),
                 ],
               ),
             ),
@@ -598,14 +522,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 10, right: 10),
-                      child: Column(
-                        children: const [
+                      child: const Column(
+                        children: [
                           Text(
                             '在线',
                             style: TextStyle(
-                                fontSize: 14,
-                                height: 2,
-                                color: Color.fromARGB(255, 126, 126, 126)),
+                                fontSize: 14, height: 2, color: Color.fromARGB(255, 126, 126, 126)),
                           ),
                           Text('离线',
                               style: TextStyle(
@@ -620,16 +542,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           _deviceStats.online.toString(),
-                          style: const TextStyle(
-                              fontSize: 14,
-                              height: 2,
-                              color: Color(0xff4CAF90)),
+                          style: const TextStyle(fontSize: 14, height: 2, color: Color(0xff4CAF90)),
                         ),
                         Text(_deviceStats.offline.toString(),
                             style: const TextStyle(
-                                fontSize: 14,
-                                height: 2,
-                                color: Color.fromARGB(255, 255, 0, 0))),
+                                fontSize: 14, height: 2, color: Color.fromARGB(255, 255, 0, 0))),
                       ],
                     ),
                   ],
@@ -659,14 +576,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 10, right: 10),
-                      child: Column(
-                        children: const [
+                      child: const Column(
+                        children: [
                           Text(
                             '正常',
                             style: TextStyle(
-                                fontSize: 14,
-                                height: 2,
-                                color: Color.fromARGB(255, 126, 126, 126)),
+                                fontSize: 14, height: 2, color: Color.fromARGB(255, 126, 126, 126)),
                           ),
                           Text('异常',
                               style: TextStyle(
@@ -681,16 +596,11 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           _deviceStats.normal.toString(),
-                          style: const TextStyle(
-                              fontSize: 14,
-                              height: 2,
-                              color: Color(0xff4CAF90)),
+                          style: const TextStyle(fontSize: 14, height: 2, color: Color(0xff4CAF90)),
                         ),
                         Text(_deviceStats.abnormal.toString(),
                             style: const TextStyle(
-                                fontSize: 14,
-                                height: 2,
-                                color: Color.fromARGB(255, 255, 0, 0))),
+                                fontSize: 14, height: 2, color: Color.fromARGB(255, 255, 0, 0))),
                       ],
                     ),
                   ],
